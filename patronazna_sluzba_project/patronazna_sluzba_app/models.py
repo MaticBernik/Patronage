@@ -90,12 +90,15 @@ class Sodelavec_ZD(models.Model):
 
 
 class Pacient(models.Model):
+	SEX = (('M', 'Moski'), ('Z', 'Zenska'))
+
 	uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
 	telefonska_st = models.CharField(max_length=15, null=False)
 	#sifra_okolisa
 	naslov = models.CharField(max_length=100, null=False)
-	datum_rojstva = models.DateTimeField(default=datetime.now() + timedelta(days=14))
-	spol
+	datum_rojstva = models.DateTimeField()
+	spol = models.CharField(max_length=1,choices=SEX,blank=False,default="")
+	skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE)
 
 
 class Kontaktna_oseba(models.Model):
@@ -105,3 +108,5 @@ class Kontaktna_oseba(models.Model):
 	telefon = models.CharField(max_length=15, null=False)  # +368
 
 class Sorodstveno_razmerje(models.Model):
+	models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
+	models.ForeignKey(Pacient, on_delete=models.CASCADE)

@@ -13,7 +13,7 @@ def dodaj_pacienta_skrbnik(geslo1, geslo2, ime, priimek, mail, st_kartice, naslo
             if preveri_kontakt(kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska, sorodstvo):
                 if preveri_pacienta(ime, priimek, st_kartice, naslov, st_okolisa, telefonska):
                     #   DODAJ PACIENTA
-                    
+
                     return 1
     return 0
 
@@ -32,7 +32,7 @@ def vsebuje_stevko(string):
 #   Preveri, ce je mail validen
 def preveri_email(mail):
     if mail is not None:
-        if re.match(r"[^@]+@[^@]+\.[^@]+", mail):
+        if re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", mail):
             return 1
     return 0
 

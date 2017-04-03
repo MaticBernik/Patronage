@@ -1,5 +1,5 @@
 import re
-
+from .models import *
 #   Izbrana vrednost za dolžino gesla
 dolzina_gesla = 8
 
@@ -13,7 +13,19 @@ def dodaj_pacienta_skrbnik(geslo1, geslo2, ime, priimek, mail, st_kartice, naslo
             if preveri_kontakt(kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska, sorodstvo):
                 if preveri_pacienta(ime, priimek, st_kartice, naslov, st_okolisa, telefonska):
                     #   DODAJ PACIENTA
+                    user = User.objects.create_user(username=mail,
+                                                    password=geslo1,
+                                                    email=mail)
 
+                    kontakt = Kontaktna_oseba(ime=kontakt_ime, priimek=kontakt_priimek,
+                                              naslov=kontakt_naslov, telefon=kontakt_telefonska)
+                    kontakt.save()
+
+                    pacient = Pacient(uporabniski_profil=user, st_kartice=st_kartice, naslov=naslov,
+                                      st_okolisa=st_okolisa, telefonska_st=telefonska,
+                                      datum_rojstva=datum_rojstva, spol=spol, kontakt=kontakt)
+                    pacient.save()
+                    
                     return 1
     return 0
 

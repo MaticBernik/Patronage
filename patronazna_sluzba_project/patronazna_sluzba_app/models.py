@@ -108,6 +108,8 @@ class Kontaktna_oseba(models.Model):
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
     #sorodstvo
+
+
 class Odvisnosti_oskrbovanec_skrbnik(models.Model):
     #   tole naj nekdo popravi, ce bi blo bols kr linkat keye al pa kaj
     id_skrbnika = models.IntegerField(max_length=11, null=False)

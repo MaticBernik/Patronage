@@ -2,15 +2,18 @@ import re
 from .models import *
 #   Izbrana vrednost za dolžino gesla
 dolzina_gesla = 8
+#   Dolzina stevilke kartice (11 glede na mojo kartico)
+dolzina_st_kartice = 11
+#   Telefonska je lahko dolga max 15
+dolzina_telefonske = 15
 
 
 def dodaj_pacienta_skrbnik(geslo1, geslo2, ime, priimek, mail, st_kartice, naslov, st_okolisa, telefonska,
-                           datum_rojstva, spol, kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska,
-                           sorodstvo):
+                           datum_rojstva, spol, kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska):
 
     if preveri_gesli(geslo1, geslo2):
         if preveri_email(mail):
-            if preveri_kontakt(kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska, sorodstvo):
+            if preveri_kontakt(kontakt_ime, kontakt_priimek, kontakt_naslov, kontakt_telefonska):
                 if preveri_pacienta(ime, priimek, st_kartice, naslov, st_okolisa, telefonska):
                     #   DODAJ PACIENTA
                     user = User.objects.create_user(username=mail,
@@ -25,20 +28,23 @@ def dodaj_pacienta_skrbnik(geslo1, geslo2, ime, priimek, mail, st_kartice, naslo
                                       st_okolisa=st_okolisa, telefonska_st=telefonska,
                                       datum_rojstva=datum_rojstva, spol=spol, kontakt=kontakt)
                     pacient.save()
-                    
                     return 1
     return 0
 
 
-def dodaj_pacienta_oskrbovanec():
-    #   DODAJ PACIENTA
-    #   DODAJ ODVISNOSTI
+#   TUKAJ JE TREBA POSKRBET ŠE ZA SORODSTVA TER KO JE BAZA KONČANA PREVERIT ČE VSE DELA
+def dodaj_pacienta_oskrbovanec(trenutni_uporabnik, ime, priimek, st_kartice, naslov, st_okolisa,
+                               datum_rojstva, spol,
+                               sorodstvo):
+
+    if preveri_oskrbovanca(ime, priimek, st_kartice, naslov, st_okolisa):
+        #   Tu dodam oskrbovanca
+        pacient = Pacient(uporabniski_profil=None, st_kartice=st_kartice, naslov=naslov,
+                          st_okolisa=st_okolisa, telefonska_st="",
+                          datum_rojstva=datum_rojstva, spol=spol, kontakt=None, skrbnistvo=trenutni_uporabnik)
+        pacient.save()
+        return 1
     return 0
-
-
-#   Vrne 1, če vsebuje števko
-def vsebuje_stevko(string):
-    return any(char.isdigit() for char in string)
 
 
 #   Preveri, ce je mail validen
@@ -56,7 +62,23 @@ def preveri_pacienta(ime, priimek, st_kartice, naslov, st_okolisa, telefonska):
             and st_kartice is not None\
             and st_okolisa is not None\
             and telefonska is not None:
-        return 1
+        if preveri_telefonsko(telefonska) & preveri_kartico(st_kartice):
+            return 1
+        return 0
+    return 0
+
+
+def preveri_oskrbovanca(ime, priimek, st_kartice, naslov, st_okolisa, telefonska, sorodstvo):
+    if ime is not None\
+            and priimek is not None\
+            and naslov is not None\
+            and st_kartice is not None\
+            and st_okolisa is not None\
+            and sorodstvo is not None\
+            and telefonska is not None:
+        if preveri_telefonsko(telefonska) & preveri_kartico(st_kartice):
+            return 1
+        return 0
     return 0
 
 
@@ -78,14 +100,34 @@ def preveri_gesli(geslo1, geslo2):
     return 0
 
 
+def preveri_kartico(st_kartice):
+    if isinstance(st_kartice, int):
+        if len(str(st_kartice)) == dolzina_st_kartice:
+            return 1
+        return 0
+    return 0
+
+
+def preveri_telefonsko(telefonska):
+    if isinstance(telefonska, int):
+        if len(str(telefonska)) <= dolzina_telefonske:
+            return 1
+        return 0
+    return 0
+
+
 #   Preveri, če so vnešeni vsi podatki (in pravilno) oz če ni vnešeno nič (tudi validno)
-def preveri_kontakt(ime, priimek, naslov, telefon, sorodstvo):
-    if ime is None and priimek is None and naslov is None and telefon is None and sorodstvo is None:
+def preveri_kontakt(ime, priimek, naslov, telefon):
+    if ime is None and priimek is None and naslov is None and telefon is None:
         return 1
     elif ime is not None \
             and priimek is not None \
             and naslov is not None \
-            and telefon is not None \
-            and sorodstvo is not None:
+            and telefon is not None:
         return 1
     return 0
+
+
+#   Vrne 1, če vsebuje števko
+def vsebuje_stevko(string):
+    return any(char.isdigit() for char in string)

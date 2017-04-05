@@ -97,10 +97,17 @@ class Kontaktna_oseba(models.Model):
     #sorodstvo
 
 
+class Sorodstveno_razmerje(models.Model):
+    models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
+    models.ForeignKey(Pacient, on_delete=models.CASCADE)
+
+
 class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
+    #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
+    st_kartice = models.IntegerField(max_length=11, null=False)
     telefonska_st = models.CharField(max_length=15, null=False)
     #sifra_okolisa
     naslov = models.CharField(max_length=100, null=False)
@@ -111,6 +118,3 @@ class Pacient(models.Model):
     kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 
 
-class Sorodstveno_razmerje(models.Model):
-    models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-    models.ForeignKey(Pacient, on_delete=models.CASCADE)

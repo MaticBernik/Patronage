@@ -7,7 +7,6 @@ def sprememba_gesla(geslo1, geslo2, id):
         user = User.objects.get(username=id)
         user.set_password(geslo1)
         user.save()
-
         return 1
     return 0
 

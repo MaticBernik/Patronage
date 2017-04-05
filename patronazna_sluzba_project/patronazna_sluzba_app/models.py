@@ -89,6 +89,14 @@ class Sodelavec_ZD(models.Model):
 #class Okolis(models.Model):
 
 
+class Kontaktna_oseba(models.Model):
+    ime = models.CharField(max_length=100, null=False)
+    priimek = models.CharField(max_length=100, null=False)
+    naslov = models.CharField(max_length=100, null=False)
+    telefon = models.CharField(max_length=15, null=False)  # +368
+    #sorodstvo
+
+
 class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
@@ -102,13 +110,6 @@ class Pacient(models.Model):
 
     kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 
-
-class Kontaktna_oseba(models.Model):
-    ime = models.CharField(max_length=100, null=False)
-    priimek = models.CharField(max_length=100, null=False)
-    naslov = models.CharField(max_length=100, null=False)
-    telefon = models.CharField(max_length=15, null=False)  # +368
-    #sorodstvo
 
 class Sorodstveno_razmerje(models.Model):
     models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)

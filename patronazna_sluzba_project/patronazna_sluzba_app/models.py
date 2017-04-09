@@ -94,6 +94,7 @@ class Kontaktna_oseba(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
+
     #sorodstvo
 
 # ALWAYS DEFINE BEFORE CALLING 
@@ -113,15 +114,15 @@ class Pacient(models.Model):
 
     kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 
-
-class Sorodstveno_razmerje(models.Model):
-    models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-    models.ForeignKey(Pacient, on_delete=models.CASCADE)
-
+#
+# NOT SURE WHAT THIS IS ABOUT ??
+# class Sorodstveno_razmerje(models.Model):
+#    models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
+#    models.ForeignKey(Pacient, on_delete=models.CASCADE)
+#
 
 
 class Sorodstveno_razmerje(models.Model):
 	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 	pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
 	tip_razmerja = models.CharField(max_length=100, null=False)
-

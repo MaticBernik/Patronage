@@ -1,5 +1,7 @@
-from django.shortcuts import render
-from kreiranje_pacienta_zgodba2 import *
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, Http404
 
 # Create your views here.
+def index(request):
+	return render_to_response('index.html')
 

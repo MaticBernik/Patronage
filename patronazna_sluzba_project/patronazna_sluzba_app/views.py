@@ -17,16 +17,28 @@ from .forms import LoginForm
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 
 
+#def index(request):
+#
+#	# if this is a POST request we need to process the form data
+#    if request.method == 'POST':
+#            #return HttpResponseRedirect('/thanks/')
+#            return HttpResponse("Thanks, for trying.")
+#    # if a GET (or any other method) we'll create a blank form
+#    else:
+#        form = LoginForm()
+#
+#    return render(request, 'index.html', {'login_form': form})
+
+
+
 # Create your views here.
 def index(request):
     if request.method=='GET':
-        template=loader.get_template('index.html')
-        context = {
-            'login_form': LoginForm()
-        }
-        return HttpResponse(template.render(context))
+        form = LoginForm()
+        return render(request, 'index.html', {'login_form': form})
     elif request.method=='POST':
         form = LoginForm(request.POST)
+        
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -50,4 +62,4 @@ def index(request):
         else:
             print("Invalid form!")
             return HttpResponseRedirect('/')
-
+        return HttpResponse("Thanks for trying.")

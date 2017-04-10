@@ -1,0 +1,116 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>User registration page</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="{% static 'script/customScript.js' %}"></script>
+		
+  
+  
+	</head>
+	<body>
+		<header>
+			Header for the Application
+		</header>
+		<h2>Registration page</h2>
+		<div class="main-centered-content">
+			<section>
+				<div class="container">
+					{{ registration_form.non_field_errors }}
+					<form  id="form" action="#" autocomplete="on" method="post" style="border:1px solid #ccc">
+					{% csrf_token %}
+					<div>
+						{{ registration_form.cardNumber.errors }}
+						<label for="{{ registration_form.cardNumber.id_for_label }}">Številka kartice zdravstvenega zavarovanja</label>
+						{{ registration_form.cardNumber }}
+					</div>
+					<div>
+						<label for="{{ registration_form.surname.id_for_label }}">Priimek</label>
+						{{ registration_form.surname }}
+					</div>
+					<div>
+						<label>Ime</label>
+						{{ registration_form.name }}
+					</div>
+					<div>
+						<label>Naslov</label>
+						{{ registration_form.address }}
+					</div>
+					<div>
+						<label>Šifra okoliša</label>
+						<select>
+							<option>05600</option>
+							<option>05470</option>
+							<option>05030</option>
+							<option>05300</option>
+						</select>
+					</div>
+					<div>
+						<label>Telefon</label>
+						{{ registration_form.phone }}
+					</div>
+					<div>
+						<label>Elektronski naslov</label>
+						<input type="email" required="required"/>
+					</div>
+					<div>
+						<label>Geslo</label>
+						{{ registration_form.password }}
+					</div>
+					<div>
+						<label>Ponovi geslo</label>
+						{{ registration_form.password2 }}
+					</div>
+					<div>
+						<label>Datum rojstva</label>
+						<input type="date" required="required"/>
+						
+					</div>
+					<div>
+						<label>Spol</label>
+						 <select required="required">
+							<option></option>
+							<option>Moški</option>
+							<option>Ženski</option>						 
+						 </select>
+					</div>
+					<div>
+						<label>Neobvezni podatki o kontaktni osebi</label>
+						<button type="button" onClick="myFunction()">Prikazi podatke</button>
+					</div>
+					<div id="myDIV"	>
+						<div>
+							<label>Priimek</label>
+							<input id="contact_surname"type="text"/>
+						</div>
+						<div>
+							<label>Ime</label>
+							<input id="contact_name" type="text"/>
+						</div>
+						<div>
+							<label>Naslov</label>
+							<input id="contact_address" type="text"/>
+						</div>
+						<div>
+							<label>Telefon</label>
+							<input id="contact_phone_number" type="tel"/>
+						</div>
+						<div>
+							<label>Sorodstveno razmerje</label>
+							<input id="sorodstvo" type="text"/>
+						</div>
+					</div>
+						<div class="clearfix">
+						  <button type="button" class="cancelbtn">Preklic</button>
+						  <button type="submit" class="signupbtn">Registracija</button>
+						</div>
+				</form>		
+			</div>
+		</div>
+	</body>
+
+</html>

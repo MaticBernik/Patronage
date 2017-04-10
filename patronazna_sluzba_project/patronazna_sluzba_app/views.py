@@ -14,6 +14,7 @@ from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .forms import LoginForm
+from .forms import RegistrationFrom
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 
 
@@ -29,7 +30,7 @@ from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacien
 #
 #    return render(request, 'index.html', {'login_form': form})
 
-
+		
 
 # Create your views here.
 def index(request):
@@ -63,3 +64,20 @@ def index(request):
             print("Invalid form!")
             return HttpResponseRedirect('/')
         return HttpResponse("Thanks for trying.")
+		
+def register(request):
+
+	# if this is a POST request we need to process the form data
+    if request.method == 'POST':
+            #return HttpResponseRedirect('/thanks/')
+            return HttpResponse("Thanks for registering")
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = RegistrationFrom()
+
+    return render(request, 'register.html', {'registration_form': form})
+
+	
+def changePassword(request):
+
+    return render(request, 'changePassword.html')

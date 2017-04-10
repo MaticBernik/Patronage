@@ -94,7 +94,6 @@ class Kontaktna_oseba(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
-
     #sorodstvo
 
 # ALWAYS DEFINE BEFORE CALLING 
@@ -104,23 +103,14 @@ class Pacient(models.Model):
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
     #   MAX_LEN does not get used in combo with IntegerField.. "max_length=11,"
-    st_kartice = models.IntegerField(null=False)
+    st_kartice = models.IntegerField(null=False,default=-1)
     telefonska_st = models.CharField(max_length=15, null=False)
     #sifra_okolisa
     naslov = models.CharField(max_length=100, null=False)
     spol = models.CharField(max_length=1,choices=SEX,blank=False,default="")
     skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE)
     datum_rojstva = models.DateTimeField()
-
-    kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-
-#
-# NOT SURE WHAT THIS IS ABOUT ??
-# class Sorodstveno_razmerje(models.Model):
-#    models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-#    models.ForeignKey(Pacient, on_delete=models.CASCADE)
-#
-
+    kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE, null=True)
 
 class Sorodstveno_razmerje(models.Model):
 	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)

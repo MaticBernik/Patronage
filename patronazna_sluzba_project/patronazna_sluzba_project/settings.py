@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'patronazna_sluzba_app',
     #'django_extensions',
-    'axes'
+    'axes',
 ]
 
 MIDDLEWARE = [

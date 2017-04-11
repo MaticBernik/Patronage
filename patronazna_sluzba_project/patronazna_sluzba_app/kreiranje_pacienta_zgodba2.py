@@ -20,7 +20,8 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                 if check_patient(name, surname, card_number, address, phone_number):
                     #   DODAJ PACIENTA
                     user = User.objects.create_user(username=mail,
-                                                    password=password1)
+                                                    password=password1,
+                                                    email=mail)
                     print("user created")
                     if contact_name != "":
                         contact = Kontaktna_oseba(ime=contact_name, priimek=contact_surname,
@@ -35,6 +36,10 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         patient.save()
                         print("patient saved")
 
+                        sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
+                        sorodstvo.save()
+                        print("sorodstvo saved")
+
                     else:
                         patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
@@ -43,10 +48,9 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         patient.save()
 
                         print("patient saved")
-
-                    sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
-                    sorodstvo.save()
-                    print("sorodstvo saved")
+                        all_entries = Pacient.objects.all()
+                        for i in all_entries:
+                            print(i.uporabniski_profil.username)
                     return True
     return False
 

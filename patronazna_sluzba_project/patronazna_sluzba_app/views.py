@@ -70,22 +70,22 @@ def register(request):
     if request.method == 'POST':
             #return HttpResponseRedirect('/thanks/')
 
-            password1 = request.POST['']
-            password2 = request.POST['']
-            name = request.POST['']
-            surname = request.POST['']
-            mail = request.POST['']
-            card_number = request.POST['']
-            address = request.POST['']
+            password1 = request.POST['password']
+            password2 = request.POST['password2']
+            name = request.POST['name']
+            surname = request.POST['surname']
+            mail = request.POST[''] #   tole se ne vem kak naj vpisem
+            card_number = request.POST['cardNumber']
+            address = request.POST['address']
             county_number = request.POST['']
-            phone_number = request.POST['']
-            birth_date = request.POST['']
-            sex = request.POST['']
-            contact_name = request.POST['']
-            contact_surname = request.POST['']
-            contact_address = request.POST['']
-            contact_phone_number = request.POST['']
-            sorodstveno_razmerje = request.POST['']
+            phone_number = request.POST['phone']
+            birth_date = request.POST['birthDate']
+            sex = request.POST['sex']
+            contact_name = request.POST['contact_name']
+            contact_surname = request.POST['contact_surname']
+            contact_address = request.POST['contact_address']
+            contact_phone_number = request.POST['contact_phone_number']
+            sorodstveno_razmerje = request.POST['contact_sorodstvo']
 
             if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, name, surname, mail,
                                                                     card_number, address, county_number, phone_number,

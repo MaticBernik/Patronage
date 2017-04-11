@@ -66,6 +66,7 @@ def check_mail_builtin(email):
         validate_email(email)
         return True
     except ValidationError:
+        print("Mail ni pravilen.")
         return False
 
 
@@ -78,7 +79,9 @@ def check_patient(name, surname, card_number, address, county_number, phone_numb
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
             return True
+        print("telefon ni ok")
         return False
+    print("podatki pacienta niso vpisani vsi")
     return False
 
 
@@ -92,7 +95,9 @@ def check_taken_care_of(name, surname, card_number, address, county_number, phon
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
             return True
+        print("telefon ni ok")
         return False
+    print("podatki oskrbovanca niso ok")
     return False
 
 
@@ -110,7 +115,9 @@ def check_passwords(password1, password2):
         if stevilo_crk1 >= dolzina_gesla and stevilo_crk2 >= dolzina_gesla:
             if contains_number(password1):
                 return True
+            print("geslo ne vsebuje stevk")
             return False
+    print("geslo ni ok")
     return False
 
 
@@ -118,7 +125,9 @@ def check_card(card_number):
     if isinstance(card_number, int):
         if len(str(card_number)) == dolzina_card_number:
             return True
+        print("dolzina kartice not cool")
         return False
+    print("kartica ni ok")
     return False
 
 

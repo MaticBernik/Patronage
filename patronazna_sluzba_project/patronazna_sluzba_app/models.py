@@ -89,12 +89,6 @@ class Sodelavec_ZD(models.Model):
 #class Okolis(models.Model):
 
 
-class Sorodstveno_razmerje(models.Model):
-    kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-    pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
-    tip_razmerja = models.CharField(max_length=100, null=False)
-
-
 class Kontaktna_oseba(models.Model):
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
@@ -102,19 +96,23 @@ class Kontaktna_oseba(models.Model):
     telefon = models.CharField(max_length=15, null=False)  # +368
 
 
+# ALWAYS DEFINE BEFORE CALLING 
 class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
-    st_kartice = models.IntegerField(max_length=11, null=False)
+    #   MAX_LEN does not get used in combo with IntegerField.. "max_length=11,"
+    st_kartice = models.IntegerField(null=False,default=-1)
     telefonska_st = models.CharField(max_length=15, null=False)
     #sifra_okolisa
     naslov = models.CharField(max_length=100, null=False)
     spol = models.CharField(max_length=1,choices=SEX,blank=False,default="")
-    skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE)
+    skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     datum_rojstva = models.DateTimeField()
+    kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE, null=True)
 
-    kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-
-
+class Sorodstveno_razmerje(models.Model):
+	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
+	pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
+	tip_razmerja = models.CharField(max_length=100, null=False)

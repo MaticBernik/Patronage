@@ -1,0 +1,140 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>User registration page</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="{% static 'script/customScript.js' %}"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd-mm-yy',yearRange: "-100:+0"})
+  } );
+  </script>
+		
+  
+  
+	</head>
+	<body>
+		<header>
+			Header for the Application
+		</header>
+		<h2>Registration page</h2>
+		<div class="main-centered-content">
+			<section>
+				<div class="container">
+					{{ registration_form.non_field_errors }}
+					<form  id="form" autocomplete="on" method="post" style="border:1px solid #ccc">
+					{% csrf_token %}
+					<div>
+						{{ registration_form.cardNumber.errors }}
+						<label for="{{ registration_form.cardNumber.id_for_label }}">Številka kartice zdravstvenega zavarovanja</label>
+						{{ registration_form.cardNumber }}
+					</div>
+					<div>
+						<label for="{{ registration_form.surname.id_for_label }}">Priimek</label>
+						{{ registration_form.surname }}
+					</div>
+					<div>
+						<label>Ime</label>
+						{{ registration_form.name }}
+					</div>
+					<div>
+						<label>Naslov</label>
+						{{ registration_form.address }}
+					</div>
+					<div>
+						<label>Pošta</label>
+						{{ registration_form.postCode }}
+					</div>
+					<div>
+						<label>Šifra okoliša</label>
+						{{ registration_form.district}}
+						<!--<select>
+							<option>05600</option>
+							<option>05470</option>
+							<option>05030</option>
+							<option>05300</option>
+						</select>
+						-->
+					</div>
+					<div>
+						<label>Telefon</label>
+						{{ registration_form.phone }}
+					</div>
+					<div>
+						<label>Elektronski naslov</label>
+						<!--<input type="email" required="required"/>-->
+						{{ registration_form.email }}
+					</div>
+					<div>
+						<label>Geslo</label>
+						{{ registration_form.password }}
+					</div>
+					<div>
+						<label>Ponovi geslo</label>
+						{{ registration_form.password2 }}
+					</div>
+					<div>
+						<label>Datum rojstva</label>
+						{{ registration_form.birthDate }}
+						<!--<input type="date" required="required"/>-->
+						
+					</div>
+					<div>
+						<label>Spol</label>
+						{{ registration_form.sex }}
+						 <!--<select required="required">
+							<option></option>
+							<option>Moški</option>
+							<option>Ženski</option>						 
+						 </select>
+						 -->
+					</div>
+					<div>
+						<label>Neobvezni podatki o kontaktni osebi</label>
+						<button type="button" onClick="myFunction()">Prikazi podatke</button>
+					</div>
+					<div id="myDIV"	>
+						<div>
+							<label>Priimek</label>
+							{{ registration_form.contact_surname }}
+							<!--<input id="contact_surname"type="text"/>-->
+						</div>
+						<div>
+							<label>Ime</label>
+							{{ registration_form.contact_name}}
+							<!--<input id="contact_name" type="text"/>-->
+						</div>
+						<div>
+							<label>Naslov</label>
+							{{ registration_form.contact_address }}
+							<!--<input id="contact_address" type="text"/>-->
+						</div>
+						<div>
+							<label>Telefon</label>
+							{{ registration_form.contact_phone_number }}
+							<!--<input id="contact_phone_number" type="tel"/>-->
+						</div>
+						<div>
+							<label>Sorodstveno razmerje</label>
+							{{ registration_form.contact_sorodstvo }}
+							<!--<input id="sorodstvo" type="text"/>-->
+						</div>
+					</div>
+						<div class="clearfix">
+						  <button type="button" class="cancelbtn">Preklic</button>
+						  <button type="submit" class="signupbtn">Registracija</button>
+						</div>
+				</form>		
+			</div>
+		</div>
+	</body>
+
+</html>

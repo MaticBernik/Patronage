@@ -19,7 +19,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from patronazna_sluzba_app import views as v
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', v.index)
+    url(r'^base/', v.base),
+    url(r'^$', v.index),
 ]
 
 #ADD 

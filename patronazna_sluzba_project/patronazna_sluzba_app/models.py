@@ -94,7 +94,7 @@ class Kontaktna_oseba(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
-    #sorodstvo
+
 
 # ALWAYS DEFINE BEFORE CALLING 
 class Pacient(models.Model):

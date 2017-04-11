@@ -13,8 +13,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .forms import LoginForm
-from .forms import RegistrationFrom
+from .forms import *
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 from . import kreiranje_pacienta_zgodba2
 #def index(request):

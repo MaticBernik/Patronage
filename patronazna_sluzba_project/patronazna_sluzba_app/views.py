@@ -16,7 +16,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .forms import LoginForm
 from .forms import RegistrationFrom
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
-import kreiranje_pacienta_zgodba2
+from . import kreiranje_pacienta_zgodba2
 #def index(request):
 #
 #	# if this is a POST request we need to process the form data

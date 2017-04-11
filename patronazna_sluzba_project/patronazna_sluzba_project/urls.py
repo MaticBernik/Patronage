@@ -21,7 +21,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', v.index),
 	url(r'^register/', v.register,name='register'),
-	url(r'^changePassword/', v.changePassword)
+	url(r'^changePassword/', v.changePassword),
+    url(r'^addNursingPatient/', v.addNursingPatient)
 ]
 
 #ADD 

@@ -111,3 +111,32 @@ def register(request):
 def changePassword(request):
 
     return render(request, 'changePassword.html')
+
+
+def addNursingPatient(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        form = AddNursingPatient(request.POST)
+
+        if form.is_valid():
+            if request.user.is_authenticated():
+                currentUser = request.user.username
+                cardNumber = form.cleaned_data['cardNumber']
+                name = form.cleaned_data['name']
+                surname = form.cleaned_data['surname']
+                phone = form.cleaned_data['phone']
+                address = form.cleaned_data['address']
+                postCode = form.cleaned_data['postCode']
+                district = form.cleaned_data['district']
+                birthDate = form.cleaned_data['birthDate']
+                sex = form.cleaned_data['sex']
+                relation = form.cleaned_data['relation']
+
+                if not (
+                kreiranje_pacienta_zgodba2.add_patient_taken_care_of(currentUser, name, surname, cardNumber, address,
+                                                                     district, birthDate, sex, relation)):
+                    return HttpResponse("Napaka pri dodajanju oskrbovanca");
+        return HttpResponse("Dodali ste oskrbovanca")
+    else:
+        form = AddNursingPatient()
+        return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})

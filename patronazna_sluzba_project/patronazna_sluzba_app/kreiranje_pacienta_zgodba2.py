@@ -31,13 +31,19 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex, kontakt=contact)
+                        print("patient dodan")
+                        patient.save()
+                        print("patient saved")
+
                     else:
                         patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex)
-                    print("patient dodan")
-                    patient.save()
-                    print("patient saved")
+                        print("patient dodan")
+                        patient.save()
+
+                        print("patient saved")
+
                     sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
                     sorodstvo.save()
                     print("sorodstvo saved")

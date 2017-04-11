@@ -28,6 +28,7 @@ class RegistrationFrom(forms.Form):
    password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
    sex = forms.ChoiceField(choices=SEX_CHOICES)
    district = forms.ChoiceField(choices=DISTRICT_CHOICES)
+   email = forms.EmailField()
    
    contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
    contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))

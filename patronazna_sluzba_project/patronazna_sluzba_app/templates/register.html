@@ -30,7 +30,7 @@
 			<section>
 				<div class="container">
 					{{ registration_form.non_field_errors }}
-					<form  id="form" action="#" autocomplete="on" method="post" style="border:1px solid #ccc">
+					<form  id="form" autocomplete="on" method="post" style="border:1px solid #ccc">
 					{% csrf_token %}
 					<div>
 						{{ registration_form.cardNumber.errors }}
@@ -70,7 +70,8 @@
 					</div>
 					<div>
 						<label>Elektronski naslov</label>
-						<input type="email" required="required"/>
+						<!--<input type="email" required="required"/>-->
+						{{ registration_form.email }}
 					</div>
 					<div>
 						<label>Geslo</label>

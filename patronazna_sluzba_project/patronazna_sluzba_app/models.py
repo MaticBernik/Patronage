@@ -108,7 +108,7 @@ class Pacient(models.Model):
     #sifra_okolisa
     naslov = models.CharField(max_length=100, null=False)
     spol = models.CharField(max_length=1,choices=SEX,blank=False,default="")
-    skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE)
+    skrbnistvo = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     datum_rojstva = models.DateTimeField()
     kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE, null=True)
 

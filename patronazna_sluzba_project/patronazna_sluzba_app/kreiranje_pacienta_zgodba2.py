@@ -11,41 +11,49 @@ dolzina_card_number = 11
 dolzina_telefonske = 15
 
 
-def add_patient_caretaker(password1, password2, name, surname, mail, card_number, address, county_number, phone_number,
+def add_patient_caretaker(password1, password2, name, surname, mail, card_number, address, phone_number,
                            birth_date, sex, contact_name, contact_surname, contact_address, contact_phone_number, sorodstveno_razmerje):
 
     if check_passwords(password1, password2):
         if check_mail_builtin(mail):
             if check_contact(contact_name, contact_surname, contact_address, contact_phone_number):
-                if check_patient(name, surname, card_number, address, county_number, phone_number):
+                if check_patient(name, surname, card_number, address, phone_number):
                     #   DODAJ PACIENTA
                     user = User.objects.create_user(username=mail,
-                                                    password=password1,
-                                                    email=mail)
+                                                    password=password1)
+                    print("user created")
+                    if contact_name != "":
+                        contact = Kontaktna_oseba(ime=contact_name, priimek=contact_surname,
+                                                  naslov=contact_address, telefon=contact_phone_number)
+                        contact.save()
+                        print("contact saved")
 
-                    contact = Kontaktna_oseba(name=contact_name, surname=contact_surname,
-                                              address=contact_address, telefon=contact_phone_number)
-                    contact.save()
-
-                    patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
-                                      sifra_okolisa=county_number, telefonska_st=phone_number,
-                                      datum_rojstva=birth_date, spol=sex, kontakt=contact)
+                        patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
+                                          telefonska_st=phone_number,
+                                          datum_rojstva=birth_date, spol=sex, kontakt=contact)
+                    else:
+                        patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
+                                          telefonska_st=phone_number,
+                                          datum_rojstva=birth_date, spol=sex)
+                    print("patient dodan")
                     patient.save()
-
+                    print("patient saved")
                     sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
+                    sorodstvo.save()
+                    print("sorodstvo saved")
                     return True
     return False
 
 
 #   TUKAJ JE TREBA POSKRBET ŠE ZA SORODSTVA TER KO JE BAZA KONČANA PREVERIT ČE VSE DELA
-def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address, county_number,
+def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address,
                                birth_date, sex,
                                sorodstvo):
 
-    if check_taken_care_of(name, surname, card_number, address, county_number):
+    if check_taken_care_of(name, surname, card_number, address):
         #   Tu dodam oskrbovanca
         patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address,
-                          sifra_okolisa=county_number, telefonska_st="",
+                          telefonska_st="",
                           datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
         patient.save()
         return True
@@ -70,12 +78,11 @@ def check_mail_builtin(email):
         return False
 
 
-def check_patient(name, surname, card_number, address, county_number, phone_number):
+def check_patient(name, surname, card_number, address, phone_number):
     if name is not None\
             and surname is not None\
             and address is not None\
             and card_number is not None\
-            and county_number is not None\
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
             return True
@@ -85,12 +92,11 @@ def check_patient(name, surname, card_number, address, county_number, phone_numb
     return False
 
 
-def check_taken_care_of(name, surname, card_number, address, county_number, phone_number, sorodstvo):
+def check_taken_care_of(name, surname, card_number, address, phone_number, sorodstvo):
     if name is not None\
             and surname is not None\
             and address is not None\
             and card_number is not None\
-            and county_number is not None\
             and sorodstvo is not None\
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
@@ -112,14 +118,17 @@ def check_passwords(password1, password2):
 
         if stevilo_crk1 >= dolzina_gesla and stevilo_crk2 >= dolzina_gesla:
             if contains_number(password1):
-                if password_validation.validate_password(password1):
-
+                if password_validation.validate_password(password1) is None:
                     return True
-                print("Built in password validation error (check_passwords)")
+                else:
+                    print(ValidationError.args)
+                    print("Built in password validation error (check_passwords)")
                 return False
             print("Password should have numbers (check_passwords)")
             return False
     print("Password just doesn't work (check_passwords)")
+    print("Password 1:", password1)
+    print("Password 2:", password2)
     return False
 
 
@@ -130,6 +139,7 @@ def check_card(card_number):
         print("Card length not cool (check_card)")
         return False
     print("Card should be a number (check_card)")
+    print(type(card_number))
     return False
 
 
@@ -145,14 +155,18 @@ def check_phone(phone_number):
 
 #   Preveri, če so vnešeni vsi podatki (in pravilno) oz če ni vnešeno nič (tudi validno)
 def check_contact(name, surname, address, telefon):
-    if name is None and surname is None and address is None and telefon is None:
+    if name == "" and surname == "" and address == "" and telefon is None:
         return 1
-    elif name is not None \
-            and surname is not None \
-            and address is not None \
+    elif name is not "" \
+            and surname != "" \
+            and address != "" \
             and telefon is not None:
         return True
     print("All or nothing. Contact, that is. (check_contact)")
+    print(name)
+    print(surname)
+    print(address)
+    print(telefon)
     return False
 
 

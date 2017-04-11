@@ -68,33 +68,39 @@ def register(request):
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
-            #return HttpResponseRedirect('/thanks/')
+        #return HttpResponseRedirect('/thanks/')
 
-            password1 = request.POST['password']
-            password2 = request.POST['password2']
-            name = request.POST['name']
-            surname = request.POST['surname']
-            mail = request.POST[''] #   tole se ne vem kak naj vpisem
-            card_number = request.POST['cardNumber']
-            address = request.POST['address']
-            county_number = request.POST['']
-            phone_number = request.POST['phone']
-            birth_date = request.POST['birthDate']
-            sex = request.POST['sex']
-            contact_name = request.POST['contact_name']
-            contact_surname = request.POST['contact_surname']
-            contact_address = request.POST['contact_address']
-            contact_phone_number = request.POST['contact_phone_number']
-            sorodstveno_razmerje = request.POST['contact_sorodstvo']
+        #   TOLE VEDNO NAPISE DA FORM NI VALID NO IDEA WHY
+        form = RegistrationFrom(request.POST)
+        if form.is_valid():
+            password1 = form.cleaned_data['password']
+            password2 = form.cleaned_data['password2']
+            name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
+            mail = form.cleaned_data['email']
+            card_number = form.cleaned_data['cardNumber']
+            address = form.cleaned_data['address']
+            phone_number = form.cleaned_data['phone']
+            birth_date = form.cleaned_data['birthDate']
+            sex = form.cleaned_data['sex']
+            contact_name = form.cleaned_data['contact_name']
+            contact_surname = form.cleaned_data['contact_surname']
+            contact_address = form.cleaned_data['contact_address']
+            contact_phone_number = form.cleaned_data['contact_phone_number']
+            sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
 
             if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, name, surname, mail,
-                                                                    card_number, address, county_number, phone_number,
+                                                                    card_number, address, phone_number,
                                                                     birth_date, sex, contact_name,
                                                                     contact_surname, contact_address,
                                                                     contact_phone_number, sorodstveno_razmerje)):
                 return HttpResponse("Nekdo posile requeste napisane na roko... al pa mi se funkcije ne delajo")
+        else:
+            print("form not valid bro", form.errors)
 
-            return HttpResponse("Thanks for registering")
+        return HttpResponse("Registracija uspela")
+
+
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RegistrationFrom()

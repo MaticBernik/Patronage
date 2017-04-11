@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Pacient
+from django.core.validators import MaxValueValidator
+
 
 #so far the conditionst are very basic, to be strickend
 class LoginForm(forms.Form):
@@ -19,11 +21,11 @@ DISTRICT_CHOICES = (
     ('5', '05300 - MOSTE-POLJE'),
 )
 class RegistrationFrom(forms.Form):
-   cardNumber = forms.CharField(label='Številka kartice:', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+   cardNumber = forms.IntegerField(label='Številka kartice:', widget=forms.NumberInput(attrs={'class': 'form-control'}))
    surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
    name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
    address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   phone = forms.CharField(label='Telefon:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+   phone = forms.IntegerField(label='Telefon:', widget=forms.TextInput(attrs={'class': 'form-control'}))
    password = forms.CharField(label='Geslo',max_length=100, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
    password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
    sex = forms.ChoiceField(choices=SEX_CHOICES)
@@ -33,7 +35,7 @@ class RegistrationFrom(forms.Form):
    contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
    contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
    contact_address = forms.CharField(label='Naslov:', required=False,  max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   contact_phone_number = forms.CharField(label='Telefon',  required=False,  max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+   contact_phone_number = forms.IntegerField(label='Telefon',  required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
    contact_sorodstvo = forms.CharField(label='Sorodstvo:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}))
+   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}), input_formats=['%d-%m-%Y'])
    postCode =  forms.CharField(label='Pošta', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))

@@ -12,7 +12,7 @@ dolzina_telefonske = 15
 
 
 def add_patient_caretaker(password1, password2, name, surname, mail, card_number, address, county_number, phone_number,
-                           birth_date, sex, contact_name, contact_surname, contact_address, contact_phone_number):
+                           birth_date, sex, contact_name, contact_surname, contact_address, contact_phone_number, sorodstveno_razmerje):
 
     if check_passwords(password1, password2):
         if check_mail(mail):
@@ -31,6 +31,8 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                                       sifra_okolisa=county_number, telefonska_st=phone_number,
                                       datum_rojstva=birth_date, spol=sex, kontakt=contact)
                     patient.save()
+
+                    sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
                     return True
     return False
 

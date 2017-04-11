@@ -14,7 +14,7 @@ from django.template import RequestContext
 import logging
 # Create your views here.
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
-from .forms import LoginForm,UserForm
+from .forms import LoginForm
 
 def register_nurse(request):
     if request.method == 'POST':
@@ -61,22 +61,22 @@ def register_nurse(request):
             print("Could not create Nurse object using given data!")
 
 def index(request):
-	user = request.user
-	if request.method=='GET':
-		template=loader.get_template('login.html')
-		context = {
-            'loginForm': LoginForm()
-		}
-		return HttpResponse(template.render(context))
-	elif request.method=='POST':
-		form = LoginForm(request.POST)
-		if form.is_valid():
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password']
-			user = authenticate(username=username, password=password )
-			print('Login: ',username)
-			if user is not None:
-				login(request, user)
+    user = request.user
+    if request.method=='GET':
+        template=loader.get_template('index.html')
+        context = {
+            'login_form': LoginForm()
+        }
+        return HttpResponse(template.render(context))
+    elif request.method=='POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password )
+            print('Login: ',username)
+            if user is not None:
+                login(request, user)
                 if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
                     return HttpResponseRedirect('home_nurse/')
                 elif Vodja_PS.objects.filter(uporabniski_profil=user).exists():
@@ -87,12 +87,12 @@ def index(request):
                     return HttpResponseRedirect('home_employee/')
                 elif Pacient.objects.filter(uporabniski_profil=user).exists():
                     return HttpResponseRedirect('home_patient/')
-			else:
-				print("Unsuccessful user authentication.")
-				return HttpResponseRedirect('/')
+            else:
+                print("Unsuccessful user authentication.")
+                return HttpResponseRedirect('/')
         else:
-			print("Invalid form!")
-			return HttpResponseRedirect('/')
+            print("Invalid form!")
+            return HttpResponseRedirect('/')
 
 @login_required(login_url='/library/')
 def logout_user(request):

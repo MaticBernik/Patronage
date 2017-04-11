@@ -13,9 +13,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# ..\GitHub\TPO\patronazna_sluzba_project
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 #base for static files
+# ..\GitHub\TPO\patronazna_sluzba_project\patronazna_sluzba_project
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -124,6 +126,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# STATIC_JOIN:  ..\GitHub\TPO\patronazna_sluzba_project\patronazna_sluzba_project\static
+# FOR: static assets that aren’t tied to a particular app
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
+
+# print("BASE_DIR: ", BASE_DIR)
+# print("PROJECT_ROOT: ", PROJECT_ROOT)
+# print("STATIC_URL: ", STATIC_URL)
+# print("STATIC_JOIN: ", os.path.join(PROJECT_ROOT, 'static'))

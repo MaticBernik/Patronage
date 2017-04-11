@@ -1,3 +1,12 @@
-h1{
-	color: #777777;
+html, body {
+    margin: 0;
+    max-height: 100%;
+}
+
+html{ 
+	background: url(../img/back_comp_opac22.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }

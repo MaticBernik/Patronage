@@ -63,3 +63,15 @@ def index(request):
             print("Invalid form!")
             return HttpResponseRedirect('/')
         return HttpResponse("Thanks for trying.")
+
+
+def base(request):
+
+	# if this is a POST request we need to process the form data
+    if request.method == 'POST':
+            #return HttpResponseRedirect('/thanks/')
+            return HttpResponse("Thanks, for trying.")
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        #form = LoginForm()
+    	return render_to_response('base.html')

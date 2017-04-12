@@ -45,21 +45,17 @@ def index(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
-            try:
-                log = User.objects.get(username=username)
-                pacient = Pacient.objects.get(uporabniski_profil=log)
-                if pacient.aktiviran == 0:
-                    return HttpResponse("Potrebna je aktivacija uporabniskega racuna.")
-                print("Pacient je aktiviran")
-            except:
-                print("Neuspesen login.")
-                return HttpResponseRedirect('/')
-
-
             user = authenticate(username=username, password=password)
-
             print('Login: ',username)
             if user is not None:
+
+                u = User.objects.get(username=username)
+                if Pacient.objects.filter(uporabniski_profil=u).exists():
+                    pacient = Pacient.objects.get(uporabniski_profil=u)
+                    if pacient.aktiviran == 0:
+                        return HttpResponse("Potrebna je aktivacija uporabniskega racuna pacienta.")
+
+
                 login(request, user)
                 if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
                     return HttpResponseRedirect('home_nurse/')

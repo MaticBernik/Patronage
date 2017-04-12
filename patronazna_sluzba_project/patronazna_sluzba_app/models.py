@@ -101,6 +101,7 @@ class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
+    #   Ce je aktiviran = 0, potem je potrebna aktivacija. lahko pa je null ce gre za oskrbovanca.
     aktiviran = models.IntegerField(null=True)
 
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja

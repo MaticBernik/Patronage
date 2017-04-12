@@ -77,9 +77,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'patronazna_sluzba_project.wsgi.application'
 
 #   AXES settings
-AXES_COOLOFF_TIME: 24
-AXES_USE_USER_AGENT: True   # Pomeni da drug user iz istega ipja se lahk logina
-AXES_LOGIN_FAILURE_LIMIT: 3     # Po 3 poskusih zafejla
+#AXES_COOLOFF_TIME: 24
+#AXES_USE_USER_AGENT: True   # Pomeni da drug user iz istega ipja se lahk logina
+#AXES_LOGIN_FAILURE_LIMIT: 3     # Po 3 poskusih zafejla
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 
 # STATIC_JOIN:  ..\GitHub\TPO\patronazna_sluzba_project\patronazna_sluzba_project\static
-# FOR: static assets that aren’t tied to a particular app
+# FOR: static assets that arent tied to a particular app
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )

@@ -100,6 +100,16 @@ class Pacient(models.Model):
     posta = models.ForeignKey(Posta, null=True)
     okolis = models.ForeignKey(Okolis, null=True)
     #sorodstvo = models.ForeignKey(Sorodstveno_razmerje,null=True)
+    ime = models.CharField(max_length=100, null=False)
+    priimek = models.CharField(max_length=100, null=False)
+    email=models.EmailField(unique=True,null=False)
+
+    def copy_redundant_fiends(self):
+        if self.uporabniski_profil:
+            self.uporabniski_profil.first_name = self.ime
+            self.uporabniski_profil.last_name = self.priimek
+            self.uporabniski_profil.email = self.email
+            self.uporabniski_profil.username= self.email
 
 class Sorodstveno_razmerje(models.Model):
 	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
@@ -137,7 +147,7 @@ class Zdravilo(models.Model):
     slovenski_opis_ATC = models.CharField(max_length=100, null=True)
     latinski_opis_ATC = models.CharField(max_length=100, null=True)
     angleski_opis_ATC = models.CharField(max_length=100, null=True)
-    aktivno_zdravilo = models.BooleanField(default=False,null=True)
+    aktivno_zdravilo = models.BooleanField(default=False)
     sifra_liste = models.IntegerField(null=False)
     oznaka_liste = models.CharField(max_length=100, null=True)
     opis_omejitve_predpisovanja = models.CharField(max_length=100, null=True)
@@ -203,13 +213,13 @@ class Vrsta_obiska(models.Model):
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
 
-    datum_prvega_obiska
-    st_obiskov
-    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV,blank=False)
+    datum_prvega_obiska = models.DateTimeField(null=True)
+    st_obiskov = models.IntegerField(null=False)
+    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=False)
     cas_obiskov_dolzina = models.IntegerField(null=False)
 
 class Pacient_DN(models.Model):
-    delovni_nalog = models.ForeignKey(delovni_nalog, null=False)
+    delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)
     pacient = models.ForeignKey(Pacient, null=True)
 
 class Material_DN(models.Model):

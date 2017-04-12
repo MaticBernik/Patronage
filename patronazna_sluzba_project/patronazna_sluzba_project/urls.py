@@ -16,11 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from patronazna_sluzba_app import views as v
+from patronazna_sluzba_app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^base/', v.base),
-    url(r'^$', v.index),
+    url(r'^base/', views.base),
+    url(r'^$', views.index),
 ]
 
 #ADD 

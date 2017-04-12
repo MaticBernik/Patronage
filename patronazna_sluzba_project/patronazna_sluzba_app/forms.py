@@ -49,11 +49,11 @@ class RegistrationFrom(forms.Form):
    postCode =  forms.CharField(label='Pošta', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
 class AddNursingPatient(forms.Form):
-	cardNumber = forms.CharField(label='Številka kartice:', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+	cardNumber = forms.IntegerField(label='Številka kartice:', widget=forms.NumberInput(attrs={'class': 'form-control'}))
 	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
 	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
 	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-	phone = forms.CharField(label='Telefon:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
+	phone = forms.IntegerField(label='Telefon:',  widget=forms.NumberInput(attrs={'class': 'form-control'}))
 	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}), input_formats=['%d-%m-%Y'])
 	postCode =  forms.CharField(label='Pošta', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
 	sex = forms.ChoiceField(choices=SEX_CHOICES)

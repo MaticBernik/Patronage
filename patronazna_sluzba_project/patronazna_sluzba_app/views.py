@@ -72,12 +72,23 @@ def register(request):
         #   TOLE VEDNO NAPISE DA FORM NI VALID NO IDEA WHY
         form = RegistrationFrom(request.POST)
         if form.is_valid():
+            #   Preveri, da kartice slucajno ze ne obstaja.
+            card_number = form.cleaned_data['cardNumber']
+            try:
+                st_kartice = Pacient.objects.get(card_number=card_number)
+                print("This card number is already in the database.")
+                return HttpResponse("This card number is already in our database. You may have gotten it wrong?")
+            except:
+                print("Card number is not in our DB yet, all good.")
+
+
+
             password1 = form.cleaned_data['password']
             password2 = form.cleaned_data['password2']
             name = form.cleaned_data['name']
             surname = form.cleaned_data['surname']
             mail = form.cleaned_data['email']
-            card_number = form.cleaned_data['cardNumber']
+
             address = form.cleaned_data['address']
             phone_number = form.cleaned_data['phone']
             birth_date = form.cleaned_data['birthDate']
@@ -117,6 +128,42 @@ def addNursingPatient(request):
     if request.method == 'POST':
         form = AddNursingPatient(request.POST)
 
+        pacienti = Pacient.objects.all()
+        for i in pacienti:
+            print(i.st_kartice)
+
+        # za testiranje
+        current_user = User.objects.get(username="test@gmail.com")
+        current_pacient = Pacient.objects.get(uporabniski_profil=current_user)
+        print(current_user.username)
+
+        if form.is_valid():
+            #   Preveri, da kartice slucajno ze ne obstaja.
+            cardNumber = form.cleaned_data['cardNumber']
+            try:
+                st_kartice = Pacient.objects.get(st_kartice=cardNumber)
+                print("This card number is already in the database. Number:", st_kartice)
+                return HttpResponse("This card number is already in our database. You may have gotten it wrong?")
+            except:
+                print("Card number is not in our DB yet, all good.")
+
+            name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
+            phone = form.cleaned_data['phone']
+            address = form.cleaned_data['address']
+            postCode = form.cleaned_data['postCode']
+            district = form.cleaned_data['district']
+            birthDate = form.cleaned_data['birthDate']
+            sex = form.cleaned_data['sex']
+            relation = form.cleaned_data['relation']
+
+            if not (
+                    kreiranje_pacienta_zgodba2.add_patient_taken_care_of(current_pacient, name, surname, cardNumber,
+                                                                         address,
+                                                                          birthDate, sex, relation, phone)):
+                return HttpResponse("Napaka pri dodajanju oskrbovanca");
+            return HttpResponse("Dodali ste oskrbovanca")
+        """ DEJANSKA KODA ko bo se front end naret
         if form.is_valid():
             if request.user.is_authenticated():
                 currentUser = request.user.username
@@ -136,6 +183,7 @@ def addNursingPatient(request):
                                                                      district, birthDate, sex, relation)):
                     return HttpResponse("Napaka pri dodajanju oskrbovanca");
         return HttpResponse("Dodali ste oskrbovanca")
+        """
     else:
         form = AddNursingPatient()
         return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})

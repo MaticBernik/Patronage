@@ -55,17 +55,21 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
     return False
 
 
-#   TUKAJ JE TREBA POSKRBET ŠE ZA SORODSTVA TER KO JE BAZA KONČANA PREVERIT ČE VSE DELA
+#   TUKAJ JE TREBA POSKRBET ŠE ZA SORODSTVA TER KO JE BAZA KONČANA PREVERIT ČE VSE DELA, dodat okoliše,....
 def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address,
                                birth_date, sex,
-                               sorodstvo):
+                               sorodstvo, phone):
 
-    if check_taken_care_of(name, surname, card_number, address):
+    if check_taken_care_of(name, surname, card_number, address, phone, sorodstvo):
         #   Tu dodam oskrbovanca
         patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address,
-                          telefonska_st="",
+                          telefonska_st=phone,
                           datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
         patient.save()
+        print("Dodan oskrbovanec za: ", trenutni_uporabnik.uporabniski_profil.username)
+        oskrbovanci = Pacient.objects.filter(skrbnistvo=trenutni_uporabnik)
+        for i in oskrbovanci:
+            print("Oskrbovanceva kartica je: ", i.st_kartice)
         return True
     return False
 
@@ -111,9 +115,8 @@ def check_taken_care_of(name, surname, card_number, address, phone_number, sorod
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
             return True
-        print("telefon ni ok")
         return False
-    print("podatki oskrbovanca niso ok")
+    print("Taken care of dude data not cool.")
     return False
 
 
@@ -147,7 +150,12 @@ def check_passwords(password1, password2):
 def check_card(card_number):
     if isinstance(card_number, int):
         if len(str(card_number)) == dolzina_card_number:
-            return True
+            try:
+                st_kartice = Pacient.objects.get(card_number=card_number)
+                print("This card number is already in the database.")
+                return False
+            except:
+                return True
         print("Card length not cool (check_card)")
         return False
     print("Card should be a number (check_card)")

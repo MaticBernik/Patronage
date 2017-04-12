@@ -101,6 +101,8 @@ class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
+    aktiviran = models.IntegerField(null=True)
+
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
     #   MAX_LEN does not get used in combo with IntegerField.. "max_length=11,"
     st_kartice = models.IntegerField(null=False,default=-1)

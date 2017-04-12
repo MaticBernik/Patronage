@@ -72,6 +72,14 @@ TEMPLATES = [
     },
 ]
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'enejsi'
+EMAIL_HOST_PASSWORD = 'Bordanje009'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+
 WSGI_APPLICATION = 'patronazna_sluzba_project.wsgi.application'
 
 #   AXES settings

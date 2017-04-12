@@ -1,8 +1,12 @@
+import hashlib
+import random
 import re
 from .models import *
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth import password_validation
+from django.core.mail import send_mail
+from . import token
 #   Izbrana vrednost za dolžino gesla
 dolzina_gesla = 8
 #   Dolzina stevilke kartice (11 glede na mojo kartico)
@@ -22,6 +26,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                     user = User.objects.create_user(username=mail,
                                                     password=password1,
                                                     email=mail)
+
                     print("user created")
                     if contact_name != "":
                         contact = Kontaktna_oseba(ime=contact_name, priimek=contact_surname,
@@ -31,7 +36,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
 
                         patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex, kontakt=contact)
+                                          datum_rojstva=birth_date, spol=sex, kontakt=contact, aktiviran=0)
                         print("patient dodan")
                         patient.save()
                         print("patient saved")
@@ -43,7 +48,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                     else:
                         patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex)
+                                          datum_rojstva=birth_date, spol=sex, aktiviran=0)
                         print("patient dodan")
                         patient.save()
 
@@ -51,6 +56,9 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         all_entries = Pacient.objects.all()
                         for i in all_entries:
                             print(i.uporabniski_profil.username)
+
+                        # mail verifikacija
+
                     return True
     return False
 
@@ -72,6 +80,23 @@ def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, ad
             print("Oskrbovanceva kartica je: ", i.st_kartice)
         return True
     return False
+
+
+def sendEmail(activation_key, customer_mail):
+
+    link="http://127.0.0.1:8000/activate?token="+activation_key
+    sporocilo = "Click the activation link to finish registration.   "+link
+
+    send_mail(
+        'Activation PARSEK',
+        sporocilo,
+        'activation@parsekrules.si',
+        [customer_mail],
+        fail_silently=False,
+    )
+
+
+
 
 
 #   Preveri, ce je mail validen

@@ -16,7 +16,7 @@ import logging
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 from .forms import LoginForm
 
-def register_nurse(request):
+def register_medical_staff(request):
     if request.method == 'POST':
         #EXTRACT DATA FROM REQUEST
         #Extract standard user data from request
@@ -25,9 +25,11 @@ def register_nurse(request):
         email=request.POST['email']
         password1=request.POST['password1']
         password2=request.POST['password2']
-        #Extract additional nurse specific data from request
-        nurse_number=request.POST['nurse_number']
+        #Extract additional staff specific data from request
+        role=request.POST['role']
+        code=request.POST['medical_id']
         phone_number=request.POST['phone_number']
+        institution=request.POST["medical_area_id"]
         #work_location_number=request.POST['work_location_number']
 
         #VALIDATE FIELD VALUES
@@ -41,8 +43,14 @@ def register_nurse(request):
         if User.objects.filter(username=email).exists():
             print("Username is already taken.")
         #Check if nurse whith specified number already exists:
-        if Patronazna_sestra.objects.filter(sifra_patronazne_sestre=nurse_number).exists():
+        if role=='nurse' and Patronazna_sestra.objects.filter(sifra_patronazne_sestre=code).exists():
             print("Account with specified nurse number already exists.")
+        elif role=='doc' and Zdravnik.objects.filter(sifra_zdravnika=code):
+            print("Account with specified doctor number already exists.")
+        elif role=='head_of_medical_service' and Vodja_PS.objects.filter(sifra_vodje_PS=code):
+            print("Account with specified head of medical service number already exists.")
+        elif role=='employee' and Sodelavec_ZD.objects.filter(sifra_sodelavca=code):
+            print("Account with specified employee number already exists.")
         #Validate phone number
         #Validate nurse number
 
@@ -54,11 +62,12 @@ def register_nurse(request):
         except:
             print("Could not create User object using given data!")
         #Finally create Nurse object
-        nurse = Patronazna_sestra(uporabniski_profil=user,sifra_patronazne_sestre=nurse_number,telefonska_st=phone_number)
+        nurse = Patronazna_sestra(uporabniski_profil=user,sifra_patronazne_sestre=code,telefonska_st=phone_number)
         try:
             nurse.save()
         except:
             print("Could not create Nurse object using given data!")
+
 
 def index(request):
     user = request.user
@@ -93,6 +102,7 @@ def index(request):
         else:
             print("Invalid form!")
             return HttpResponseRedirect('/')
+
 
 @login_required(login_url='/library/')
 def logout_user(request):

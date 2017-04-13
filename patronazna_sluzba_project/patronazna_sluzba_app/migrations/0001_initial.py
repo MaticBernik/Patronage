@@ -251,4 +251,24 @@ class Migration(migrations.Migration):
             name='posta',
             field=models.ForeignKey(to='patronazna_sluzba_app.Posta', null=True),
         ),
+        migrations.AddField(
+            model_name='delovni_nalog',
+            name='izvajalec_zs',
+            field=models.ForeignKey(to='patronazna_sluzba_app.Izvajalec_ZS'),
+        ),
+        migrations.AddField(
+            model_name='delovni_nalog',
+            name='vodja_PS',
+            field=models.ForeignKey(to='patronazna_sluzba_app.Vodja_PS'),
+        ),
+        migrations.AddField(
+            model_name='delovni_nalog',
+            name='vrsta_obiska',
+            field=models.ForeignKey(to='patronazna_sluzba_app.Vrsta_obiska'),
+        ),
+        migrations.AddField(
+            model_name='delovni_nalog',
+            name='zdravnik',
+            field=models.ForeignKey(to='patronazna_sluzba_app.Zdravnik'),
+        ),
     ]

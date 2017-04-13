@@ -83,7 +83,7 @@ def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, ad
 
     if check_taken_care_of(name, surname, card_number, address, phone, sorodstvo):
         #   Tu dodam oskrbovanca
-        patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address,
+        patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address, ime=name, priimek=surname,
                           telefonska_st=phone,
                           datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
         patient.save()

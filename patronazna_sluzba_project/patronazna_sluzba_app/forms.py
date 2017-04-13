@@ -27,7 +27,7 @@ RELATIONS = (
     ('3', 'VNUK'),
 	('4', 'STARI STARSI'),
 )
-
+#   prvi commit
 class RegistrationFrom(forms.Form):
    cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'class': 'form-control'}))
    surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))

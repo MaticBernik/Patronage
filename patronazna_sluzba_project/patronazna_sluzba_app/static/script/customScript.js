@@ -1,9 +1,26 @@
 $(document).ready(function() {
-	//alert("hello world");
+	
     $(".signupbtn").click(function(){
-		//alert("this query works");
+		//alert("hello world");
+		var birthResult = birthDate();
+		//alert("Hello again!!!");
+		//alert("Rezultat birthResult: "+ birthResult);
+		
 		
 		var inputResult = registrationValidation();
+		//alert("Rezultat regValidat: "+inputResult);
+		inputResult = inputResult && birthResult;
+		//alert("Rezultat AND: "+inputResult);
+		
+		if(!inputResult){
+				$("form").submit(function(e){
+					//alert('inputResult is false');
+                e.preventDefault(e);
+				$(this).unbind(e);
+            });
+			}
+		//alert("this query works");
+		
 		//alert("Rezultat validacije main "+inputResult);
 		//check contact fields
 		var cName = document.getElementById("contact_name");
@@ -27,7 +44,9 @@ $(document).ready(function() {
 			var uC = "[A-Z\u010C\u0160\u017d\u0106\u0110]";
 			var lC="[a-z\u010d\u0161\u017e\u0107\u0111]";
 			var badColor = "#ff6666";
-			var nameRE = new RegExp("^("+uC+lC+"+)");
+			//var nameRE = new RegExp("^("+uC+lC+"+)");
+			//lowerCase
+			var nameRE = new RegExp("^("+lC+"+)");
 			//did the validation pass
 			
 			
@@ -58,7 +77,7 @@ $(document).ready(function() {
 		
 		if(!inputResult){
 				$("form").submit(function(e){
-					alert('inputResult is false');
+					//alert('inputResult is false');
                 e.preventDefault(e);
 				$(this).unbind(e);
             });
@@ -166,12 +185,47 @@ function firstVisitDate(){
 	}
 	
 	$(".signupbtn").removeAttr('disabled');
-	
-	var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	return true;
+	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var chosenDate = Date.parse(datum.value);
-	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;
+	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
 }
 
+function birthDate(){
+	var today = new Date();
+	var day1 = today.getDate();
+	var month1 = (today.getMonth()+1);
+	var year1 = today.getFullYear();
+	
+	var datum = document.getElementById('birthDate');
+	var message = document.getElementById('message');
+	
+	var birth = datum.value.split("-");
+	//alert("datum rojstva primerjava: "+birth[0]+' : '+day1);
+	//alert("today:"+firstVisit[2]);
+	if(birth[2]>year1){
+		alert("Napacna letnica rojstva");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	if(birth[2]==year1 && birth[1]>month1){
+		alert("Napacen datum! Datum rojstva mora biti manjsi od trenutnega! Napačen mesec!");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	
+	if(birth[2] == year1 && birth[1] == month1 && birth[0] > day1){
+		alert("Napacen datum! Datum obiska mora biti manjsi od trenutnega! Napačen dan!");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	
+	return true;
+	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var chosenDate = Date.parse(datum.value);
+	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
+	
+}
 function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
@@ -243,16 +297,21 @@ function registrationValidation(){
 	var allCase = "[A-Z\u010C\u0160\u017d\u0106\u0110\a-z\u010d\u0161\u017e\u0107\u0111]";
 	var badColor = "#ff6666";
 	//ime in priimek morajo biti z veliko začetnico
-	var nameRE = new RegExp("^("+uC+lC+"+)");
+	//var nameRE = new RegExp("^("+uC+lC+"+)");
+	//lowerCase
+	var nameRE = new RegExp("^("+lC+"+)");
 	var name= document.getElementById('name');
 	var surname = document.getElementById('surname');
 	var cardNumber = document.getElementById('cardNumber');
 	var phone = document.getElementById('phone');
-	var birthDate = document.getElementById('birthDate');
+	//var birthDate = document.getElementById('birthDate');
 	//var address = document.getElementById('address');
 	//console.log(name.value+", reges: "+name.value.match(nameRE));
+	//alert('Before passwordCheck ');
+	//var passCheck = checkPassword();
+	//alert('Rezultat passworda: '+passCheck);
 	if(cardNumber.value.length != 12){
-		alert("Dolžina številke Zdravstvene kartice mora biti 11");
+		alert("Dolžina številke Zdravstvene kartice mora biti 12");
 		cardNumber.style.backgroundColor = badColor;
 		return false;
 	}else if(surname.value.match(nameRE)== null){
@@ -268,7 +327,16 @@ function registrationValidation(){
 		phone.style.backgroundColor = badColor;
 		return false;
 	}
-	return checkPassword();
+	
+	try{
+		//alert('try happend');
+		return checkPassword();
+	}catch(err){
+		
+	}finally{
+		//alert('finnaly happend');
+		return true;
+	}
 	
 	
 }

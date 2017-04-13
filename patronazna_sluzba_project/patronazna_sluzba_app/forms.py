@@ -82,12 +82,12 @@ class RegistrationFrom(forms.Form):
   
 
 class AddNursingPatient(forms.Form):
-	cardNumber = forms.CharField(label='Številka kartice:', max_length=100, widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
+	cardNumber = forms.CharField(label='Številka kartice:',widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
 	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname'}))
 	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name'}))
 	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address'}))
-	phone = forms.CharField(label='Telefon:', max_length=100, widget=forms.TextInput(attrs={'id': 'phone'}))
-	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}), input_formats=['%d-%m-%Y'])
+	phone = forms.CharField(label='Telefon:', max_length=100, widget=forms.NumberInput(attrs={'id': 'phone'}))
+	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate'}), input_formats=['%d-%m-%Y'])
 	postCode =  forms.ChoiceField(label='Pošta', choices=POST_CODES)
 	sex = forms.ChoiceField(choices=SEX_CHOICES)
 	district = forms.ChoiceField(choices=DISTRICT_CHOICES)

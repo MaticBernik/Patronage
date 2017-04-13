@@ -7,10 +7,10 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import password_validation
 from django.core.mail import send_mail
 from . import token
-#   Izbrana vrednost za dolžino gesla
+#   Izbrana vrednost za dolzino gesla
 dolzina_gesla = 8
-#   Dolzina stevilke kartice (11 glede na mojo kartico)
-dolzina_card_number = 11
+#   Dolzina stevilke kartice (9+3=12 glede na mojo kartico)
+dolzina_card_number = 12
 #   phone_number je lahko dolga max 15
 dolzina_telefonske = 15
 
@@ -63,7 +63,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
     return False
 
 
-#   TUKAJ JE TREBA POSKRBET ŠE ZA SORODSTVA TER KO JE BAZA KONČANA PREVERIT ČE VSE DELA, dodat okoliše,....
+#   TUKAJ JE TREBA POSKRBET SE ZA SORODSTVA TER KO JE BAZA KONCANA PREVERIT CE VSE DELA, dodat okolise,....
 def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address,
                                birth_date, sex,
                                sorodstvo, phone):
@@ -145,7 +145,7 @@ def check_taken_care_of(name, surname, card_number, address, phone_number, sorod
     return False
 
 
-#   Prnamerja dve gesli, oba sta stringa. Funkcija vrne 1 če sta enaki in validni
+#   Primerja dve gesli, oba sta stringa. Funkcija vrne 1 ce sta enaki in validni
 def check_passwords(password1, password2):
     if password1 == password2:
         stevilo_crk1 = 0
@@ -198,7 +198,7 @@ def check_phone(phone_number):
     return False
 
 
-#   Preveri, če so vnešeni vsi podatki (in pravilno) oz če ni vnešeno nič (tudi validno)
+#   Preveri, ce so vneseni vsi podatki (in pravilno) oz ce ni vneseno nic (tudi validno)
 def check_contact(name, surname, address, telefon):
     if name == "" and surname == "" and address == "" and telefon is None:
         return 1
@@ -215,6 +215,6 @@ def check_contact(name, surname, address, telefon):
     return False
 
 
-#   Vrne 1, če vsebuje števko
+#   Vrne 1, ce vsebuje stevko
 def contains_number(string):
     return any(char.isdigit() for char in string)

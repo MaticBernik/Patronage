@@ -13,10 +13,12 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .forms import *
+from .forms import LoginForm,RegistrationFrom,AddNursingPatient
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 from . import kreiranje_pacienta_zgodba2
 from . import token
+from ipware.ip import get_ip #pip install django-ipware
+import os
 
 #def index(request):
 #
@@ -29,11 +31,50 @@ from . import token
 #        form = LoginForm()
 #
 #    return render(request, 'index.html', {'login_form': form})
+IP_FAILED_LOGIN=[]
+BLACKLISTED_TIME_MIN=20
 
+def valid_login(ip):
+    global IP_FAILED_LOGIN
+    if ip in IP_FAILED_LOGIN[:][0]:
+        i=IP_FAILED_LOGIN[:][0].index(ip)
+        del(IP_FAILED_LOGIN[i])
+
+def invalid_login(ip):
+    global IP_FAILED_LOGIN
+    if ip in IP_FAILED_LOGIN[:][0]:
+        i=IP_FAILED_LOGIN[:][0].index(ip)
+        IP_FAILED_LOGIN[i][1]+=1
+        if IP_FAILED_LOGIN[i][1]>=3:
+            with open("IP_BLACKLIST.csv", "a+") as blacklist_file:
+                blacklist_writer = csv.writer(csv_file,delimiter=';')
+                blacklist_writer.write([ip,datetime.now()])
+                blacklist_file.close()
+    else:
+        IP_FAILED_LOGIN.append([ip,1])
+
+def ip_blacklisted(ip):
+    global BLACKLISTED_TIME_MIN
+    #DODAJ RAM CACHING, DA NE BO POTREBNO VEDNO BRATI CELOTNE DATOTEKE..
+    if not os.path.isfile('IP_BLACKLIST.csv'):
+        return False
+    with open("IP_BLACKLIST.csv", "r") as blacklist_file:
+        blacklist_reader = csv.reader(blacklist_file, delimiter=';')
+        for line in blacklist_reader:
+            ip_naslov = line[0]
+            cas_vnosa = datetime.fromtimestamp(line[1])
+            pretekli_cas = (datetime.now - cas_vnosa).total_seconds/60
+            if pretekli_cas < BLACKLISTED_TIME_MIN:
+                if ip==ip_naslov:
+                    return True
+        return False
 
 
 # Create your views here.
 def index(request):
+    ip_naslov=get_ip(request)
+    if ip_blacklisted(ip_naslov):
+        print("***IP naslov je bil zacasno blokiran, zaradi 3 neveljavnih poskusov prijave.")
     if request.method=='GET':
         form = LoginForm()
 
@@ -46,6 +87,7 @@ def index(request):
             password = form.cleaned_data['password']
 
             user = authenticate(username=username, password=password)
+            valid_login(ip_naslov)
             print('Login: ',username)
             if user is not None:
 
@@ -69,6 +111,7 @@ def index(request):
                     return HttpResponseRedirect('home_patient/')
             else:
                 print("Unsuccessful user authentication.")
+                invalid_login(ip_naslov)
                 return HttpResponseRedirect('/')
         else:
             print("Invalid form!")
@@ -93,7 +136,7 @@ def activate(request):
                 print("Pacient je aktiviran")
                 return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
             except:
-                print("Ta mail ni v naši bazi")
+                print("Ta mail ni v nasi bazi")
 
     return HttpResponse("Aktivacija ni uspela.")
 

@@ -102,6 +102,7 @@ class Pacient(models.Model):
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=False)
+    aktiviran = models.IntegerField(null=True,default=0)
 
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:
@@ -233,3 +234,8 @@ class Material_DN(models.Model):
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+
+'''#POPOLNOMA SISTEMSKA TABELA - BOLJE BI BILO SICER, CE BI SE NAHAJALA ZNOTRAJ DRUGE BAZE (ALI DATOTEKE?)
+class blacklist_ip(models.Model):
+    naslov_ip = models.CharField(max_length=100, primary_key=True)
+    cas_vpisa = models.DateTimeField(default=datetime.now())'''

@@ -13,10 +13,10 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .forms import LoginForm
+from .forms import LoginForm, RegisterMedicalStaffForm
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
-
-
+import logging
+from django.contrib.auth import password_validation
 #def index(request):
 #
 #	# if this is a POST request we need to process the form data
@@ -29,7 +29,7 @@ from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacien
 #
 #    return render(request, 'index.html', {'login_form': form})
 
-
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def index(request):
@@ -69,9 +69,24 @@ def base(request):
 
 	# if this is a POST request we need to process the form data
     if request.method == 'POST':
-            #return HttpResponseRedirect('/thanks/')
-            return HttpResponse("Thanks, for trying.")
-    # if a GET (or any other method) we'll create a blank form
+        #return HttpResponseRedirect('/thanks/')
+        return HttpResponse("Thanks, for trying.")
+        # if a GET (or any other method) we'll create a blank form
     else:
+    	# context={'medical_reg_form': RegisterMedicalStaffForm()}
+    	# return render(request, 'medical_registration.html', context)
         #form = LoginForm()
-    	return render_to_response('base.html')
+    	return render(request, 'base.html')
+    	# form = RegisterMedicalStaffForm()
+    	# return render(request, 'medical_registration.html', {'medical_reg_form': form})
+
+def medicalStaffRegister(request):
+	if request.method == 'GET':
+		context={'medical_reg_form': RegisterMedicalStaffForm()}
+		return render(request, 'medical_registration.html', context)
+		# form = RegisterMedicalStaffForm()
+ 		# return HttpResponse("THIS SHOULD BE IT.")
+		# return render(request, 'medical_registration.html', {'medical_reg_form': form})
+		# return render_to_response(request, 'medical_registration.html')
+	else:
+		return HttpResponse("Implement form sent")

@@ -20,6 +20,7 @@ from patronazna_sluzba_app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/', views.base),
+    url(r'^base/newStaffMember', views.medicalStaffRegister, name="register_medical_personal"),
     url(r'^$', views.index),
 ]
 

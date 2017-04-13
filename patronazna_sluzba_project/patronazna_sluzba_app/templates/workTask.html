@@ -1,0 +1,254 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Delovni nalog</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<link rel="stylesheet" href="{% static 'css/workTask.css' %}">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="{% static 'script/customScript.js' %}"></script>
+		<script src="{% static 'script/addPatient.js' %}"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd-mm-yy',yearRange: "-100:+0"})
+  } );
+  </script>
+  
+	</head>
+	<body>
+		<header>
+			Header for the Application
+		</header>
+		<h2>Kreiranje delovnega naloga</h2>
+		<div class="container">
+			<section>
+				<!--<div class="container">-->
+				{{ work_task_form.non_field_errors }}
+					<form method="post" style="border:1px solid #ccc">
+					{% csrf_token %}
+					<!--Fieldset goes here-->
+					
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>1　— Zdravnik</h3>
+							</legend>
+						<div>
+							<!--<label for="myName">Številka izvajalca:</label>
+							<input type="text" name="myName" id="myName">-->
+							<label>Številka zdravnika</label>
+							{{ work_task_form.creatorId }}							
+						</div>
+						<div>
+							<label>Številka izvajalca</label>
+							{{ work_task_form.nurseId }}	
+						</div>
+						<div>
+							<label>Številka delovnaga naloga</label>
+							{{ work_task_form.taskId }}	
+						</div>
+					</fieldset>
+					<!--Vrsta obiskov-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>2　— Vrste obiskov</h3>
+							</legend>
+						<div>
+							<label>Vrste obiskov</label>
+							{{ work_task_form.visitType}}
+						<!--<select>
+							<option>Preventivni</option>
+							<option>Kurativni</option>
+						</select>-->
+					</div>
+					<div>
+						<label>Podvrste obiskov</label>
+						{{ work_task_form.visitTypeDetail }}
+						<!--<select id="visitType" onchange="addPatientButton()">
+							<option></option>
+							<option>Obisk nosečnice</option>
+							<option>Obisk otročnice in novorojenčka</option>
+							<option>Preventivo starostnika</option>
+							<option>Odvzem krvi</option>
+							<option>Aplikacija injekcij</option>
+							<option>Kontrola zdravstvenega stanja</option>
+						</select>
+							-->				
+					</div>
+					</fieldset>
+					<!--Podatki o pacientu-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>3　— Zavarovalna oseba</h3>
+							</legend>
+						<div>
+							<div class="input_fields_wrap">
+							<label>Številka zavarovane osebe</label>
+							{{ work_task_form.cardNumber }}
+							<!--<input required type="number"/>-->
+							<button class="add_field_button btn btn-primary" style="display: none;">Dodaj novorojenčka</button>					
+						</div>
+					</fieldset>
+					<!--Datum obiskov-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>4　— Datum obiska</h3>
+							</legend>
+						<div>
+						<label>Datum prvega obiska</label>
+						{{ work_task_form.visitDate }}
+						<!--<input id="visitDate" type="date" required="required" onchange="firstVisitDate()"/>
+						<label>Obvezen</label>
+						<input type="checkbox"/>-->
+						<span id="message"></span>
+						</div>
+						<div>
+							<label>Število obiskov</label>
+							{{ work_task_form.visitCount }}
+							<!--<input type="number" max=10 required />-->
+						</div>
+						<div>
+							<label>Časovni interval</label>
+							<!--<input id="timeInterval" type="text"/>-->
+							{{ work_task_form.timeInterval }}
+						</div>
+						<div>
+							<label>Časovno obdobje</label>
+							{{ work_task_form.timePeriod }}
+							<!--<input id="timePeriod" type="text" />-->
+						</div>
+						
+					</fieldset>
+					<!--Zdravila-->
+					<div id="cureId" style="display: none">
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>5　— Zdravila</h3>
+						</legend>
+						<div>
+						<label>Šifrant zdravil</label>
+						{{ work_task_form.cureId }}
+						<!--<select>
+							<option>12345</option>
+							<option>67890</option>
+						</select>
+						-->
+					</div>
+					</div>
+					</fieldset>
+					<!--Material-->
+					<div id="materialId" style="display:none">
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>6　— Material</h3>
+						</legend>
+						<div>
+						<label>Barva in število euruvet</label>
+						{{ work_task_form.materialColor }}
+						{{ work_task_form.materialQuantity }}
+						<!--<select>
+							<option>Rdeča</option>
+							<option>Modra</option>
+							<option>Rumena</option>
+							<option>Zelena</option>
+						</select>
+						<select id="stEpruvet">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>-->
+						</div>
+					</div>					
+					</fieldset>
+					<!---->
+					<!--<div>
+						<label>Vrste obiskov</label>
+						<select>
+							<option>Preventivni</option>
+							<option>Kurativni</option>
+						</select>
+					
+					</div>
+					<div>
+						<label>Podvrste obiskov</label>
+						<select id="visitType" onchange="addPatientButton()">
+							<option></option>
+							<option>Obisk nosečnice</option>
+							<option>Obisk otročnice in novorojenčka</option>
+							<option>Preventivo starostnika</option>
+							<option>Odvzem krvi</option>
+							<option>Aplikacija injekcij</option>
+							<option>Kontrola zdravstvenega stanja</option>
+						</select>
+					
+					</div>
+					
+					<div>
+						<label>Šifrant zdravil</label>
+						<select>
+							<option>12345</option>
+							<option>67890</option>
+						</select>
+					</div>
+					
+					<div>
+						<label>Barva in število euruvet</label>
+						<select>
+							<option>Rdeča</option>
+							<option>Modra</option>
+							<option>Rumena</option>
+							<option>Zelena</option>
+						</select>
+						<select id="stEpruvet">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select>
+					</div>-->
+					<!--<div>
+						<label>Datum prvega obiska</label>
+						<input id="visitDate" type="date" required="required" onchange="firstVisitDate()"/>
+						<label>Obvezen</label>
+						<input type="checkbox"/>
+						<span id="message"></span>
+					</div>
+					<div>
+						<label>Število obiskov</label>
+						<input type="number" max=10 required />
+					</div>
+					<div>
+						<label>Časovni interval</label>
+						<input id="timeInterval" type="text"/>
+					</div>
+					<div>
+						<label>Časovno obdobje</label>
+						<input id="timeSpan" type="text" />
+					</div>
+					<h2>Podatki o pacientu</h2>
+						<div class="input_fields_wrap">
+							<label>Številka kartice zdravstvenega zavarovanja</label>
+							<input required type="number"/>
+							<button class="add_field_button" style="display: none;">Add More Fields</button>							
+						</div>
+					-->
+						<div class="clearfix">
+						  <button type="button" class="cancelbtn">Prekliči</button>
+						  <button type="submit" class="signupbtn" onclick="firstVisitDate()">Ustvari</button>
+						</div>
+				</form>				
+			<!--</div>-->
+		</div>
+	</body>
+
+</html>

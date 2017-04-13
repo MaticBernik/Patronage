@@ -4,23 +4,24 @@ $(document).ready(function() {
 		//alert("this query works");
 		
 		var inputResult = registrationValidation();
+		//alert("Rezultat validacije main "+inputResult);
 		//check contact fields
 		var cName = document.getElementById("contact_name");
-		var cSurname = document.getElementById("contact_surname")
+		var cSurname = document.getElementById("contact_surname");
 		var cAddress = document.getElementById("contact_address");
 		var cPhoneNumber = document.getElementById("contact_phone_number");
 		var bloodRelation = document.getElementById("relation");
-		var test = true;
+		//var test = true;
 		//alert("test "+test+" input: "+inputResult);
 		//console.log("test "+test+" input: "+inputResult);
 		
+		//alert("Contakt surname value: "+cSurname.value);
 		
-		
-		if((cName == "" && cSurname == "" && cAddress == "" && cPhoneNumber == ""
-		&& bloodRelation == "")){
+		if((cName.value == "" && cSurname.value == "" && cAddress.value == "" && cPhoneNumber.value == ""
+		&& bloodRelation.value == "")){
 			//the field are empty
 			
-		}else if ((cName != "" && cSurname != "" && cAddress != "" && cPhoneNumber != ""&& bloodRelation != "")){
+		}else if ((cName.value != "" && cSurname.value != "" && cAddress.value != "" && cPhoneNumber.value != ""&& bloodRelation.value != "")){
 			//do contact validation
 			//alert("Contact validation");
 			var uC = "[A-Z\u010C\u0160\u017d\u0106\u0110]";
@@ -31,16 +32,16 @@ $(document).ready(function() {
 			
 			
 			if(cSurname.value.match(nameRE)== null){
-				alert("Napačen vnos priimka");
+				alert("Napačen vnos priimka kontakt");
 				cSurname.style.backgroundColor = badColor;
 				inputResult = false;
 				console.log(cSurname);
 			}else if(cName.value.match(nameRE) == null){
-				alert("Napačen vnos imena");
+				alert("Napačen vnos imena kontakt");
 				cName.style.backgroundColor = badColor;
 				inputResult=false;
 			}else if(cPhoneNumber.value.length<9){
-				alert("Napačen vnos telefonske številke");
+				alert("Napačen vnos telefonske številke kontakt");
 				cPhoneNumber.style.backgroundColor = badColor;
 				inputResult = false;
 			}
@@ -247,9 +248,10 @@ function registrationValidation(){
 	var surname = document.getElementById('surname');
 	var cardNumber = document.getElementById('cardNumber');
 	var phone = document.getElementById('phone');
+	var birthDate = document.getElementById('birthDate');
 	//var address = document.getElementById('address');
 	//console.log(name.value+", reges: "+name.value.match(nameRE));
-	if(cardNumber.value.length != 11){
+	if(cardNumber.value.length != 12){
 		alert("Dolžina številke Zdravstvene kartice mora biti 11");
 		cardNumber.style.backgroundColor = badColor;
 		return false;

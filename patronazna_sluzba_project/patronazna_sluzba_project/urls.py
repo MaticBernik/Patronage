@@ -16,14 +16,17 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from patronazna_sluzba_app import views as v
+from patronazna_sluzba_app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', v.index),
-	url(r'^register/', v.register,name='register'),
-	url(r'^changePassword/', v.changePassword),
-    url(r'^addNursingPatient/', v.addNursingPatient),
-    url(r'^activate/', v.activate),
+    url(r'^base/newStaffMember', views.medicalStaffRegister, name="register_medical_personal"),
+    url(r'^base/controlPanel', views.base, name="control_panel"),
+    url(r'^$', views.index),
+    url(r'^$', views.index),
+	url(r'^register/', views.register,name='register'),
+	url(r'^changePassword/', views.changePassword),
+    url(r'^addNursingPatient/', views.addNursingPatient),
+    url(r'^activate/', views.activate),
 ]
 
 #ADD 

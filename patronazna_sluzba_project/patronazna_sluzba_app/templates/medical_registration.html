@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block main_content %}
+
+	{{ medical_reg_form.non_field_errors }}
+	<h3>REGISTRACIJA NOVEGA UPORABNIKA</h3>
+	<hr>
+	<!-- class="form-horizontal col-lg-offset-4 col-lg-4 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12" -->
+	<form method="post" id="medical_reg_form" class="left form-horizontal col-lg-10 col-lg-offset-1  col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" style="text-align: left">
+		{% csrf_token %}
+		<div class="form-group">
+	  		{{ medical_reg_form.role.errors }}
+	    	<label for="{{ medical_reg_form.role.id_for_label }}">Tip zdravniskega usluzbenca:</label>
+	    	{{ medical_reg_form.role }}
+	    	<!--<inptype="password" class="form-control" id="pwd">-->  
+	  	</div>
+		<div class="form-group">
+	  		{{ medical_reg_form.medical_id.errors }}
+	    	<label for="{{ medical_reg_form.medical_id.id_for_label }}">Sifra zdravstvenega osebja:</label>
+	    	{{ medical_reg_form.medical_id }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.medical_area_id.errors }}
+	    	<label for="{{ medical_reg_form.medical_area_id.id_for_label }}">Sifra zdravstvenega okolisa:</label>
+	    	{{ medical_reg_form.medical_area_id }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.name.errors }}
+	    	<label for="{{ medical_reg_form.name.id_for_label }}">Ime:</label>
+	    	{{ medical_reg_form.name }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.surname.errors }}
+	    	<label for="{{ medical_reg_form.surname.id_for_label }}">Priimek:</label>
+	    	{{ medical_reg_form.surname }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.email.errors }}
+	    	<label for="{{ medical_reg_form.email.id_for_label }}">E-postni naslov:</label>
+	    	{{ medical_reg_form.email }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.phone_number.errors }}
+	    	<label for="{{ medical_reg_form.phone_number.id_for_label }}">Telefonska stevilka:</label>
+	    	{{ medical_reg_form.phone_number }}
+	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+	  	</div>
+	  	<div class="form-group">
+	  		{{ medical_reg_form.password.errors }}
+	    	<label for="{{ medical_reg_form.password.id_for_label }}">Geslo:</label>
+	    	{{ medical_reg_form.password }}
+	    	<!--<input type="password" class="form-control" id="pwd">-->  
+	  	</div>
+	  	<div class="login-checkbox">
+	    	<label><input type="checkbox">	Zapomni si me</label>
+	  	</div>
+	  	<br/>
+	  	<div class="form-group">
+	  		<button type="submit" class="btn btn-primary form-control">Registracija</button>
+	  	</div>  	
+	  	<div class="form-group">
+	  		<a href="/link-to/whatever-address/" id="cancel" name="cancel" class="btn btn-default form-control">Cancel</a>
+	  	</div>
+	  	
+	</form>
+{% endblock %}

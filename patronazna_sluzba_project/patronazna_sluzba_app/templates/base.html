@@ -1,0 +1,87 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Aplikacija-PatronaznaSluzba</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- CUSTOM CSS (PLACE AFTER BOOTSTRAP FOR OVERRIDE or use !IMPORTANT) -->			
+	<link rel="stylesheet" type="text/css" href="{% static '/css/base.css' %}">
+
+
+
+</head>
+
+<body>
+<!--
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="#">PatronaznaSluzba</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+	      <li class="active"><a href="#">Nadzorna plosca</a></li>
+	      <li><a href="#">Dodaj uporabnika</a></li>
+	      <li><a href="#">Dodaj banane</a></li>
+	    </ul>
+	    <ul class="nav navbar-nav navbar-right">
+	      <li><a href="#"><span class="glyphicon glyphicon-user"></span> USERNAME</a></li>
+	      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+	    </ul>
+	  </div>
+	</nav>
+-->
+
+
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">PatronaznaSluzba</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Nadzorna plosca</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Testni dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Option 1</a></li>
+            <li><a href="#">Option 2</a></li>
+            <li><a href="#">Option 3</a></li>
+          </ul>
+        </li>
+        <li><a href="{% url 'register_medical_personal' %}">Dodaj zdravstveno osebje</a></li>
+        <li><a href="#">Dodaj testno</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span>USERNAME</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container cont col-lg-12 col-md-12 col-sm-12 col-xs-12" id="full_page_content">
+	<div id="left_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
+	<div id="central_content" class="cont col-lg-8 col-md-8 col-sm-12 col-xs-12">
+	{% block main_content %}
+	{% endblock %}
+	</div>
+	<div id="right_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
+</div>
+</body>
+</html>

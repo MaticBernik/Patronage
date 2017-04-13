@@ -3,6 +3,22 @@ import sqlite3
 import csv
 from datetime import datetime
 import os
+import hashlib
+import uuid
+from django.utils.crypto import (pbkdf2, get_random_string)
+def hash_password(password):
+    # uuid is used to generate a random number
+    salt = uuid.uuid4().hex
+    return "sha256"+'$1$'+salt+"$"+hashlib.sha256(salt+ password).hexdigest()
+
+'''def hash_password(password):
+	algorithm = "pbkdf2_sha256"
+	iterations = 10000
+	salt = 'p9Tkr6uqxKtf'
+	digest = hashlib.sha256
+	hash = pbkdf2(password, salt, iterations, digest=digest)
+	hash = hash.encode('base64').strip()
+	return "%s$%d$%s$%s" % (algorithm, iterations, salt, hash)'''
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE_DIR)
@@ -16,8 +32,9 @@ with open("testni_pacienti.csv","r", encoding="Windows-1251") as patients_file:
 	next(patients_reader, None) #skip header
 	for line in patients_reader:
 		print(line)
+		passwd=hash_password(line[9])
 		if line[0]=="da":
-			conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(line[5],line[5],line[1],line[2],line[9],True,False,False,datetime.now()));
+			conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(line[5],line[5],line[1],line[2],passwd,True,False,False,datetime.now()));
 			cursor = conn.execute("select id from auth_user where username = '"+line[5]+"';")
 			id=int(cursor.fetchall()[0][0])
 			conn.execute("INSERT INTO patronazna_sluzba_app_pacient (ime,priimek,naslov,st_kartice,email,telefonska_st,spol,datum_rojstva,uporabniski_profil_id) VALUES (?,?,?,?,?,?,?,?,?)", (line[1], line[2], line[3], int(line[4]), line[5], line[6], line[7], datetime.strptime(line[8], '%d.%m.%Y'), id));

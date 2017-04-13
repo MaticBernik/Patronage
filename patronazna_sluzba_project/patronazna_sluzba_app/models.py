@@ -5,7 +5,6 @@ from django.utils import timezone
 from django.contrib.auth.models import Group
 from django.conf import settings
 
-
 class Posta(models.Model):
     postna_st = models.IntegerField(primary_key=True)
     naziv_poste = models.CharField(max_length=100, null=False)
@@ -206,8 +205,6 @@ class Vrsta_obiska(models.Model):
     VRSTA_KURATIVNI = (('I',"Aplikacija inekcij"), ('K',"Odvzem krvi"), ('Z'), "Kontrola zdravstvenega stanja")
     ime = models.CharField(max_length=100, null=False)
 
-#class Obisk(models.Model):
-
 #class Material(models.Model):
 
 class Delovni_nalog(models.Model):
@@ -217,6 +214,13 @@ class Delovni_nalog(models.Model):
     st_obiskov = models.IntegerField(null=False)
     cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=False)
     cas_obiskov_dolzina = models.IntegerField(null=False)
+    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=False)
+    #bolezen = models.ForeignKey(Bolezen,null=False)
+    izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=False)
+    zdravnik = models.ForeignKey(Zdravnik, null=False)
+    vodja_PS = models.ForeignKey(Vodja_PS, null=False)
+
+#class Obisk(models.Model):
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)

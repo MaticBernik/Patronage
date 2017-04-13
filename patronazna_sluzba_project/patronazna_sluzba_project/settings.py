@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'patronazna_sluzba_app',
-    #'django_extensions',
-    'axes',
 ]
 
 MIDDLEWARE = [
@@ -74,12 +72,19 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'patronazna_sluzba_project.wsgi.application'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'enejsi'
+EMAIL_HOST_PASSWORD = 'Bordanje009'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 
 #   AXES settings
 #AXES_COOLOFF_TIME: 24
 #AXES_USE_USER_AGENT: True   # Pomeni da drug user iz istega ipja se lahk logina
 #AXES_LOGIN_FAILURE_LIMIT: 3     # Po 3 poskusih zafejla
+
+WSGI_APPLICATION = 'patronazna_sluzba_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases

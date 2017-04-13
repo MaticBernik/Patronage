@@ -27,6 +27,7 @@ urlpatterns = [
 	url(r'^changePassword/', views.changePassword),
     url(r'^addNursingPatient/', views.addNursingPatient),
     url(r'^activate/', views.activate),
+	url(r'^workTask/', views.workTaskForm),
 ]
 
 #ADD 

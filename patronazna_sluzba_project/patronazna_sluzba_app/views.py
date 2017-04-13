@@ -182,6 +182,13 @@ def register(request):
             name = form.cleaned_data['name']
             surname = form.cleaned_data['surname']
             mail = form.cleaned_data['email']
+
+            uporabniki = User.objects.all()
+            for i in uporabniki:
+                if i.username == mail:
+                    print("Ta mail je ze v bazi")
+                    return HttpResponse("Ta mail je ze v bazi")
+
             address = form.cleaned_data['address']
             phone_number = form.cleaned_data['phone']
             birth_date = form.cleaned_data['birthDate']
@@ -239,13 +246,13 @@ def addNursingPatient(request):
         pacienti = Pacient.objects.all()
         for i in pacienti:
             print(i.st_kartice)
-
+"""
         # za testiranje
         current_user = User.objects.get(username="stoklas.nac@gmail.com")
         current_pacient = Pacient.objects.get(uporabniski_profil=current_user)
-        print(current_user.username)
-"""
-        current_pacient = Pacient.objects.get(uporabniski_profil=request.user)
+        print("TUKAAAAJ", current_user.username)
+
+        #current_pacient = Pacient.objects.get(uporabniski_profil=request.user)
 
         if form.is_valid():
             #   Preveri, da kartice slucajno ze ne obstaja.

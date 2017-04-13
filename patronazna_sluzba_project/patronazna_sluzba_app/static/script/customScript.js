@@ -3,12 +3,12 @@ $(document).ready(function() {
     $(".signupbtn").click(function(){
 		//alert("hello world");
 		var birthResult = birthDate();
-		//alert("Hello again!!!");
-		//alert("Rezultat birthResult: "+ birthResult);
+		alert("Hello again!!!");
+		alert("Rezultat birthResult: "+ birthResult);
 		
 		
 		var inputResult = registrationValidation();
-		//alert("Rezultat regValidat: "+inputResult);
+		alert("Rezultat regValidat: "+inputResult);
 		inputResult = inputResult && birthResult;
 		//alert("Rezultat AND: "+inputResult);
 		
@@ -329,12 +329,10 @@ function registrationValidation(){
 	}
 	
 	try{
-		//alert('try happend');
+		alert('try happend');
 		return checkPassword();
 	}catch(err){
-		
-	}finally{
-		//alert('finnaly happend');
+		alert('err');
 		return true;
 	}
 	

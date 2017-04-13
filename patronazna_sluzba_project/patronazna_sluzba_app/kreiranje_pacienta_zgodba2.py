@@ -23,34 +23,48 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
             if check_contact(contact_name, contact_surname, contact_address, contact_phone_number):
                 if check_patient(name, surname, card_number, address, phone_number):
                     #   DODAJ PACIENTA
-                    user = User.objects.create_user(username=mail,
-                                                    password=password1,
-                                                    email=mail)
 
-                    print("user created")
                     if contact_name != "":
                         contact = Kontaktna_oseba(ime=contact_name, priimek=contact_surname,
                                                   naslov=contact_address, telefon=contact_phone_number)
-                        contact.save()
-                        print("contact saved")
 
-                        patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
+                        patient = Pacient(ime=name, priimek=surname, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex, kontakt=contact, aktiviran=0)
-                        print("patient dodan")
+                        print("patient objekt ustvarjen")
+
+
+                        print("sorodstvo saved")
+
+                        user = User.objects.create_user(username=mail,
+                                                        password=password1,
+                                                        email=mail)
+
+                        patient.uporabniski_profil = user
+
+                        contact.save()
                         patient.save()
-                        print("patient saved")
+
 
                         sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
                         sorodstvo.save()
-                        print("sorodstvo saved")
 
+                        print("user created")
+                        print("patient saved")
                     else:
-                        patient = Pacient(uporabniski_profil=user, st_kartice=card_number, naslov=address,
+                        patient = Pacient(ime=name, priimek=surname, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex, aktiviran=0)
                         print("patient dodan")
+                        #patient.save()
+
+                        user = User.objects.create_user(username=mail,
+                                                        password=password1,
+                                                        email=mail,)
+
+                        patient.uporabniski_profil = user
                         patient.save()
+                        print("user created")
 
                         print("patient saved")
                         all_entries = Pacient.objects.all()
@@ -63,7 +77,6 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
     return False
 
 
-#   TUKAJ JE TREBA POSKRBET SE ZA SORODSTVA TER KO JE BAZA KONCANA PREVERIT CE VSE DELA, dodat okolise,....
 def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address,
                                birth_date, sex,
                                sorodstvo, phone):
@@ -75,6 +88,7 @@ def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, ad
                           datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
         patient.save()
         print("Dodan oskrbovanec za: ", trenutni_uporabnik.uporabniski_profil.username)
+
         oskrbovanci = Pacient.objects.filter(skrbnistvo=trenutni_uporabnik)
         for i in oskrbovanci:
             print("Oskrbovanceva kartica je: ", i.st_kartice)
@@ -88,7 +102,7 @@ def sendEmail(activation_key, customer_mail):
     sporocilo = "Click the activation link to finish registration.   "+link
 
     send_mail(
-        'Activation PARSEK',
+        'Parsek RULES. You will want to activate',
         sporocilo,
         'activation@parsekrules.si',
         [customer_mail],
@@ -125,7 +139,7 @@ def check_patient(name, surname, card_number, address, phone_number):
             and phone_number is not None:
         if check_phone(phone_number) & check_card(card_number):
             return True
-
+        print("returnam false")
         return False
     print("Patient data should be... welll, filled out. (check_patient)")
     return False

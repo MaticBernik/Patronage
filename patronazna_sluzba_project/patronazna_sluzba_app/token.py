@@ -23,7 +23,7 @@ def _parse_time( d):
 def generate_token(text):
     #   generira token
     full_text = text + '|' + _get_time()
-    token = fernet.encrypt(bytes(full_text), 'utf-8')
+    token = fernet.encrypt(bytes(full_text,  'utf-8'))
 
     return token
 

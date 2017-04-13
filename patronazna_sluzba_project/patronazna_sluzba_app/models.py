@@ -86,10 +86,10 @@ class Kontaktna_oseba(models.Model):
 class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
 
-    uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
+    uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE, null=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
     #   MAX_LEN does not get used in combo with IntegerField.. "max_length=11,"
-    st_kartice = models.IntegerField(null=False,default=-1)
+    st_kartice = models.IntegerField(null=False,default=-1, primary_key=True)
     telefonska_st = models.CharField(max_length=15, null=False)
     naslov = models.CharField(max_length=100, null=False)
     spol = models.CharField(max_length=1,choices=SEX,blank=False)
@@ -104,7 +104,6 @@ class Pacient(models.Model):
     email=models.EmailField(unique=True,null=False)
     aktiviran = models.IntegerField(null=True,default=0)
 
-    aktiviran = models.IntegerField(null=True, default=0)
 
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:

@@ -19,6 +19,8 @@ from . import kreiranje_pacienta_zgodba2
 from . import token
 from ipware.ip import get_ip #pip install django-ipware
 import os
+import csv
+from datetime import datetime
 
 #def index(request):
 #
@@ -33,45 +35,59 @@ import os
 #    return render(request, 'index.html', {'login_form': form})
 IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=20
+VAR = 0
 
 def valid_login(ip):
     global IP_FAILED_LOGIN
-    if ip in IP_FAILED_LOGIN[:][0]:
-        i=IP_FAILED_LOGIN[:][0].index(ip)
-        del(IP_FAILED_LOGIN[i])
+    failed_ip_list = [x[0] for x in IP_FAILED_LOGIN]
+
+    if len(IP_FAILED_LOGIN) > 0:
+        if ip in failed_ip_list:
+            print(ip)
+            i = failed_ip_list.index(ip)
+            del (IP_FAILED_LOGIN[i])
+    else:
+        return True
+
 
 def invalid_login(ip):
     global IP_FAILED_LOGIN
-    if ip in IP_FAILED_LOGIN[:][0]:
-        i=IP_FAILED_LOGIN[:][0].index(ip)
+    failed_ip_list = [x[0] for x in IP_FAILED_LOGIN]
+    if ((len(IP_FAILED_LOGIN) > 0) and (ip in failed_ip_list)):
+        i=failed_ip_list.index(ip)
         IP_FAILED_LOGIN[i][1]+=1
         if IP_FAILED_LOGIN[i][1]>=3:
             with open("IP_BLACKLIST.csv", "a+") as blacklist_file:
-                blacklist_writer = csv.writer(csv_file,delimiter=';')
-                blacklist_writer.write([ip,datetime.now()])
+                blacklist_writer = csv.writer(blacklist_file,delimiter=';')
+                blacklist_writer.writerow([ip,datetime.now()])
                 blacklist_file.close()
     else:
         IP_FAILED_LOGIN.append([ip,1])
 
+
 def ip_blacklisted(ip):
     global BLACKLISTED_TIME_MIN
+
     #DODAJ RAM CACHING, DA NE BO POTREBNO VEDNO BRATI CELOTNE DATOTEKE..
     if not os.path.isfile('IP_BLACKLIST.csv'):
         return False
     with open("IP_BLACKLIST.csv", "r") as blacklist_file:
         blacklist_reader = csv.reader(blacklist_file, delimiter=';')
         for line in blacklist_reader:
-            ip_naslov = line[0]
-            cas_vnosa = datetime.fromtimestamp(line[1])
-            pretekli_cas = (datetime.now - cas_vnosa).total_seconds/60
-            if pretekli_cas < BLACKLISTED_TIME_MIN:
-                if ip==ip_naslov:
-                    return True
+            if len(line) > 0:
+                ip_naslov = line[0]  # 127.0.0.1;2017-04-13 20:34:17.582762
+                cas_vnosa = datetime.strptime(line[1], "%Y-%m-%d %H:%M:%S.%f")
+                pretekli_cas = (datetime.now() - cas_vnosa).total_seconds() / 60
+                if pretekli_cas < BLACKLISTED_TIME_MIN:
+                    if ip == ip_naslov:
+                        return True
         return False
 
 
 # Create your views here.
 def index(request):
+    global IP_FAILED_LOGIN
+
     ip_naslov=get_ip(request)
     if ip_blacklisted(ip_naslov):
         print("***IP naslov je bil zacasno blokiran, zaradi 3 neveljavnih poskusov prijave.")
@@ -87,10 +103,10 @@ def index(request):
             password = form.cleaned_data['password']
 
             user = authenticate(username=username, password=password)
-            valid_login(ip_naslov)
+
             print('Login: ',username)
             if user is not None:
-
+                valid_login(ip_naslov)
                 u = User.objects.get(username=username)
                 if Pacient.objects.filter(uporabniski_profil=u).exists():
                     pacient = Pacient.objects.get(uporabniski_profil=u)
@@ -111,7 +127,9 @@ def index(request):
                     return HttpResponseRedirect('home_patient/')
             else:
                 print("Unsuccessful user authentication.")
+                print(IP_FAILED_LOGIN)
                 invalid_login(ip_naslov)
+                print(IP_FAILED_LOGIN)
                 return HttpResponseRedirect('/')
         else:
             print("Invalid form!")
@@ -132,6 +150,7 @@ def activate(request):
                 user = User.objects.get(username=value)
                 pacient = Pacient.objects.get(uporabniski_profil=user)
                 pacient.aktiviran = 1
+                user.is_active = 1
                 pacient.save()
                 print("Pacient je aktiviran")
                 return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
@@ -158,14 +177,11 @@ def register(request):
             except:
                 print("Card number is not in our DB yet, all good.")
 
-
-
             password1 = form.cleaned_data['password']
             password2 = form.cleaned_data['password2']
             name = form.cleaned_data['name']
             surname = form.cleaned_data['surname']
             mail = form.cleaned_data['email']
-
             address = form.cleaned_data['address']
             phone_number = form.cleaned_data['phone']
             birth_date = form.cleaned_data['birthDate']
@@ -181,7 +197,8 @@ def register(request):
                                                                     birth_date, sex, contact_name,
                                                                     contact_surname, contact_address,
                                                                     contact_phone_number, sorodstveno_razmerje)):
-                return HttpResponse("Nekdo posile requeste napisane na roko... al pa mi se funkcije ne delajo")
+                return HttpResponse("Nekdo posile requeste napisane na roko... Ali pa ne dela vredu front end"
+                                    " validacija... al pa mi funkcije ne palijo kot morjo :D")
 
             # poslji mail za aktivacijo
             act_key = token.generate_token(mail)
@@ -189,7 +206,7 @@ def register(request):
             kreiranje_pacienta_zgodba2.sendEmail(act_key.decode("utf-8"), mail)
 
         else:
-            print("form not valid bro", form.errors)
+            print("Form not valid bro", form.errors)
             return HttpResponse("Form not valid")
 
         return HttpResponse("Registracija uspela")
@@ -212,14 +229,17 @@ def addNursingPatient(request):
     if request.method == 'POST':
         form = AddNursingPatient(request.POST)
 
+        """
         pacienti = Pacient.objects.all()
         for i in pacienti:
             print(i.st_kartice)
 
         # za testiranje
-        current_user = User.objects.get(username="test@gmail.com")
+        current_user = User.objects.get(username="stoklas.nac@gmail.com")
         current_pacient = Pacient.objects.get(uporabniski_profil=current_user)
         print(current_user.username)
+"""
+        current_pacient = Pacient.objects.get(uporabniski_profil=request.user)
 
         if form.is_valid():
             #   Preveri, da kartice slucajno ze ne obstaja.

@@ -19,8 +19,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from patronazna_sluzba_app import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^base/', views.base),
     url(r'^base/newStaffMember', views.medicalStaffRegister, name="register_medical_personal"),
+    url(r'^base/controlPanel', views.base, name="control_panel"),
     url(r'^$', views.index),
 ]
 

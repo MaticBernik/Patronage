@@ -335,6 +335,4 @@ function registrationValidation(){
 		alert('err');
 		return true;
 	}
-	
-	
 }

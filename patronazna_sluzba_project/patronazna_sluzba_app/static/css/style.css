@@ -47,7 +47,7 @@ input[type=text], input[type=password], input[type=number] , input[type=tel], in
 }
 
 label{
-	    box-sizing: border-box;
+	box-sizing: border-box;
     /* border: 2px solid blue; */
     display: inline-block;
     padding: 8px;
@@ -56,6 +56,7 @@ label{
     width: 35%;
     margin-top: 4px;
 }
+
 select{
 	width: 40%;
 	padding: 6px 10px;
@@ -64,6 +65,7 @@ select{
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
+
 #stEpruvet{
 	width: 8%;
 }
@@ -108,3 +110,4 @@ select{
     color: red;
     cursor: pointer;
 }
+

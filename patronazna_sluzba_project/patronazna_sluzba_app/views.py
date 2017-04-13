@@ -224,6 +224,12 @@ def changePassword(request):
     return render(request, 'changePassword.html')
 
 
+	
+def workTaskForm(request):
+	form = WorkTaskForm()
+	return render(request, 'workTask.html',{'work_task_form':form})
+
+
 def addNursingPatient(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

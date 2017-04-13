@@ -1,3 +1,89 @@
+$(document).ready(function() {
+	
+    $(".signupbtn").click(function(){
+		//alert("hello world");
+		var birthResult = birthDate();
+		//alert("Hello again!!!");
+		//alert("Rezultat birthResult: "+ birthResult);
+		
+		
+		var inputResult = registrationValidation();
+		//alert("Rezultat regValidat: "+inputResult);
+		inputResult = inputResult && birthResult;
+		//alert("Rezultat AND: "+inputResult);
+		
+		if(!inputResult){
+				$("form").submit(function(e){
+					//alert('inputResult is false');
+                e.preventDefault(e);
+				$(this).unbind(e);
+            });
+			}
+		//alert("this query works");
+		
+		//alert("Rezultat validacije main "+inputResult);
+		//check contact fields
+		var cName = document.getElementById("contact_name");
+		var cSurname = document.getElementById("contact_surname");
+		var cAddress = document.getElementById("contact_address");
+		var cPhoneNumber = document.getElementById("contact_phone_number");
+		var bloodRelation = document.getElementById("relation");
+		//var test = true;
+		//alert("test "+test+" input: "+inputResult);
+		//console.log("test "+test+" input: "+inputResult);
+		
+		//alert("Contakt surname value: "+cSurname.value);
+		
+		if((cName.value == "" && cSurname.value == "" && cAddress.value == "" && cPhoneNumber.value == ""
+		&& bloodRelation.value == "")){
+			//the field are empty
+			
+		}else if ((cName.value != "" && cSurname.value != "" && cAddress.value != "" && cPhoneNumber.value != ""&& bloodRelation.value != "")){
+			//do contact validation
+			//alert("Contact validation");
+			var uC = "[A-Z\u010C\u0160\u017d\u0106\u0110]";
+			var lC="[a-z\u010d\u0161\u017e\u0107\u0111]";
+			var badColor = "#ff6666";
+			//var nameRE = new RegExp("^("+uC+lC+"+)");
+			//lowerCase
+			var nameRE = new RegExp("^("+lC+"+)");
+			//did the validation pass
+			
+			
+			if(cSurname.value.match(nameRE)== null){
+				alert("Napačen vnos priimka kontakt");
+				cSurname.style.backgroundColor = badColor;
+				inputResult = false;
+				console.log(cSurname);
+			}else if(cName.value.match(nameRE) == null){
+				alert("Napačen vnos imena kontakt");
+				cName.style.backgroundColor = badColor;
+				inputResult=false;
+			}else if(cPhoneNumber.value.length<9){
+				alert("Napačen vnos telefonske številke kontakt");
+				cPhoneNumber.style.backgroundColor = badColor;
+				inputResult = false;
+			}
+			//alert("Dodatni "+phone.value.length+" input: "+inputResult);
+		}else{
+			//alert("Za kontaktno osebo morajo biti izpolnjeni vsi podatki ali pa nobeden ");
+			
+			$("form").submit(function(e){
+                alert('Za kontaktno osebo morajo biti izpolnjeni vsi podatki ali pa nobeden!');
+                e.preventDefault(e);
+				$(this).unbind(e);
+            });
+		}
+		
+		if(!inputResult){
+				$("form").submit(function(e){
+					//alert('inputResult is false');
+                e.preventDefault(e);
+				$(this).unbind(e);
+            });
+			}
+	});
+});
 var modal;
 
 /*hide the div with extra contact data*/
@@ -67,7 +153,7 @@ function checkPassword(){
 		message.innerHTML = pass1.value;*/
 		return false;
 	}
-	
+	return true;
 }
 
 function firstVisitDate(){
@@ -80,37 +166,89 @@ function firstVisitDate(){
 	var message = document.getElementById('message');
 	
 	var firstVisit = datum.value.split("-");
-	
-	if(firstVisit[0]<year1){
+	//alert("today:"+firstVisit[2]);
+	if(firstVisit[2]<year1){
 		alert("Napacno letnico");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
-	if(firstVisit[0]==year1 && firstVisit[1]<month1){
-		alert("Napacen datum");
+	if(firstVisit[2]==year1 && firstVisit[1]<month1){
+		alert("Napacen datum! Datum obiska mora biti večji ali enak trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
-	if(firstVisit[0] == year1 && firstVisit[1] == month1 && firstVisit[2] < day1){
-		alert("Napacen datum");
+	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] < day1){
+		alert("Napacen datum! Datum obiska mora biti večji ali enak trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
 	$(".signupbtn").removeAttr('disabled');
-	
-	var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	return true;
+	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var chosenDate = Date.parse(datum.value);
-	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;
+	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
 }
 
+function birthDate(){
+	var today = new Date();
+	var day1 = today.getDate();
+	var month1 = (today.getMonth()+1);
+	var year1 = today.getFullYear();
+	
+	var datum = document.getElementById('birthDate');
+	var message = document.getElementById('message');
+	
+	var birth = datum.value.split("-");
+	//alert("datum rojstva primerjava: "+birth[0]+' : '+day1);
+	//alert("today:"+firstVisit[2]);
+	if(birth[2]>year1){
+		alert("Napacna letnica rojstva");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	if(birth[2]==year1 && birth[1]>month1){
+		alert("Napacen datum! Datum rojstva mora biti manjsi od trenutnega! Napačen mesec!");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	
+	if(birth[2] == year1 && birth[1] == month1 && birth[0] > day1){
+		alert("Napacen datum! Datum obiska mora biti manjsi od trenutnega! Napačen dan!");
+		//$(".signupbtn").attr('disabled','disabled');
+		return false;
+	}
+	
+	return true;
+	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var chosenDate = Date.parse(datum.value);
+	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
+	
+}
 function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
-	if(s.value == "Obisk otročnice in novorojenčka"){
+	//alert(s);
+	if(s == "Obisk otročnice in novorojenčka"){
+		//alert("changed to prevention");
+		//hide these fields
+		document.getElementById("cureId").style.display = 'none';
+		document.getElementById('materialId').style.display = 'none';
+		
 		document.getElementByClassName("add_field_button").style.display='block';
-	}else{
+		
+	}else if(s == 'Aplikacija injekcij'){
+		//alert("changed to injection");
+		document.getElementById("cureId").style.display = 'block';
+		//hide this
+		document.getElementById('materialId').style.display = 'none';
+	}else if (s == 'Odvzem krvi'){
+		document.getElementById('materialId').style.display = 'block';
+		//hide this
+		document.getElementById("cureId").style.display = 'none';
+	}
+	else{
 		document.getElementById("message").innerHTML = this.options[this.selectedIndex].innerHTML;
 	}
 }
@@ -126,52 +264,79 @@ $(document).ready(function() {
 		
 });
 	$("#timeInterval").on('input',function(){
-		$("#timeSpan").attr('disabled','disabled');
+		$("#timePeriod").attr('disabled','disabled');
 	});
 	
-	$("#timeSpan").on('input',function(){
+	$("#timePeriod").on('input',function(){
 		$("#timeInterval").attr('disabled','disabled');
 	});
 	
 	$("#timeInterval").on('focusout',function(){
 		if($("#timeInterval").val() == "" ){
-			$("#timeSpan").removeAttr('disabled');
+			$("#timePeriod").removeAttr('disabled');
 		}
 		
 	});
 	
 	
-	$("#timeSpan").on('focusout',function(){
-		if($("#timeSpan").val() == "" ){
+	$("#timePeriod").on('focusout',function(){
+		if($("#timePeriod").val() == "" ){
 			$("#timeInterval").removeAttr('disabled');
 		}
 		
 	});
 	
-	
-	
-	$(".signupbtn").click(function(){
-		//check contact fields
-		var cName = $("#contact_name").val();
-		var cSurname = $("#contact_surname").val();
-		var cAddress = $("#contact_address").val();
-		var cPhoneNumber = $("#contact_phone_number").val();
-		var bloodRelation = $("#sorodstvo").val();
-		
-		if((cName == "" && cSurname == "" && cAddress == "" && cPhoneNumber == ""
-		&& bloodRelation == "") || (cName != "" && cSurname != "" && cAddress != "" && cPhoneNumber != ""&& bloodRelation != "")){
-			continue;
-		}else{
-			//alert("Za kontaktno osebo morajo biti izpolnjeni vsi podatki ali pa nobeden ");
-			
-			$("form").submit(function(e){
-                alert('submit intercepted');
-                e.preventDefault(e);
-            });
-		}
-	});
 });
 
 
-
-
+// preveri vnos uporabnika
+function registrationValidation(){
+	
+	var uC = "[A-Z\u010C\u0160\u017d\u0106\u0110]";
+	var lC="[a-z\u010d\u0161\u017e\u0107\u0111]";
+	var allCase = "[A-Z\u010C\u0160\u017d\u0106\u0110\a-z\u010d\u0161\u017e\u0107\u0111]";
+	var badColor = "#ff6666";
+	//ime in priimek morajo biti z veliko začetnico
+	//var nameRE = new RegExp("^("+uC+lC+"+)");
+	//lowerCase
+	var nameRE = new RegExp("^("+lC+"+)");
+	var name= document.getElementById('name');
+	var surname = document.getElementById('surname');
+	var cardNumber = document.getElementById('cardNumber');
+	var phone = document.getElementById('phone');
+	//var birthDate = document.getElementById('birthDate');
+	//var address = document.getElementById('address');
+	//console.log(name.value+", reges: "+name.value.match(nameRE));
+	//alert('Before passwordCheck ');
+	//var passCheck = checkPassword();
+	//alert('Rezultat passworda: '+passCheck);
+	if(cardNumber.value.length != 12){
+		alert("Dolžina številke Zdravstvene kartice mora biti 12");
+		cardNumber.style.backgroundColor = badColor;
+		return false;
+	}else if(surname.value.match(nameRE)== null){
+		alert("Napačen vnos priimka");
+		surname.style.backgroundColor = badColor;
+		return false;
+	}else if(name.value.match(nameRE) == null){
+		alert("Napačen vnos imena");
+		name.style.backgroundColor = badColor;
+		return false;
+	}else if(phone.value.length<9){
+		alert("Napačen vnos telefonske številke");
+		phone.style.backgroundColor = badColor;
+		return false;
+	}
+	
+	try{
+		//alert('try happend');
+		return checkPassword();
+	}catch(err){
+		
+	}finally{
+		//alert('finnaly happend');
+		return true;
+	}
+	
+	
+}

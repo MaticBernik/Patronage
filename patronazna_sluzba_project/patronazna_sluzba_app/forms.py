@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Pacient
+from .models import *
 from django.core.validators import MaxValueValidator
 
 
@@ -14,11 +14,10 @@ SEX_CHOICES = (
     ('2', 'Zenski'),
 )
 DISTRICT_CHOICES = (
-	('1', ''),
-    ('2', '05600 - VIC-RUDNIK'),
-    ('3', '05470 - SISKA'),
-	('4', '05030 - BEZIGRAD'),
-    ('5', '05300 - MOSTE-POLJE'),
+    ('1', '05600 - VIČ-RUDNIK'),
+    ('2', '05470 - ŠIŠKA'),
+	('3', '05030 - BEŽIGRAD'),
+    ('4', '05300 - MOSTE-POLJE'),
 )
 
 RELATIONS = (
@@ -27,35 +26,88 @@ RELATIONS = (
     ('3', 'VNUK'),
 	('4', 'STARI STARSI'),
 )
-#   prvi commit
+POST_CODES = (
+	('1', '1000'),
+    ('2', '2000'),
+    ('3', '3000'),
+	('4', '4000'),
+    ('5', '5000'),
+    ('6', '6000'),
+)
+VRSTE_OBISKOV = (
+	('1','Preventivni'),
+	('2','Kurativni'),
+)
+VRSTE_OBISKOV_DETAIL = (
+	('Obisk nosečnice', 'Obisk nosečnice'),
+    ('Obisk otročnice in novorojenčka', 'Obisk otročnice in novorojenčka'),
+    ('Preventivo starostnika', 'Preventivo starostnika'),
+	('Odvzem krvi', 'Odvzem krvi'),
+    ('Aplikacija injekcij', 'Aplikacija injekcij'),
+    ('Kontrola zdravstvenega stanja', 'Kontrola zdravstvenega stanja'),
+)
+EPRUVETE_BARVA = (
+	('Zelena', 'Zelena'),
+    ('RDECA', 'RDECA'),
+    ('MODRDA', 'MODRA'),
+	('RUMENA', 'RUMENA'),
+)
+EPRUVETE_NUMBER = (
+	('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+	('4', '4'),
+	('5', '5'),
+)
 class RegistrationFrom(forms.Form):
-   cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'class': 'form-control'}))
-   surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   phone = forms.IntegerField(label='Telefon:', widget=forms.TextInput(attrs={'class': 'form-control'}))
-   password = forms.CharField(label='Geslo',max_length=100, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-   password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+   cardNumber = forms.IntegerField(label='Številka kartice:', widget=forms.NumberInput(attrs={'id': 'cardNumber','placeholder':'04167496667'}))
+   surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname','placeholder': 'Novak'}))
+   name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name','placeholder': 'Janez'}))
+   address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address','placeholder': 'Šmartinska cesta 10'}))
+   phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone','placeholder':'041674966'}))
+   password = forms.CharField(label='Geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1'}))
+   password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2'}))
    sex = forms.ChoiceField(choices=SEX_CHOICES)
    district = forms.ChoiceField(choices=DISTRICT_CHOICES)
-   email = forms.EmailField()
+   email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com'}))
+   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate'}), input_formats=['%d-%m-%Y'])
+   postCode =  forms.ChoiceField(label='Pošta',choices=POST_CODES)
    
-   contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   contact_address = forms.CharField(label='Naslov:', required=False,  max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   contact_phone_number = forms.IntegerField(label='Telefon',  required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
-   contact_sorodstvo = forms.CharField(label='Sorodstvo:',  required=False, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}), input_formats=['%d-%m-%Y'])
-   postCode =  forms.CharField(label='Posta', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+   #kontaktna oseba
+   contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_surname','placeholder': 'Novak'}))
+   contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_name','placeholder': 'Janez'}))
+   contact_address = forms.CharField(label='Naslov:', required=False,  max_length=100, widget=forms.TextInput(attrs={'id': 'contact_address'}))
+   contact_phone_number = forms.IntegerField(label='Telefon',  required=False, widget=forms.NumberInput(attrs={'id': 'contact_phone_number','placeholder': '031890123'}))
+   contact_sorodstvo = forms.CharField(label='relation:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'relation'}))
+  
 
 class AddNursingPatient(forms.Form):
-	cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'class': 'form-control'}))
-	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-	phone = forms.IntegerField(label='Telefon:',  widget=forms.NumberInput(attrs={'class': 'form-control'}))
-	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}), input_formats=['%d-%m-%Y'])
-	postCode =  forms.CharField(label='Posta', max_length=100, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+	cardNumber = forms.CharField(label='Številka kartice:',widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
+	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname'}))
+	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name'}))
+	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address'}))
+	phone = forms.CharField(label='Telefon:', max_length=100, widget=forms.NumberInput(attrs={'id': 'phone'}))
+	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate'}), input_formats=['%d-%m-%Y'])
+	postCode =  forms.ChoiceField(label='Pošta', choices=POST_CODES)
 	sex = forms.ChoiceField(choices=SEX_CHOICES)
 	district = forms.ChoiceField(choices=DISTRICT_CHOICES)
 	relation = forms.ChoiceField(label='Sorodstvo:', choices = RELATIONS )
+	
+class WorkTaskForm(forms.Form):
+	creatorId = forms.CharField(label='Številka zdravnika:', widget=forms.TextInput(attrs={'disabled': 'disabled'}))
+	nurseId = forms.CharField(label='Številka izvajalca:', widget=forms.TextInput(attrs={'disabled': 'disabled'}))
+	taskId = forms.CharField(label='Številka naloga:', widget=forms.TextInput(attrs={'disabled': 'disabled'}))
+	visitType = forms.ChoiceField(choices=VRSTE_OBISKOV)
+	visitTypeDetail = forms.ChoiceField(choices=VRSTE_OBISKOV_DETAIL,widget=forms.Select(attrs={'id':'visitType','onchange':'addPatientButton()'}))
+	cardNumber = forms.CharField(label='Številka kartice:', max_length=100, widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
+	visitDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'visitDate','onchange':'firstVisitDate()'}), input_formats=['%d-%m-%Y'])
+	visitCount = forms.CharField(label='Število obiskov', max_length=100, widget=forms.NumberInput(attrs={'max': '10'}))
+	timeInterval = forms.CharField(label='Časovni interval',widget=forms.TextInput(attrs={'id':'timeInterval'}))
+	timePeriod = forms.CharField(label='Časovno obdobje',widget=forms.TextInput(attrs={'id':'timePeriod'}))
+	
+	#cureList = Zdravila.objects.all();
+	
+	cureId = forms.ChoiceField(choices=VRSTE_OBISKOV_DETAIL)
+	materialColor = forms.ChoiceField(choices=EPRUVETE_BARVA)
+	materialQuantity = forms.ChoiceField(choices=EPRUVETE_NUMBER,widget=forms.Select(attrs={'id':'stEpruvet'}))
+	

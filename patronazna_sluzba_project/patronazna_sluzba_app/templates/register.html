@@ -6,6 +6,8 @@
 		<title>User registration page</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 		<script src="{% static 'script/customScript.js' %}"></script>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -26,9 +28,9 @@
 			Header for the Application
 		</header>
 		<h2>Registration page</h2>
-		<div class="main-centered-content">
+		<div class="container">
 			<section>
-				<div class="container">
+				<!--<div class="container">-->
 					{{ registration_form.non_field_errors }}
 					<form  id="form" autocomplete="on" method="post" style="border:1px solid #ccc">
 					{% csrf_token %}
@@ -99,7 +101,7 @@
 					</div>
 					<div>
 						<label>Neobvezni podatki o kontaktni osebi</label>
-						<button type="button" onClick="myFunction()">Prikazi podatke</button>
+						<button type="button" class="btn btn-primary" onClick="myFunction()">Prikazi podatke</button>
 					</div>
 					<div id="myDIV"	>
 						<div>
@@ -130,10 +132,10 @@
 					</div>
 						<div class="clearfix">
 						  <button type="button" class="cancelbtn">Preklic</button>
-						  <button type="submit" class="signupbtn">Registracija</button>
+						  <button type="submit" class="signupbtn" >Registracija</button>
 						</div>
 				</form>		
-			</div>
+			<!--</div>-->
 		</div>
 	</body>
 

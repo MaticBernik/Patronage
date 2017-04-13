@@ -52,9 +52,15 @@
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
-	  		{{ medical_reg_form.password.errors }}
-	    	<label for="{{ medical_reg_form.password.id_for_label }}">Geslo:</label>
-	    	{{ medical_reg_form.password }}
+	  		{{ medical_reg_form.password1.errors }}
+	    	<label for="{{ medical_reg_form.password1.id_for_label }}">Geslo:</label>
+	    	{{ medical_reg_form.password1 }}
+	    	<!--<input type="password" class="form-control" id="pwd">-->  
+	  	</div>
+        <div class="form-group">
+	  		{{ medical_reg_form.password2.errors }}
+	    	<label for="{{ medical_reg_form.password2.id_for_label }}">Ponovitev gesla:</label>
+	    	{{ medical_reg_form.password2 }}
 	    	<!--<input type="password" class="form-control" id="pwd">-->  
 	  	</div>
 	  	<div class="login-checkbox">

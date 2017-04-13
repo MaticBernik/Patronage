@@ -16,6 +16,7 @@ import logging
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 from .forms import LoginForm
 
+
 def register_nurse(request):
     if request.method == 'POST':
         #EXTRACT DATA FROM REQUEST
@@ -60,6 +61,7 @@ def register_nurse(request):
         except:
             print("Could not create Nurse object using given data!")
 
+
 def index(request):
     user = request.user
     if request.method=='GET':
@@ -93,6 +95,7 @@ def index(request):
         else:
             print("Invalid form!")
             return HttpResponseRedirect('/')
+
 
 @login_required(login_url='/library/')
 def logout_user(request):

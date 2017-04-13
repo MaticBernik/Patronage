@@ -51,16 +51,16 @@ $(document).ready(function() {
 			
 			
 			if(cSurname.value.match(nameRE)== null){
-				alert("Napačen vnos priimka kontakt");
+				alert("Napacen vnos priimka kontakt");
 				cSurname.style.backgroundColor = badColor;
 				inputResult = false;
 				console.log(cSurname);
 			}else if(cName.value.match(nameRE) == null){
-				alert("Napačen vnos imena kontakt");
+				alert("Napacen vnos imena kontakt");
 				cName.style.backgroundColor = badColor;
 				inputResult=false;
 			}else if(cPhoneNumber.value.length<9){
-				alert("Napačen vnos telefonske številke kontakt");
+				alert("Napacen vnos telefonske stevilke kontakt");
 				cPhoneNumber.style.backgroundColor = badColor;
 				inputResult = false;
 			}
@@ -173,13 +173,13 @@ function firstVisitDate(){
 		return false;
 	}
 	if(firstVisit[2]==year1 && firstVisit[1]<month1){
-		alert("Napacen datum! Datum obiska mora biti večji ali enak trenutnega!");
+		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
 	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] < day1){
-		alert("Napacen datum! Datum obiska mora biti večji ali enak trenutnega!");
+		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -209,13 +209,13 @@ function birthDate(){
 		return false;
 	}
 	if(birth[2]==year1 && birth[1]>month1){
-		alert("Napacen datum! Datum rojstva mora biti manjsi od trenutnega! Napačen mesec!");
+		alert("Napacen datum! Datum rojstva mora biti manjsi od trenutnega! Napacen mesec!");
 		//$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
 	if(birth[2] == year1 && birth[1] == month1 && birth[0] > day1){
-		alert("Napacen datum! Datum obiska mora biti manjsi od trenutnega! Napačen dan!");
+		alert("Napacen datum! Datum obiska mora biti manjsi od trenutnega! Napacen dan!");
 		//$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -230,7 +230,7 @@ function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
 	//alert(s);
-	if(s == "Obisk otročnice in novorojenčka"){
+	if(s == "Obisk otrocnice in novorojencka"){
 		//alert("changed to prevention");
 		//hide these fields
 		document.getElementById("cureId").style.display = 'none';
@@ -255,7 +255,7 @@ function addPatientButton(){
 
 $(document).ready(function() {
 	$("#visitType").change(function() {
-		if($("#visitType option:selected").text() == "Obisk otročnice in novorojenčka"){
+		if($("#visitType option:selected").text() == "Obisk otrocnice in novorojencka"){
 			$(".add_field_button").show();
 			$(".add_field_button").removeAttr('disabled');
 		}else{
@@ -296,7 +296,7 @@ function registrationValidation(){
 	var lC="[a-z\u010d\u0161\u017e\u0107\u0111]";
 	var allCase = "[A-Z\u010C\u0160\u017d\u0106\u0110\a-z\u010d\u0161\u017e\u0107\u0111]";
 	var badColor = "#ff6666";
-	//ime in priimek morajo biti z veliko začetnico
+	//ime in priimek morajo biti z veliko zacetnico
 	//var nameRE = new RegExp("^("+uC+lC+"+)");
 	//lowerCase
 	var nameRE = new RegExp("^("+lC+"+)");
@@ -311,19 +311,19 @@ function registrationValidation(){
 	//var passCheck = checkPassword();
 	//alert('Rezultat passworda: '+passCheck);
 	if(cardNumber.value.length != 12){
-		alert("Dolžina številke Zdravstvene kartice mora biti 12");
+		alert("Dolzina stevilke Zdravstvene kartice mora biti 12");
 		cardNumber.style.backgroundColor = badColor;
 		return false;
 	}else if(surname.value.match(nameRE)== null){
-		alert("Napačen vnos priimka");
+		alert("Napacen vnos priimka");
 		surname.style.backgroundColor = badColor;
 		return false;
 	}else if(name.value.match(nameRE) == null){
-		alert("Napačen vnos imena");
+		alert("Napacen vnos imena");
 		name.style.backgroundColor = badColor;
 		return false;
 	}else if(phone.value.length<9){
-		alert("Napačen vnos telefonske številke");
+		alert("Napacen vnos telefonske stevilke");
 		phone.style.backgroundColor = badColor;
 		return false;
 	}

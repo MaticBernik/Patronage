@@ -103,6 +103,8 @@ class Pacient(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=False)
 
+    aktiviran = models.IntegerField(null=True, default=0)
+
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:
             self.uporabniski_profil.first_name = self.ime

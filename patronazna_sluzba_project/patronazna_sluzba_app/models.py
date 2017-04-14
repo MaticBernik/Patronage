@@ -46,7 +46,7 @@ class Zdravnik(models.Model):
     uporabniski_profil = models.OneToOneField(User)
     sifra_zdravnika = models.IntegerField(unique=True,null=False) #koliko mestna?
     telefonska_st = models.CharField(max_length=15, null=False) #+368
-    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=False)
+    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     #sifra_izvajalca_ZS = models.DecimalField(max_digits=5,decimal_places=0)
     def __str__(self):
         return self.sifra_zdravnika+' '+self.uporabniski_profil.firstName+''+self.uporabniski_profil.lastName
@@ -57,7 +57,7 @@ class Vodja_PS(models.Model):
     sifra_vodje_PS = models.IntegerField(unique=True,null=False)
     #sifra_vodje_PS = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
-    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=False)
+    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
 
 class Patronazna_sestra(models.Model):
     #uporabniski_profil = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -65,7 +65,7 @@ class Patronazna_sestra(models.Model):
     sifra_patronazne_sestre = models.IntegerField(unique=True,null=False)
     #sifra_patronazne_sestre = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
-    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=False)
+    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     okolis = models.OneToOneField(Okolis,default=1)
 
 class Sodelavec_ZD(models.Model):
@@ -74,7 +74,7 @@ class Sodelavec_ZD(models.Model):
     sifra_sodelavca = models.IntegerField(unique=True,null=False)
     #sifra_sodelavca = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
-    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=False)
+    sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
 
 class Kontaktna_oseba(models.Model):
     ime = models.CharField(max_length=100, null=False)

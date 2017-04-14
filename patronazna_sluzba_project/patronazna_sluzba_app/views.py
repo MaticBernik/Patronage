@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import Context, loader
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
-#from django.urls import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
@@ -19,14 +19,13 @@ from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacien
 import logging
 from django.contrib.auth import password_validation
 from .forms import LoginForm,RegistrationFrom,AddNursingPatient
-from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
+from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient, Izvajalec_ZS
 from . import kreiranje_pacienta_zgodba2
 from . import token
 from ipware.ip import get_ip #pip install django-ipware
 import os
 import csv
 from datetime import datetime
-
 #def index(request):
 #
 #   # if this is a POST request we need to process the form data
@@ -41,6 +40,7 @@ from datetime import datetime
 IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=3
 VAR = 0
+
 
 def valid_login(ip):
     global IP_FAILED_LOGIN
@@ -168,7 +168,7 @@ def base(request):
         # form = RegisterMedicalStaffForm()
         # return render(request, 'medical_registration.html', {'medical_reg_form': form})
 
-@user_passes_test(isAdmin,login_url='/')
+# @user_passes_test(isAdmin,login_url='/')
 def medicalStaffRegister(request):
     print("medical add")
     if request.method == 'GET':
@@ -192,14 +192,20 @@ def medicalStaffRegister(request):
         code=request.POST['medical_id']
         phone_number=request.POST['phone_number']
         institution=request.POST["medical_area_id"]
+        institution=Izvajalec_ZS.objects.filter(st_izvajalca=institution)
         #work_location_number=request.POST['work_location_number']
+        if len(institution)==0:
+            institution=None
+        else:
+            institution=institution[0]
 
         #VALIDATE FIELD VALUES
         #Validate passwords
-        if not password1==password2 or not password_validation.validate_password(password1) or not len(password1)>7:
+        # or not password_validation.validate_password(password1)
+        if not password1==password2  or not len(password1)>7:
             print("Invalid password.")
         #Validate email
-        if not validate_email(email):
+        if not kreiranje_pacienta_zgodba2.check_mail(email):
             print("Invalid email.")
         #Check if username(email) already exists
         if User.objects.filter(username=email).exists():
@@ -226,19 +232,19 @@ def medicalStaffRegister(request):
         #Finally create Nurse object
 
         if role=='nurse':
-            profile = Patronazna_sestra(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+            profile = Patronazna_sestra(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number, sifra_izvajalca_ZS=institution)
         elif role=='doc':
-            profile = Zdravnik(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+            profile = Zdravnik(uporabniski_profil=user, sifra_zdravnika=code, telefonska_st=phone_number, sifra_izvajalca_ZS=institution)
         elif role=='head_of_medical_service':
-            profile = Vodja_PS(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+            profile = Vodja_PS(uporabniski_profil=user, sifra_vodje_PS=code, telefonska_st=phone_number, sifra_izvajalca_ZS=institution)
         elif role=='employee':
-            profile = Sodelavec_ZD(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+            profile = Sodelavec_ZD(uporabniski_profil=user, ssifra_sodelavca=code, telefonska_st=phone_number, sifra_izvajalca_ZS=institution)
         try:
             profile.save()
         except:
             print("Could not create "+role+" profile using given data!")
 
-        redirect('control_panel')
+        return redirect('control_panel')
 
 def activate(request):
     if request.method == 'GET':
@@ -408,3 +414,6 @@ def addNursingPatient(request):
         form = AddNursingPatient()
         return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})
 
+def logout_user(request):
+	logout(request)
+	return HttpResponseRedirect('index.html')

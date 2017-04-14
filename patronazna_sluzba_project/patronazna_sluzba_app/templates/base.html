@@ -65,11 +65,16 @@
           </ul>
         </li>
         <li><a href="{% url 'register_medical_personal' %}">Dodaj zdravstveno osebje</a></li>
-        <li><a href="#">Dodaj testno</a></li>
+        <li><a href="#">Dodaj oskrbovanca</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>USERNAME</a></li>
-        <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+      	{% if user.is_authenticated %}
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{ user }}</a></li>
+        <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
+        {% else %}
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span>Uporabnik</a></li>
+        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>

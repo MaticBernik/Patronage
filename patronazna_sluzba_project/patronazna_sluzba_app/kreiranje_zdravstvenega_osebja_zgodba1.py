@@ -103,8 +103,3 @@ def index(request):
             print("Invalid form!")
             return HttpResponseRedirect('/')
 
-
-@login_required(login_url='/library/')
-def logout_user(request):
-	logout(request)
-	return HttpResponseRedirect(reverse('index'))

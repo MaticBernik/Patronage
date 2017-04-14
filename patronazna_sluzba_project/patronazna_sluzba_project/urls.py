@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^addNursingPatient/', views.addNursingPatient),
     url(r'^activate/', views.activate),
 	url(r'^workTask/', views.workTaskForm),
-	url(r'^logout', views.logout, name="logout"),
+	url(r'^logout', views.logout_user, name="logout"),
 	url(r'^$', views.index, name="home"),
 ]
 

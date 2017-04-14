@@ -1,5 +1,6 @@
 #from django.contrib.auth import password_validation
 import django.contrib.auth
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.validators import validate_email
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -13,12 +14,14 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.urls import reverse
+
 
 from .forms import LoginForm, RegisterMedicalStaffForm
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 import logging
 from django.contrib.auth import password_validation
-from .forms import LoginForm,RegistrationFrom,AddNursingPatient
+from .forms import LoginForm,RegistrationFrom,AddNursingPatient,ChangePasswordForm,WorkTaskForm
 from .models import User,Vodja_PS,Zdravnik,Patronazna_sestra,Sodelavec_ZD,Pacient
 from . import kreiranje_pacienta_zgodba2
 from . import token
@@ -26,7 +29,7 @@ from ipware.ip import get_ip #pip install django-ipware
 import os
 import csv
 from datetime import datetime
-
+from django.contrib.auth import update_session_auth_hash
 #def index(request):
 #
 #   # if this is a POST request we need to process the form data
@@ -263,11 +266,31 @@ def register(request):
 
 
 def changePassword(request):
+    if request.method == "POST":
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
 
-    return render(request, 'changePassword.html')
+            currentUser = request.user
+           # print("Uporabnik: ")
+            oldpassword =  form.cleaned_data['oldpassword']
+            #print(currentUser.check_password(oldpassword))
+            if currentUser.check_password(oldpassword):
+                password1 = form.cleaned_data['password1'];
+                password2 = form.cleaned_data['password2'];
+                if password1 == password2:
+                    user = User.objects.get(username=currentUser)
+                    user.set_password(password1)
+                    user.save()
+                    return HttpResponse("Uspesna sprememba gesla!")
+                else:
+                    return HttpResponse("Napaka pri potrditvi novega gesla!")
+            else:
+                return HttpResponse("Napačen vnos trenutnega gesla!")
 
+    else:
+        form = ChangePasswordForm()
+    return render(request, 'changePassword.html', {'change_password_form': form})
 
-	
 def workTaskForm(request):
 	form = WorkTaskForm()
 	return render(request, 'workTask.html',{'work_task_form':form})
@@ -340,4 +363,5 @@ def addNursingPatient(request):
     else:
         form = AddNursingPatient()
         return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})
+
 

@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 from .models import *
 from django.core.validators import MaxValueValidator
 
@@ -127,4 +129,8 @@ class WorkTaskForm(forms.Form):
 	cureId = forms.ChoiceField(choices=VRSTE_OBISKOV_DETAIL)
 	materialColor = forms.ChoiceField(choices=EPRUVETE_BARVA)
 	materialQuantity = forms.ChoiceField(choices=EPRUVETE_NUMBER,widget=forms.Select(attrs={'id':'stEpruvet'}))
-	
+
+class ChangePasswordForm(forms.Form):
+    oldpassword = forms.CharField(label='Geslo1',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass0'}))
+    password1 = forms.CharField(label='Geslo2', max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1'}))
+    password2 = forms.CharField(label='Geslo2', max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2'}))

@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#from patronazna_sluzba_app import views
 from patronazna_sluzba_app import views
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/newStaffMember', views.medicalStaffRegister, name="register_medical_personal"),
@@ -24,7 +27,7 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^$', views.index),
 	url(r'^register/', views.register,name='register'),
-	url(r'^changePassword/', views.changePassword),
+	url(r'^changePassword', views.changePassword,name="change_password"),
     url(r'^addNursingPatient/', views.addNursingPatient),
     url(r'^activate/', views.activate),
 	url(r'^workTask/', views.workTaskForm),

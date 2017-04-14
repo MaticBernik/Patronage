@@ -87,7 +87,7 @@ class RegistrationFrom(forms.Form):
    sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
    district = forms.ChoiceField(choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
-   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate', 'class': 'form-control'}), input_formats=['%d-%m-%Y'])
+   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d-%m-%Y'])
    postCode =  forms.ChoiceField(label='PoSta',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
    
    #kontaktna oseba

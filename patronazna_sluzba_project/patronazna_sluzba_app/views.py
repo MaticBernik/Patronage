@@ -91,6 +91,14 @@ def ip_blacklisted(ip):
                         return True
         return False
 
+def isPatient(user):
+    if Pacient.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
+def isAdmin(user):
+    return user.is_superuser
+
 # Create your views here.
 def index(request):
     global IP_FAILED_LOGIN
@@ -160,6 +168,7 @@ def base(request):
         # form = RegisterMedicalStaffForm()
         # return render(request, 'medical_registration.html', {'medical_reg_form': form})
 
+@user_passes_test(isAdmin,login_url='/')
 def medicalStaffRegister(request):
     print("medical add")
     if request.method == 'GET':
@@ -187,7 +196,7 @@ def medicalStaffRegister(request):
 
         #VALIDATE FIELD VALUES
         #Validate passwords
-        if not password1==password2 and password_validation.validate_password(password1):
+        if not password1==password2 or not password_validation.validate_password(password1) or not len(password1)>7:
             print("Invalid password.")
         #Validate email
         if not validate_email(email):
@@ -215,11 +224,19 @@ def medicalStaffRegister(request):
         except:
             print("Could not create User object using given data!")
         #Finally create Nurse object
-        nurse = Patronazna_sestra(uporabniski_profil=user,sifra_patronazne_sestre=code,telefonska_st=phone_number)
+
+        if role=='nurse':
+            profile = Patronazna_sestra(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+        elif role=='doc':
+            profile = Zdravnik(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+        elif role=='head_of_medical_service':
+            profile = Vodja_PS(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
+        elif role=='employee':
+            profile = Sodelavec_ZD(uporabniski_profil=user, sifra_patronazne_sestre=code, telefonska_st=phone_number)
         try:
-            nurse.save()
+            profile.save()
         except:
-            print("Could not create Nurse object using given data!")
+            print("Could not create "+role+" profile using given data!")
 
         redirect('control_panel')
 
@@ -311,18 +328,18 @@ def register(request):
 
     return render(request, 'register.html', {'registration_form': form})
 
-
+@login_required(login_url='/')
 def changePassword(request):
 
     return render(request, 'changePassword.html')
 
 
-	
+@login_required(login_url='/')
 def workTaskForm(request):
 	form = WorkTaskForm()
 	return render(request, 'workTask.html',{'work_task_form':form})
 
-
+@user_passes_test(isPatient,login_url='/')
 def addNursingPatient(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

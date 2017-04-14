@@ -65,7 +65,7 @@
           </ul>
         </li>
         <li><a href="{% url 'register_medical_personal' %}">Dodaj zdravstveno osebje</a></li>
-        <li><a href="#">Dodaj oskrbovanca</a></li>
+        <li><a href="{% url 'addNursing' %}/">Dodaj oskrbovanca</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       	{% if user.is_authenticated %}

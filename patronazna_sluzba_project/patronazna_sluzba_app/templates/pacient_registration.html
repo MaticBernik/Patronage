@@ -9,7 +9,6 @@
 
 	<!-- CUSTOM CSS (PLACE AFTER BOOTSTRAP FOR OVERRIDE or use !IMPORTANT ) -->
 	<link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static '/css/register_pac.css' %}">
 	
 
 	<!-- Latest compiled and minified CSS -->
@@ -20,7 +19,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 	<script src="{% static 'script/customScript.js' %}"></script>
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script>
 		$( function() {
@@ -30,38 +29,36 @@
 
 </head>
 
-<body  id="full_page_content">
+<body>
 	<div class="container">
 			<section>
 				<!--<div class="container">-->
-                    <h3 style="text-align: center;">REGISTRACIJA NOVEGA UPORABNIKA</h3>
-                    <hr>
 					{{ registration_form.non_field_errors }}
-					<form  id="form" autocomplete="on" method="post" class="form-horizontal col-lg-offset-3 col-lg-6 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12">
+					<form  id="form" autocomplete="on" method="post" style="border:1px solid #ccc">
 					{% csrf_token %}
-					<div class="form-group">
+					<div>
 						{{ registration_form.cardNumber.errors }}
 						<label for="{{ registration_form.cardNumber.id_for_label }}">Številka kartice zdravstvenega zavarovanja</label>
 						{{ registration_form.cardNumber }}
 					</div>
-					<div class="form-group">
-						<label>Ime</label>
-						{{ registration_form.name }}
-					</div>
-					<div class="form-group">
+					<div>
 						<label for="{{ registration_form.surname.id_for_label }}">Priimek</label>
 						{{ registration_form.surname }}
 					</div>
-					<div class="form-group">
+					<div>
+						<label>Ime</label>
+						{{ registration_form.name }}
+					</div>
+					<div>
 						<label>Naslov</label>
 						{{ registration_form.address }}
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Pošta</label>
 						{{ registration_form.postCode }}
 					</div>
-					<div class="form-group">
-						<label>Šifra zdravstvenega okoliša</label>
+					<div>
+						<label>Šifra okoliša</label>
 						{{ registration_form.district}}
 						<!--<select>
 							<option>05600</option>
@@ -71,30 +68,30 @@
 						</select>
 						-->
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Telefon</label>
 						{{ registration_form.phone }}
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Elektronski naslov</label>
 						<!--<input type="email" required="required"/>-->
 						{{ registration_form.email }}
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Geslo</label>
 						{{ registration_form.password }}
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Ponovi geslo</label>
 						{{ registration_form.password2 }}
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Datum rojstva</label>
 						{{ registration_form.birthDate }}
 						<!--<input type="date" required="required"/>-->
 						
 					</div>
-					<div class="form-group">
+					<div>
 						<label>Spol</label>
 						{{ registration_form.sex }}
 						 <!--<select required="required">
@@ -104,52 +101,41 @@
 						 </select>
 						 -->
 					</div>
-					<div class="form-group">
-						<label>Kontaktna oseba (neobvezno)</label>
-						<button type="button" class="btn btn-primary" onClick="myFunction()" style="float: right;">Prikazi vnos</button>
+					<div>
+						<label>Neobvezni podatki o kontaktni osebi</label>
+						<button type="button" class="btn btn-primary" onClick="myFunction()">Prikazi podatke</button>
 					</div>
 					<div id="myDIV"	>
-						<div class="form-group">
-							<label>Ime</label>
-							{{ registration_form.contact_name}}
-							<!--<input id="contact_name" type="text"/>-->
-						</div>
-						<div class="form-group">
+						<div>
 							<label>Priimek</label>
 							{{ registration_form.contact_surname }}
 							<!--<input id="contact_surname"type="text"/>-->
 						</div>
-						<div class="form-group">
+						<div>
+							<label>Ime</label>
+							{{ registration_form.contact_name}}
+							<!--<input id="contact_name" type="text"/>-->
+						</div>
+						<div>
 							<label>Naslov</label>
 							{{ registration_form.contact_address }}
 							<!--<input id="contact_address" type="text"/>-->
 						</div>
-						<div class="form-group">
+						<div>
 							<label>Telefon</label>
 							{{ registration_form.contact_phone_number }}
 							<!--<input id="contact_phone_number" type="tel"/>-->
 						</div>
-						<div class="form-group">
+						<div>
 							<label>Sorodstveno razmerje</label>
 							{{ registration_form.contact_sorodstvo }}
 							<!--<input id="sorodstvo" type="text"/>-->
 						</div>
-					<!--
-					</div class="form-group">
-						<div class="clearfix form-group">
+					</div>
+						<div class="clearfix">
 						  <button type="button" class="cancelbtn">Preklic</button>
 						  <button type="submit" class="signupbtn" >Registracija</button>
 						</div>
-					-->
-					</div>
-					<br/>
-				  	<div class="form-group">
-				  		<button type="submit" class="btn btn-primary form-control signupbtn">Registracija</button>
-				  	</div>  	
-				  	<div class="form-group">
-				  		<a href="/" class="btn btn-default form-control">Preklic</a>
-				  	</div>
-				  	<div class="button-padder form-group"></div>
 				</form>		
 			<!--</div>-->
 		</div>

@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.template import RequestContext
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 
 from .forms import LoginForm, RegisterMedicalStaffForm
@@ -39,7 +39,7 @@ from datetime import datetime
 #
 #    return render(request, 'index.html', {'login_form': form})
 IP_FAILED_LOGIN=[]
-BLACKLISTED_TIME_MIN=20
+BLACKLISTED_TIME_MIN=3
 VAR = 0
 
 def valid_login(ip):
@@ -171,7 +171,57 @@ def medicalStaffRegister(request):
         # return render(request, 'medical_registration.html', {'medical_reg_form': form})
         # return render_to_response(request, 'medical_registration.html')
     else:
-        return HttpResponse("Implement form sent")
+        #EXTRACT DATA FROM REQUEST
+        #Extract standard user data from request
+        first_name=request.POST['first_name']
+        last_name=request.POST['last_name']
+        email=request.POST['email']
+        password1=request.POST['password1']
+        password2=request.POST['password2']
+        #Extract additional staff specific data from request
+        role=request.POST['role']
+        code=request.POST['medical_id']
+        phone_number=request.POST['phone_number']
+        institution=request.POST["medical_area_id"]
+        #work_location_number=request.POST['work_location_number']
+
+        #VALIDATE FIELD VALUES
+        #Validate passwords
+        if not password1==password2 and password_validation.validate_password(password1):
+            print("Invalid password.")
+        #Validate email
+        if not validate_email(email):
+            print("Invalid email.")
+        #Check if username(email) already exists
+        if User.objects.filter(username=email).exists():
+            print("Username is already taken.")
+        #Check if nurse whith specified number already exists:
+        if role=='nurse' and Patronazna_sestra.objects.filter(sifra_patronazne_sestre=code).exists():
+            print("Account with specified nurse number already exists.")
+        elif role=='doc' and Zdravnik.objects.filter(sifra_zdravnika=code):
+            print("Account with specified doctor number already exists.")
+        elif role=='head_of_medical_service' and Vodja_PS.objects.filter(sifra_vodje_PS=code):
+            print("Account with specified head of medical service number already exists.")
+        elif role=='employee' and Sodelavec_ZD.objects.filter(sifra_sodelavca=code):
+            print("Account with specified employee number already exists.")
+        #Validate phone number
+        #Validate nurse number
+
+        #CREATE AND SAVE NEW OBJECT TO DB
+        #Create User object
+        user=User(first_name=first_name,last_name=last_name,password=password1,email=email,username=email)
+        try:
+            user.save()
+        except:
+            print("Could not create User object using given data!")
+        #Finally create Nurse object
+        nurse = Patronazna_sestra(uporabniski_profil=user,sifra_patronazne_sestre=code,telefonska_st=phone_number)
+        try:
+            nurse.save()
+        except:
+            print("Could not create Nurse object using given data!")
+
+        redirect('control_panel')
 
 def activate(request):
     if request.method == 'GET':
@@ -252,7 +302,7 @@ def register(request):
             print("Form not valid bro", form.errors)
             return HttpResponse("Form not valid")
 
-        return HttpResponse("Registracija uspela")
+        return redirect('home')
 
 
     # if a GET (or any other method) we'll create a blank form

@@ -12,8 +12,8 @@ class LoginForm(forms.Form):
 class RegisterMedicalStaffForm(forms.Form):
 # check medical_id length, same for medical_area_id and phone_number_id
   medical_id = forms.IntegerField(label="medical_personal_id", widget=forms.NumberInput(attrs={'class': 'form-control'}))
-  name = forms.CharField(label='med_name', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
-  surname = forms.CharField(label='med_surname', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
+  first_name = forms.CharField(label='med_name', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
+  last_name = forms.CharField(label='med_surname', max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
   medical_area_id = forms.IntegerField(label="medical_area_id", widget=forms.NumberInput(attrs={'class': 'form-control'}))
   email = forms.EmailField(label="email", max_length=50, widget=forms.EmailInput(attrs={'class': 'form-control'}))
   phone_number = forms.IntegerField(label="phone_number", widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -77,25 +77,25 @@ EPRUVETE_NUMBER = (
 	('5', '5'),
 )
 class RegistrationFrom(forms.Form):
-   cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'id': 'cardNumber','placeholder':'04167496667'}))
-   surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname','placeholder': 'Novak'}))
-   name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name','placeholder': 'Janez'}))
-   address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address','placeholder': 'Smartinska cesta 10'}))
-   phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone','placeholder':'041674966'}))
-   password = forms.CharField(label='Geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1'}))
-   password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2'}))
-   sex = forms.ChoiceField(choices=SEX_CHOICES)
-   district = forms.ChoiceField(choices=DISTRICT_CHOICES)
-   email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com'}))
-   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate'}), input_formats=['%d-%m-%Y'])
-   postCode =  forms.ChoiceField(label='PoSta',choices=POST_CODES)
+   cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'id': 'cardNumber','placeholder':'Sifra zdrav. kartice (12 mest)', 'class': 'form-control'}))
+   surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname', 'class': 'form-control'}))
+   name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}))
+   address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
+   phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone','placeholder':'xxxxxxxxx', 'class': 'form-control'}))
+   password = forms.CharField(label='Geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1', 'class': 'form-control'}))
+   password2 = forms.CharField(label='Ponovi geslo',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2', 'class': 'form-control'}))
+   sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+   district = forms.ChoiceField(choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+   email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
+   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate', 'class': 'form-control'}), input_formats=['%d-%m-%Y'])
+   postCode =  forms.ChoiceField(label='PoSta',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
    
    #kontaktna oseba
-   contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_surname','placeholder': 'Novak'}))
-   contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_name','placeholder': 'Janez'}))
-   contact_address = forms.CharField(label='Naslov:', required=False,  max_length=100, widget=forms.TextInput(attrs={'id': 'contact_address'}))
-   contact_phone_number = forms.IntegerField(label='Telefon',  required=False, widget=forms.NumberInput(attrs={'id': 'contact_phone_number','placeholder': '031890123'}))
-   contact_sorodstvo = forms.CharField(label='relation:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'relation'}))
+   contact_surname = forms.CharField(label='Priimek:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_surname', 'class': 'form-control'}))
+   contact_name = forms.CharField(label='Ime:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_name', 'class': 'form-control'}))
+   contact_address = forms.CharField(label='Naslov:', required=False,  max_length=100, widget=forms.TextInput(attrs={'id': 'contact_address', 'class': 'form-control'}))
+   contact_phone_number = forms.IntegerField(label='Telefon',  required=False, widget=forms.NumberInput(attrs={'id': 'contact_phone_number','placeholder': 'xxxxxxxxx', 'class': 'form-control'}))
+   contact_sorodstvo = forms.CharField(label='relation:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'relation', 'class': 'form-control'}))
   
 
 class AddNursingPatient(forms.Form):

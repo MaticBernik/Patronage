@@ -96,6 +96,26 @@ def isPatient(user):
         return True
     return False
 
+def isNurse(user):
+    if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
+def isDoctor(user):
+    if Zdravnik.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
+def isLeaderPS(user):
+    if Vodja_PS.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
+def isCoworker(user):
+    if Sodelavec_ZD.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
 def isAdmin(user):
     return user.is_superuser
 

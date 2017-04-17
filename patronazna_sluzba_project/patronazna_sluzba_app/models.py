@@ -198,18 +198,33 @@ class Zdravilo(models.Model):
     sif_razp_zdr = models.CharField(max_length=100, null=True)
     razpolozljivost_zdravila = models.CharField(max_length=100, null=True)
 
-class Meritev(models.Model): #Oz. bolje receno aktivnost?
+class Vrsta_obiska(models.Model):
+    TIP_OBISKA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
+    VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
+    VRSTA_KURATIVNI = (('I', "Aplikacija inekcij"), ('K', "Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"))
+    IME_STORITVE = (('I', "Aplikacija inekcij"), ('K', "Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"), ('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
+
     sifra = models.IntegerField(primary_key=True)
+    ime = models.CharField(choices=IME_STORITVE, max_length=10, blank=False, null=False)
+    tip = models.CharField(choices=TIP_OBISKA, max_length=10, null=True)
+
+    def save(self):
+        preventivni=[x[0] for x in self.VRSTA_PREVENTIVNI]
+        if self.ime in preventivni:
+            self.tip=self.TIP_OBISKA[0]
+        else:
+            self.tip=self.TIP_OBISKA[1]
+
+class Meritev(models.Model): #Oz. bolje receno aktivnost?
+    class Meta:
+        unique_together = (('sifra', 'vrsta_obiska'),)
+
+    vrsta_obiska = models.ForeignKey(Vrsta_obiska, null=False)
+    sifra = models.IntegerField(null=False)
     opis = models.CharField(max_length=500, null=False)
     porocilo = models.CharField(max_length=100, null=False)
 
 #class Bolezen(models.Model):
-
-class Vrsta_obiska(models.Model):
-    VRSTA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
-    VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O','Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
-    VRSTA_KURATIVNI = (('I',"Aplikacija inekcij"), ('K',"Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"))
-    ime = models.CharField(max_length=100, null=False)
 
 #class Material(models.Model):
 

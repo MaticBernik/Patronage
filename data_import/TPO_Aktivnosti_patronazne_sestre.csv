@@ -1,0 +1,95 @@
+Šifra storitve;Storitev;"Šifra aktivnosti";Aktivnost;Poročilo
+10;Obisk nosečnice;10;Seznanitev nosečnice o normalnem poteku nosečnosti in o spremembah na telesu.;Prosti vnos
+10;Obisk nosečnice;20;Povabilo v šolo za starše.;Prosti vnos
+10;Obisk nosečnice;30;Seznanitev o rednih ginekoloških pregledih.;Prosti vnos
+10;Obisk nosečnice;40;Seznanitev z bližajočim se porodom in pravočasnim odhodom v porodnišnico. ;Prosti vnos
+10;Obisk nosečnice;50;Pogovor in vključevanje partnerja v nosečnost in porod ter po prihodu domov. ;Prosti vnos
+10;Obisk nosečnice;60;Svetovanje o pripomočkih, ki jih bo potrebovala v porodnišnici. ;Prosti vnos
+10;Obisk nosečnice;70;Seznanitev nosečnice o štetju in beleženju plodovih gibov. ;Prosti vnos
+10;Obisk nosečnice;80;Svetovanje glede opreme za novorojenca in primerno ležišče. ;Prosti vnos
+10;Obisk nosečnice;90;Svetovanje o pravilni prehrani, ustrezni izbiri obleke in obutve.;Prosti vnos
+10;Obisk nosečnice;100;Svetovanje o primernem režim življenja, telesne vaje, gibanje na svežem zraku.;Prosti vnos
+10;Obisk nosečnice;110;Odsvetovanje razvad kot so uživanje alkohola, kajenje, uživanje zdravil in drog. ;Prosti vnos
+10;Obisk nosečnice;120;Seznanitev nosočnice z nevšečnostmi in svetovanje glede lajšanja težav zaradi nevšečnosti (slabosti, bruhanja, zaprtja, pogostih mikcij, nespečnosti, zgage, ...).;Prosti vnos
+10;Obisk nosečnice;130;Seznanitev nosečnice s pravicami do starševskega dopusta (porodniški dopust, pravica do dopusta za nego in varstvo otroka, pravica do očetovskega dopusta) in o uveljavljanju pravic povezanih z rojstvom otroka (pravica do paketa, otroški dodatek, zdravstveno zavarovanje, rojstni list, ureditev očetovstva).;Prosti vnos
+10;Obisk nosečnice;140;Pričakovan datum poroda;Datum *
+10;Obisk nosečnice;150;Anamneza: počutje, telesni znaki nosečnosti.;Prosti vnos *
+10;Obisk nosečnice;160;Družinska anamneza: Odnosi v družini, odnos družine do okolja, bivalni pogoji, ekonomske razmere, zdravstveno stanje družinskih članov, zdravstvena prosvetljenost in vzgojenost.;Prosti vnos *
+10;Obisk nosečnice;170;Izražanje čustev;"Moteno/Ni moteno *, Prosti vnos"
+10;Obisk nosečnice;180;Fizična obremenjenost;"Nizka/Srednja/Visoka *, Prosti vnos"
+10;Obisk nosečnice;190;Krvni pritisk: sistolični, diastolični;"Sistolični (mm Hg) *, Diastolični (mm Hg) *"
+10;Obisk nosečnice;200;Srčni utrip;Udarci na minuto *
+10;Obisk nosečnice;210;Dihanje;Vdihi na minuto *
+10;Obisk nosečnice;220;Telesna temperatura;st C *
+10;Obisk nosečnice;230;Telesna teža pred nosečnostjo;kg *
+10;Obisk nosečnice;240;Trenutna telesna teža;kg *
+20;Obisk otročnice;10;Pregled materinske knjižice in odpustnice iz porodnišnice. ;"Datum rojstva otroka *, Porodna teža otroka (g) *, Porodna višina otroka (cm) *, Prosti vnos"
+20;Obisk otročnice;20;Kontrola vitalnih funkcij.;Prosti vnos
+20;Obisk otročnice;30;Opazovanje čišče. ;Prosti vnos
+20;Obisk otročnice;40;Nadzor nad izločanjem blata in urina. ;Prosti vnos
+20;Obisk otročnice;50;Zdravstveno vzgojno delo glede pravilnega rokovanja z novorojenčkom, učenje tehnike nege novorojenčka;Prosti vnos
+20;Obisk otročnice;60;Motivacija za dojenje. Nadzor in pomoč pri dojenju. ;Prosti vnos
+20;Obisk otročnice;70;Svetovanje o čustveni podpori s strani partnerja.;Prosti vnos
+20;Obisk otročnice;80;Seznanitev o otrokovih potrebah po toplini, nežnosti in varnosti.;Prosti vnos
+20;Obisk otročnice;90;Svetovanje o spalnih potrebah otročnice, pravilni negi in higienskem režimu v poporodnem obdobju. ;Prosti vnos
+20;Obisk otročnice;100;Svetovanje o pravilni prehrani, pitju ustreznih količin tekočin;Prosti vnos
+20;Obisk otročnice;110;Poučitev o poporodni telovadbi.;Prosti vnos
+20;Obisk otročnice;120;Sezananitev z nekaterimi obolenji.;Prosti vnos
+20;Obisk otročnice;130;Napotitev na poporodni pregled.;Prosti vnos
+20;Obisk otročnice;140;Seznanitev z metodami zaščite pred nezaželjno nosečnostjo.;Prosti vnos
+20;Obisk otročnice;150;Svetovanje o normalnem delu, življenju in spolnih odnosih. ;Prosti vnos
+20;Obisk otročnice;160;Krvni pritisk;"Sistolični (mm Hg) *, Diastolični (mm Hg) *"
+20;Obisk otročnice;170;Srčni utrip;Udarci na minuto *
+20;Obisk otročnice;180;Dihanje;Vdihi na minuto *
+20;Obisk otročnice;190;Telesna temperatura;st C *
+20;Obisk otročnice;200;Trenutna telesna teža;kg *
+20;Obisk otročnice;210;Anamneza: počutje, telesni znaki nosečnosti.;Prosti vnos *
+20;Obisk otročnice;220;Družinska anamneza: odnosi v družini, odnos družine do okolja, bivalni pogoji, ekonomske razmere, zdravstveno stanje družinskih članov, zdravstvena prosvetljenost in vzgojenost.;Prosti vnos *
+20;Obisk otročnice;230;Izražanje čustev;"Moteno/Ni moteno *, Prosti vnos"
+20;Obisk otročnice;240;Fizična obremenjenost;"Nizka/Srednja/Visoka *, Prosti vnos"
+30;Obisk novorojenčka;10;Prikaz nege dojenčka;Prosti vnos
+30;Obisk novorojenčka;20;Nega popokovne rane;Prosti vnos
+30;Obisk novorojenčka;30;Nudenje pomoči pri dojenju in seznanitev s tehnikami dojenja.;Prosti vnos
+30;Obisk novorojenčka;40;Ureditev ležišča.;Prosti vnos
+30;Obisk novorojenčka;50;Svetovanje o povijanju, oblačenju, slačenju;Prosti vnos
+30;Obisk novorojenčka;60;Trenutna telesna teža;"g *, (dodatno prikaže razliko od porodne teže)"
+30;Obisk novorojenčka;70;Trenutna telesna višina;"cm *, (dodatno prikaže razliko od poročne višine",
+30;Obisk novorojenčka;80;Dojenje;"Da/Ne *, Prosti vnos"
+30;Obisk novorojenčka;90;Dodajanje adaptiranega mleka;"Da/Ne *, Prosti vnos"
+30;Obisk novorojenčka;100;Izločanje in odvajanje;"Ni posebnosti/Mikcija/Defekacija/Napenjanje/Kolike/Polivanje/Bruhanje *, Prosti vnos"
+30;Obisk novorojenčka;110;Ritem spanja;Prosti vnos *
+30;Obisk novorojenčka;120;Povišanje bilirubina (zlatenica);Prosti vnos *
+30;Obisk novorojenčka;130;Kolki;Prosti vnos *
+30;Obisk novorojenčka;140;Posebnosti;Prosti vnos
+40;Preventiva starostnika;10;Anamneza;Prosti vnos *
+40;Preventiva starostnika;20;Družinska anamneza;Prosti vnos *
+40;Preventiva starostnika;30;Krvni pritisk: sistolični, diastolični;"Sistolični (mm Hg) *, Diastolični (mm Hg) *"
+40;Preventiva starostnika;40;Srčni utrip;Udarci na minuto *
+40;Preventiva starostnika;50;Dihanje;Vdihi na minuto *
+40;Preventiva starostnika;60;Telesna temperatura;st C *
+40;Preventiva starostnika;70;Telesna teža;kg *
+40;Preventiva starostnika;80;Osebna higiena;Prosti vnos
+40;Preventiva starostnika;90;Prehranjevanje in pitje;Prosti vnos
+40;Preventiva starostnika;100;Izločanje in odvajanje;"Urin: prosti vnos, Blato: prosti vnos"
+40;Preventiva starostnika;110;Gibanje;Prosti vnos
+40;Preventiva starostnika;120;Čutila in občutki;"Vid: prosti vnos, Vonj: prosti vnos, Sluh: prosti vnos, Okus: prosti vnos, Otip: prosti vnos"
+40;Preventiva starostnika;130;Spanje in počitek;Prosti vnos
+40;Preventiva starostnika;140;Duševno stanje: izražanje čustev in potreb, komunikacija;Prosti vnos
+40;Preventiva starostnika;150;Stanje neodvisnosti;"Samostojen/Delno odvisen/Povsem odvisen *, Pomoč: svojci, drugi, Prosti vnos"
+40;Preventiva starostnika;160;Pregled predpisanih terapij;Prosti vnos
+40;Preventiva starostnika;170;Pogovor, nasvet in vzpodbuda.;Prosti vnos
+50;Aplikacija injekcij;10;Aplikacija injekcije;
+50;Aplikacija injekcij;20;Pogovor, nasvet in vzpodbuda.;Prosti vnos
+60;Odvzem krvi;10;"Odvzem krvi, Naročnik označi, katere epruvete je potrebno napolniti (rdeča, modra, rumena, zelena)";
+60;Odvzem krvi;20;Pogovor, nasvet in vzpodbuda.;Prosti vnos
+70;Kontrola zdravstvenega stanja;10;Anamneza;Prosti vnos
+70;Kontrola zdravstvenega stanja;20;Krvni pritisk: sistolični, diastolični;"Sistolični (mm Hg) *, Diastolični (mm Hg) *"
+70;Kontrola zdravstvenega stanja;30;Srčni utrip;Udarci na minuto *
+70;Kontrola zdravstvenega stanja;40;Dihanje;Vdihi na minuto *
+70;Kontrola zdravstvenega stanja;50;Telesna temperatura;st C *
+70;Kontrola zdravstvenega stanja;60;Krvni sladkor;"mmol/L *, Prosti vnos"
+70;Kontrola zdravstvenega stanja;70;Oksigenacija SpO2;% *
+70;Kontrola zdravstvenega stanja;80;Upoštevanje terapije;"Da/Delno/Ne *, Prosti vnos"
+70;Kontrola zdravstvenega stanja;90;Pregled terapije;Prosti vnos
+70;Kontrola zdravstvenega stanja;100;Navodila za terapijo do naslednjega obiska;Prosti vnos
+70;Kontrola zdravstvenega stanja;110;Pogovor, nasvet in vzpodbuda.;Prosti vnos

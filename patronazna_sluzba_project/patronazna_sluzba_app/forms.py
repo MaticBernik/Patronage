@@ -99,16 +99,16 @@ class RegistrationFrom(forms.Form):
   
 
 class AddNursingPatient(forms.Form):
-	cardNumber = forms.IntegerField(label='Stevilka kartice:',widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
-	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname'}))
-	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name'}))
-	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address'}))
-	phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone'}))
-	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'birthDate'}), input_formats=['%d-%m-%Y'])
-	postCode =  forms.ChoiceField(label='PoSta', choices=POST_CODES)
-	sex = forms.ChoiceField(choices=SEX_CHOICES)
-	district = forms.ChoiceField(choices=DISTRICT_CHOICES)
-	relation = forms.ChoiceField(label='Sorodstvo:', choices = RELATIONS )
+	cardNumber = forms.IntegerField(label='Stevilka kartice:',widget=forms.NumberInput(attrs={'id': 'cardNumber', 'class': 'form-control'}))
+	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname', 'class': 'form-control'}))
+	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}))
+	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
+	phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control'}))
+	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d-%m-%Y'])
+	postCode =  forms.ChoiceField(label='PoSta', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+	sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+	district = forms.ChoiceField(choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+	relation = forms.ChoiceField(label='Sorodstvo:', choices = RELATIONS, widget=forms.Select(attrs={'class': 'form-control'} ))
 	
 class WorkTaskForm(forms.Form):
 	creatorId = forms.CharField(label='Stevilka zdravnika:', widget=forms.TextInput(attrs={'disabled': 'disabled'}))

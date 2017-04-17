@@ -24,15 +24,17 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE_DIR)
 #db_path = os.path.join(BASE_DIR, "db.sqlite3")
 conn = sqlite3.connect("../patronazna_sluzba_project/db.sqlite3")
+conn.text_factory = str
 print("***Connection to DB successful",os.getcwd())
 
 #Patients
-with open("testni_pacienti.csv","r", encoding="Windows-1251") as patients_file:
+with open("testni_pacienti.csv","r") as patients_file:
 	patients_reader = csv.reader(patients_file, delimiter=';')
 	next(patients_reader, None) #skip header
 	for line in patients_reader:
 		print(line)
-		passwd=hash_password(line[9])
+		#passwd=hash_password(line[9])
+		passwd="pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs=" #workaround --> geslo123
 		if line[0]=="da":
 			conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(line[5],line[5],line[1],line[2],passwd,True,False,False,datetime.now()));
 			cursor = conn.execute("select id from auth_user where username = '"+line[5]+"';")
@@ -42,12 +44,12 @@ with open("testni_pacienti.csv","r", encoding="Windows-1251") as patients_file:
 			conn.execute("INSERT INTO patronazna_sluzba_app_pacient (ime,priimek,naslov,st_kartice,email,telefonska_st,spol,datum_rojstva) VALUES (?,?,?,?,?,?,?,?)", (line[1], line[2], line[3], int(line[4]), line[5], line[6], line[7], datetime.strptime(line[8], '%d.%m.%Y')));
 
 #Medical staff
-with open("testno_zdravnisko_osebje.csv","r", encoding="Windows-1251") as staff_file:
+with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="Windows-1251"
 	staff_reader = csv.reader(staff_file, delimiter=';')
 	next(staff_reader, None)  # skip header
 	for line in staff_reader:
 		print(line)
-		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",	(line[4], line[4], line[1], line[2], line[7], True, False, True, datetime.now()));
+		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",	(line[4], line[4], line[1], line[2], passwd, True, False, True, datetime.now()));
 		cursor = conn.execute("select id from auth_user where username = '" + line[4] + "';")
 		id = int(cursor.fetchall()[0][0])
 		if line[0]=="zdravnik":
@@ -59,14 +61,22 @@ with open("testno_zdravnisko_osebje.csv","r", encoding="Windows-1251") as staff_
 		else: # line[0]=="sodelavec":
 			conn.execute("INSERT INTO patronazna_sluzba_app_sodelavec_zd (sifra_sodelavca,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id) VALUES (?,?,?,?)", (line[3], line[5], line[6], id));
 
-#zdravnik;Joze;Dolenc;99999;joze.dolenc@mail.si;051 111 111;00100;geslo
+#Poste
+with open("seznam_post.csv", "r") as poste_file:  # encoding="Windows-1251"
+	poste_reader = csv.reader(poste_file, delimiter=';')
+	next(poste_reader, None)  # skip header
+	for line in poste_reader:
+		print(line)
+		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
 
 #Drugs
-with open("vsa_zdravila.csv","r", encoding="Windows-1251") as drugs_file:
+with open("vsa_zdravila.csv","r") as drugs_file: #encoding="Windows-1251"
 	drugs_reader = csv.reader(drugs_file, delimiter=';')
-	#next(drugs_reader, None)  # skip header
-	#for line in drugs_reader:
-		#print(line)
+	next(drugs_reader, None)  # skip header
+	for line in drugs_reader:
+		print(line)
+		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],line[10], line[11], line[12],line[13], line[14], line[15],line[16], line[17], line[18],line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], line[58],line[59],line[60], line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
+
 
 
 conn.commit()

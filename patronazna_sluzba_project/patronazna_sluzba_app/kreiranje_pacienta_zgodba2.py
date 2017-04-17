@@ -67,9 +67,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         print("user created")
 
                         print("patient saved")
-                        all_entries = Pacient.objects.all()
-                        for i in all_entries:
-                            print(i.uporabniski_profil.username)
+
 
                         # mail verifikacija
 

@@ -172,6 +172,25 @@ def index(request):
         return HttpResponse("Thanks for trying.")
 
 def base(request):
+    
+    user=request.user
+    if isAdmin(user):
+        role="Admin"
+    elif isCoworker(user):
+        role="Sodelavec"
+    elif isDoctor(user):
+        role="Doktor"
+    elif isLeaderPS(user):
+        role="Vodja PS"
+    elif isNurse(user):
+        role="med.Sestra"
+    else:
+        role="pacient"
+
+    if Pacient.objects.filter(uporabniski_profil=user).exists():
+        pacient = Pacient.objects.get(uporabniski_profil=user)
+        oskrbovanci = Pacient.objects.filter(skrbnistvo=pacient)
+
 
     print("base_function")
     # if this is a POST request we need to process the form data
@@ -180,11 +199,12 @@ def base(request):
         return HttpResponse("Thanks, for trying.")
         # if a GET (or any other method) we'll create a blank form
     else:
-        # context={'medical_reg_form': RegisterMedicalStaffForm()}
+        context={'user_role': role, 'oskrbovanci_pacienta':oskrbovanci}
         # return render(request, 'medical_registration.html', context)
         #form = LoginForm()
         print("base_function")
-        return render(request, 'base.html')
+        # return render(request, 'base.html')
+        return render(request, 'base.html', context)
         # form = RegisterMedicalStaffForm()
         # return render(request, 'medical_registration.html', {'medical_reg_form': form})
 
@@ -362,8 +382,8 @@ def changePassword(request):
 
 @login_required(login_url='/')
 def workTaskForm(request):
-	form = WorkTaskForm()
-	return render(request, 'workTask.html',{'work_task_form':form})
+    form = WorkTaskForm()
+    return render(request, 'workTask.html',{'work_task_form':form})
 
 @user_passes_test(isPatient,login_url='/')
 def addNursingPatient(request):
@@ -377,7 +397,8 @@ def addNursingPatient(request):
             print(i.st_kartice)
 """
         # za testiranje
-        current_user = User.objects.get(username="stoklas.nac@gmail.com")
+        # current_user = User.objects.get(username="stoklas.nac@gmail.com")
+        current_user = request.user
         current_pacient = Pacient.objects.get(uporabniski_profil=current_user)
         print("TUKAAAAJ", current_user.username)
 
@@ -408,7 +429,8 @@ def addNursingPatient(request):
                                                                          address,
                                                                           birthDate, sex, relation, phone)):
                 return HttpResponse("Napaka pri dodajanju oskrbovanca");
-            return HttpResponse("Dodali ste oskrbovanca")
+            # return HttpResponse("Dodali ste oskrbovanca")
+            return redirect('control_panel')
         """ DEJANSKA KODA ko bo se front end naret
         if form.is_valid():
             if request.user.is_authenticated():
@@ -435,5 +457,5 @@ def addNursingPatient(request):
         return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})
 
 def logout_user(request):
-	logout(request)
-	return HttpResponseRedirect('/')
+    logout(request)
+    return HttpResponseRedirect('/')

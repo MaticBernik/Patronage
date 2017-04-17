@@ -13,7 +13,11 @@ class Okolis(models.Model):
     sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
 
 '''class Izvajalec_ZS(models.Model):
-    st_izvajalca = models.IntegerField()
+    #V izvorni tabeli so Izvajalci naprej deljeni na oddelke - vendar to nas tu ne zanima??
+    class Meta:
+        unique_together = (('st_izvajalca', 'sifra_VZD'),)
+
+    st_izvajalca = models.IntegerField(primary_key=True)
     sifra_nadrejenega = models.IntegerField(null=True)
     sifra_osnovni = models.IntegerField(null=True)
     sifra_podrejeni = models.IntegerField(null=True)
@@ -204,7 +208,7 @@ class Meritev(models.Model): #Oz. bolje receno aktivnost?
 class Vrsta_obiska(models.Model):
     VRSTA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
     VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O','Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
-    VRSTA_KURATIVNI = (('I',"Aplikacija inekcij"), ('K',"Odvzem krvi"), ('Z'), "Kontrola zdravstvenega stanja")
+    VRSTA_KURATIVNI = (('I',"Aplikacija inekcij"), ('K',"Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"))
     ime = models.CharField(max_length=100, null=False)
 
 #class Material(models.Model):

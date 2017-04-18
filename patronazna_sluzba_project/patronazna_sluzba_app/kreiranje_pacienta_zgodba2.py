@@ -106,7 +106,7 @@ def sendEmail(activation_key, customer_mail):
         [customer_mail],
         fail_silently=False,
     )
-
+    print("mail poslan")
 
 
 

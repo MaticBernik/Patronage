@@ -126,6 +126,7 @@ def index(request):
     ip_naslov=get_ip(request)
     if ip_blacklisted(ip_naslov):
         print("***IP naslov je bil zacasno blokiran, zaradi 3 neveljavnih poskusov prijave.")
+        return HttpResponse("Vas IP naslov je blokiran, ponovno lahko poskusite cez 3 minute.")
     if request.method=='GET':
         form = LoginForm()
 
@@ -374,18 +375,18 @@ def register(request):
 
     return render(request, 'register.html', {'registration_form': form})
 
-@login_required(login_url='/')
+#@login_required(login_url='/')
 def changePassword(request):
 
     return render(request, 'changePassword.html')
 
 
-@login_required(login_url='/')
+#@login_required(login_url='/')
 def workTaskForm(request):
     form = WorkTaskForm()
     return render(request, 'workTask.html',{'work_task_form':form})
 
-@user_passes_test(isPatient,login_url='/')
+#@user_passes_test(isPatient,login_url='/')
 def addNursingPatient(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

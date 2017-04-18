@@ -43,10 +43,11 @@ $(document).ready(function() {
 			//alert("Contact validation");
 			var uC = "[A-Z\u010C\u0160\u017d\u0106\u0110]";
 			var lC="[a-z\u010d\u0161\u017e\u0107\u0111]";
+			var allCase = "[A-Z\u010C\u0160\u017d\u0106\u0110\a-z\u010d\u0161\u017e\u0107\u0111]";
 			var badColor = "#ff6666";
 			//var nameRE = new RegExp("^("+uC+lC+"+)");
 			//lowerCase
-			var nameRE = new RegExp("^("+lC+"+)");
+			var nameRE = new RegExp("^("+allCase+"+)");
 			//did the validation pass
 			
 			
@@ -299,7 +300,7 @@ function registrationValidation(){
 	//ime in priimek morajo biti z veliko zacetnico
 	//var nameRE = new RegExp("^("+uC+lC+"+)");
 	//lowerCase
-	var nameRE = new RegExp("^("+lC+"+)");
+	var nameRE = new RegExp("^("+allCase+"+)");
 	var name= document.getElementById('name');
 	var surname = document.getElementById('surname');
 	var cardNumber = document.getElementById('cardNumber');

@@ -45,6 +45,7 @@ IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=3
 VAR = 0
 
+context={}
 
 def valid_login(ip):
     global IP_FAILED_LOGIN
@@ -203,6 +204,7 @@ def base(request):
         return HttpResponse("Thanks, for trying.")
         # if a GET (or any other method) we'll create a blank form
     else:
+        global context
         context={'user_role': role, 'oskrbovanci_pacienta':oskrbovanci}
         # return render(request, 'medical_registration.html', context)
         #form = LoginForm()
@@ -216,6 +218,7 @@ def base(request):
 def medicalStaffRegister(request):
     print("medical add")
     if request.method == 'GET':
+        global context
         context={'medical_reg_form': RegisterMedicalStaffForm()}
 
         return render(request, 'medical_registration.html', context)
@@ -364,6 +367,7 @@ def register(request):
             act_key = token.generate_token(mail)
 
             kreiranje_pacienta_zgodba2.sendEmail(act_key.decode("utf-8"), mail)
+            print("mail je poslan")
 
         else:
             print("Form not valid bro", form.errors)
@@ -391,11 +395,14 @@ def changePassword(request):
             if currentUser.check_password(oldpassword):
                 password1 = form.cleaned_data['password1'];
                 password2 = form.cleaned_data['password2'];
-                if password1 == password2:
-                    user = User.objects.get(username=currentUser)
-                    user.set_password(password1)
-                    user.save()
-                    return HttpResponse("Uspesna sprememba gesla!")
+                if password1 == password2 and len(password1)>7:
+                    request.user.set_password(password1)
+                    update_session_auth_hash(request, request.user)
+                    request.user.save()
+                    return render(request, 'base.html', context)
+                    #user = User.objects.get(username=currentUser)
+                    #user.set_password(password1)
+                    #user.save()
                 else:
                     return HttpResponse("Napaka pri potrditvi novega gesla!")
             else:
@@ -481,3 +488,7 @@ def addNursingPatient(request):
         form = AddNursingPatient()
         return render(request, 'addNursingPatient.html', {'add_nursing_patient': form})
 
+
+def logout_user(request):
+    logout(request)
+    return HttpResponseRedirect('/')

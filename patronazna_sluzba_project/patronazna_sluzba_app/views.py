@@ -47,6 +47,17 @@ VAR = 0
 
 context={}
 
+# @login_required(login_url='/')
+def workTaskForm(request):
+
+    if request.method == 'POST':
+        form = WorkTaskForm(request.POST)
+
+    else:
+        form = WorkTaskForm()
+
+    return render(request, 'workTask.html', {'work_task_form': form})
+
 def valid_login(ip):
     global IP_FAILED_LOGIN
     failed_ip_list = [x[0] for x in IP_FAILED_LOGIN]
@@ -436,10 +447,7 @@ def changePassword(request):
         form = ChangePasswordForm()
     return render(request, 'changePassword.html', {'change_password_form': form})
 
-#@login_required(login_url='/')
-def workTaskForm(request):
-    form = WorkTaskForm()
-    return render(request, 'workTask.html',{'work_task_form':form})
+
 
 #@user_passes_test(isPatient,login_url='/')
 def addNursingPatient(request):

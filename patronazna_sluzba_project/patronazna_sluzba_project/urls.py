@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-#from patronazna_sluzba_app import views
 from patronazna_sluzba_app import views
 
 

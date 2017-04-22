@@ -78,7 +78,7 @@ EPRUVETE_NUMBER = (
 	('4', '4'),
 	('5', '5'),
 )
-class RegistrationFrom(forms.Form):
+class PatientRegistrationFrom(forms.Form):
    cardNumber = forms.IntegerField(label='Stevilka kartice:', widget=forms.NumberInput(attrs={'id': 'cardNumber','placeholder':'Sifra zdrav. kartice (12 mest)', 'class': 'form-control'}))
    surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname', 'class': 'form-control'}))
    name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}))
@@ -100,7 +100,7 @@ class RegistrationFrom(forms.Form):
    contact_sorodstvo = forms.CharField(label='relation:',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'relation', 'class': 'form-control'}))
   
 
-class AddNursingPatient(forms.Form):
+class AddNursingPatientForm(forms.Form):
 	cardNumber = forms.IntegerField(label='Stevilka kartice:',widget=forms.NumberInput(attrs={'id': 'cardNumber', 'class': 'form-control'}))
 	surname = forms.CharField(label='Priimek:', max_length=100, widget=forms.TextInput(attrs={'id': 'surname', 'class': 'form-control'}))
 	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}))

@@ -16,21 +16,21 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from patronazna_sluzba_app import views
+from patronazna_sluzba_app.views import *
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^base/newStaffMember', views.medicalStaffRegister, name="register_medical_personal"),
-    url(r'^base/controlPanel', views.base, name="control_panel"),
+    url(r'^base/newStaffMember', register_medical_staff, name="link_register_medical_staff"),
+    url(r'^base/controlPanel', base, name="link_control_panel"),
     # url(r'^base/newPatient', views.newPatientRegister, name="register_pacient"),
-	url(r'^register/', views.register,name='register'),
-    url(r'^base/addNursingPatient', views.addNursingPatient, name="addNursing"),
-	url(r'^changePassword', views.changePassword,name="change_password"),
-    url(r'^activate/', views.activate),
-	url(r'^workTask/', views.workTaskForm),
-	url(r'^logout', views.logout_user, name="logout"),
-	url(r'^$', views.index, name="home"),
+	url(r'^register/', register_pacient,name='link_register_pacient'),
+    url(r'^base/addNursingPatient', add_nursing_patient, name="link_add_nursing"),
+	url(r'^changePassword', change_password, name="link_change_password"),
+    url(r'^activate/', activate),
+	url(r'^workTask/', work_task_form_processing),
+	url(r'^logout', logout_user, name="link_logout"),
+	url(r'^$', index, name="link_home"),
 ]
 
 #ADD 

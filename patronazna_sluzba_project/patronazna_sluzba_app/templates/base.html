@@ -69,9 +69,9 @@
             <li><a href="#">Option 3</a></li>
           </ul>
         </li>
-        <li><a href="{% url 'register_medical_personal' %}">Dodaj zdravstveno osebje</a></li>
-        <li><a href="{% url 'addNursing' %}/">Dodaj oskrbovanca</a></li>
-		<li><a href="{% url 'change_password' %}">Spremeni geslo</a></li>
+        <li><a href="{% url 'link_register_medical_staff' %}">Dodaj zdravstveno osebje</a></li>
+        <li><a href="{% url 'link_add_nursing' %}/">Dodaj oskrbovanca</a></li>
+		<li><a href="{% url 'link_change_password' %}">Spremeni geslo</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       	{% if user.is_authenticated %}

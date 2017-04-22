@@ -1,9 +1,9 @@
 from .models import *
-from kreiranje_pacienta_zgodba2 import preveri_gesli
+from . import kreiranje_pacienta_zgodba2
 
 
 def sprememba_gesla(geslo1, geslo2, id):
-    if preveri_gesli(geslo1, geslo2):
+    if kreiranje_pacienta_zgodba2.preveri_gesli(geslo1, geslo2):
         user = User.objects.get(username=id)
         user.set_password(geslo1)
         user.save()

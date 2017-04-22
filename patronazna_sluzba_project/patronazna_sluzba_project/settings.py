@@ -20,6 +20,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ..\GitHub\TPO\patronazna_sluzba_project\patronazna_sluzba_project
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+# http://stackoverflow.com/questions/4919600/django-project-root-self-discovery
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -142,6 +145,7 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
 
+# TEST READY PRINT's FOR OS DIR NAVIGATION
 # print("BASE_DIR: ", BASE_DIR)
 # print("PROJECT_ROOT: ", PROJECT_ROOT)
 # print("STATIC_URL: ", STATIC_URL)

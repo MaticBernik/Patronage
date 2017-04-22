@@ -9,9 +9,9 @@ import hashlib
 import uuid
 from django.utils.crypto import (pbkdf2, get_random_string)
 def hash_password(password):
-    # uuid is used to generate a random number
-    salt = uuid.uuid4().hex
-    return "sha256"+'$1$'+salt+"$"+hashlib.sha256(salt+ password).hexdigest()
+	# uuid is used to generate a random number
+	salt = uuid.uuid4().hex
+	return "sha256"+'$1$'+salt+"$"+hashlib.sha256(salt+ password).hexdigest()
 
 '''def hash_password(password):
 	algorithm = "pbkdf2_sha256"
@@ -22,8 +22,6 @@ def hash_password(password):
 	hash = hash.encode('base64').strip()
 	return "%s$%d$%s$%s" % (algorithm, iterations, salt, hash)'''
 
-	
-	
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE_DIR)
 #db_path = os.path.join(BASE_DIR, "db.sqlite3")
@@ -32,7 +30,7 @@ conn.text_factory = str
 print("***Connection to DB successful",os.getcwd())
 
 #Patients
-with open("testni_pacienti.csv","r") as patients_file:
+with open("testni_pacienti.csv","r", encoding="utf8") as patients_file:
 	patients_reader = csv.reader(patients_file, delimiter=';')
 	next(patients_reader, None) #skip header
 	for line in patients_reader:
@@ -48,7 +46,7 @@ with open("testni_pacienti.csv","r") as patients_file:
 			conn.execute("INSERT INTO patronazna_sluzba_app_pacient (ime,priimek,naslov,st_kartice,email,telefonska_st,spol,datum_rojstva) VALUES (?,?,?,?,?,?,?,?)", (line[1], line[2], line[3], int(line[4]), line[5], line[6], line[7], datetime.strptime(line[8], '%d.%m.%Y')));
 
 #Medical staff
-with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="Windows-1251"
+with open("testno_zdravnisko_osebje.csv","r", encoding="utf8") as staff_file: #encoding="Windows-1251"
 	staff_reader = csv.reader(staff_file, delimiter=';')
 	next(staff_reader, None)  # skip header
 	for line in staff_reader:
@@ -66,9 +64,10 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="Windows-
 			conn.execute("INSERT INTO patronazna_sluzba_app_sodelavec_zd (sifra_sodelavca,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id) VALUES (?,?,?,?)", (line[3], line[5], line[6], id));
 
 #Poste
-with open("seznam_post.csv", "r") as poste_file:  # encoding="Windows-1251"
+with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  # encoding="Windows-1251"
 	poste_reader = csv.reader(poste_file, delimiter=';')
-	next(poste_reader, None)  # skip header
+	# skip header
+	next(poste_reader, None)
 	for line in poste_reader:
 		print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
@@ -96,7 +95,7 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvaja
 #Vrste obiskov
 VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice', 'Obisk novorojencka', 'Obisk starostnika')
 VRSTA_KURATIVNI = ("Aplikacija inekcij", "Odvzem krvi", "Kontrola zdravstvenega stanja")
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="Windows-1251"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  # encoding="Windows-1251"
 	vrste_obiskov_reader = csv.reader(vrste_obiskov_file, delimiter=';')
 	next(vrste_obiskov_reader, None)  # skip header
 	last_imported = None
@@ -112,7 +111,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 			conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (int(line[0]), ime, tip));
 
 #Meritve oz. Aktivnosti
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # encoding="Windows-1251"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  # encoding="Windows-1251"
 	aktivnosti_reader = csv.reader(aktivnosti_file, delimiter=';')
 	next(aktivnosti_reader, None)  # skip header
 	for line in aktivnosti_reader:

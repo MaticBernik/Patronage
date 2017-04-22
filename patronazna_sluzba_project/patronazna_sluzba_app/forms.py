@@ -89,7 +89,7 @@ class RegistrationFrom(forms.Form):
    sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
    district = forms.ChoiceField(choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
-   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d-%m-%Y'])
+   birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
    postCode =  forms.ChoiceField(label='PoSta',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
    
    #kontaktna oseba
@@ -106,7 +106,7 @@ class AddNursingPatient(forms.Form):
 	name = forms.CharField(label='Ime:', max_length=100, widget=forms.TextInput(attrs={'id': 'name', 'class': 'form-control'}))
 	address = forms.CharField(label='Naslov:', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
 	phone = forms.IntegerField(label='Telefon:', widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control'}))
-	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d-%m-%Y'])
+	birthDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
 	postCode =  forms.ChoiceField(label='PoSta', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
 	sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
 	district = forms.ChoiceField(choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -119,7 +119,7 @@ class WorkTaskForm(forms.Form):
 	visitType = forms.ChoiceField(choices=VRSTE_OBISKOV)
 	visitTypeDetail = forms.ChoiceField(choices=VRSTE_OBISKOV_DETAIL,widget=forms.Select(attrs={'id':'visitType','onchange':'addPatientButton()'}))
 	cardNumber = forms.CharField(label='Stevilka kartice:', max_length=100, widget=forms.NumberInput(attrs={'id': 'cardNumber'}))
-	visitDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'visitDate','onchange':'firstVisitDate()'}), input_formats=['%d-%m-%Y'])
+	visitDate = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker','id':'visitDate','onchange':'firstVisitDate()'}), input_formats=['%d.%m.%Y'])
 	visitCount = forms.CharField(label='Stevilo obiskov', max_length=100, widget=forms.NumberInput(attrs={'max': '10'}))
 	timeInterval = forms.CharField(label='Casovni interval',widget=forms.TextInput(attrs={'id':'timeInterval'}))
 	timePeriod = forms.CharField(label='Casovno obdobje',widget=forms.TextInput(attrs={'id':'timePeriod'}))

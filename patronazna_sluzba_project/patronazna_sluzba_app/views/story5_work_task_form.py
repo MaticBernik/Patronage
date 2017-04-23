@@ -4,6 +4,7 @@ from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 
+
 def work_task_form_processing(request):
 
     if request.method == 'POST':

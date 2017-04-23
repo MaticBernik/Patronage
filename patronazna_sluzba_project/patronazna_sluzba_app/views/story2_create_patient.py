@@ -7,6 +7,8 @@ from patronazna_sluzba_app.models import *
 from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
+from patronazna_sluzba_app.forms import *
+
 import hashlib
 import random
 import re
@@ -240,7 +242,7 @@ def register_pacient(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
 
-        form = RegistrationFrom(request.POST)
+        form = PatientRegistrationFrom(request.POST)
 
         if form.is_valid():
             #   Preveri, da kartice slucajno ze ne obstaja.
@@ -274,7 +276,7 @@ def register_pacient(request):
             contact_phone_number = form.cleaned_data['contact_phone_number']
             sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
 
-            if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, name, surname, mail,
+            if not (add_patient_caretaker(password1, password2, name, surname, mail,
                                                                     card_number, address, phone_number,
                                                                     birth_date, sex, contact_name,
                                                                     contact_surname, contact_address,
@@ -297,7 +299,7 @@ def register_pacient(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = RegistrationFrom()
+        form = PatientRegistrationFrom()
 
     return render(request, 'patient_registration.html', {'registration_form': form})
 

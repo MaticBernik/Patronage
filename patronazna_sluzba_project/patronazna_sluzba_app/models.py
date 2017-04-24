@@ -241,15 +241,17 @@ class Meritev(models.Model): #Oz. bolje receno aktivnost?
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
 
-    datum_prvega_obiska = models.DateTimeField(null=False)
-    st_obiskov = models.IntegerField(null=False)
-    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=False)
-    cas_obiskov_dolzina = models.IntegerField(null=False)
-    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=False)
+    #   Zacasno sm dal na true nulle
+    datum_prvega_obiska = models.DateTimeField(null=True)
+    st_obiskov = models.IntegerField(null=True)
+    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=True)
+    cas_obiskov_dolzina = models.IntegerField(null=True)
+    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True)
     #bolezen = models.ForeignKey(Bolezen,null=False)
-    izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=False)
+    izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
     zdravnik = models.ForeignKey(Zdravnik, null=False)
-    vodja_PS = models.ForeignKey(Vodja_PS, null=False)
+    vodja_PS = models.ForeignKey(Vodja_PS, null=True)
+
 
 #class Obisk(models.Model):
 

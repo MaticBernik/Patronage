@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from .models import *
 from django.core.validators import MaxValueValidator
 from django.db.models import When, F, Q, Case
-from dal import autocomplete
 from django.forms import  ModelForm
 
 USER_TYPES = (

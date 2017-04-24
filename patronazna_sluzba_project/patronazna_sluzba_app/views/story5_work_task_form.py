@@ -35,12 +35,19 @@ def choose_visit_type(request):
     print('filter paremeter is: '+choose_visit)
     return render_to_response('ajax_visit.html',{'visits':visits})
 
+def fix_date(date_of_visit):
+    dd = date_of_visit[0:2]
+    mm = date_of_visit[3:5]
+    yyyy = date_of_visit[6:10]
+    print(dd, " ", mm, " ", yyyy)
+    dat = yyyy + '-' + mm + '-' + dd
+
+    return dat
+
 def work_task_view(request):
 
     if request.method == 'POST':
         form = WorkTaskForm(request.POST)
-
-
 
         vrsta_obiska = request.POST['visitType']
         podvrsta_vrsta_obiska = request.POST['visitTypeDetail']
@@ -99,7 +106,77 @@ def work_task_view(request):
         #zdravilo = request.POST['medicine']
         #autoData = request.POST['searchPatient']
         #pacient = autoData.split()
+
+        #   =====================>>>>>>==============<<<<<<<========================
+        #   ===========================   BACK BACK  ===============================
+        #   =====================>>>>>>==============<<<<<<<========================
+        #   Add doctor for this worktask form
+        current_user = request.user
+        try:
+            current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
+        except:
+            us = User.objects.get(email='zd@gmail.com')
+            current_doc = Zdravnik.objects.get(uporabniski_profil=us)
+            print("hardcodan doc")
+
+            #return HttpResponse("Can't find this doctor(user) in the database")
+
+        #nurse_id = form.cleaned_data['nurse_id']
+
+        try:
+            #current_nurse = Patronazna_sestra.objects.get(sifra_patronazne_sestre=nurse_id)
+            current_nurse = Patronazna_sestra.objects.get(sifra_patronazne_sestre=12121)
+        except:
+            print("hardcodam sestro kr se nimamo user vlog naretih")
+            current_nurse = Patronazna_sestra.objects.get(sifra_patronazne_sestre='99998')
+
+            # anita.gorenc@mail.si
+            #return HttpResponse("Can't find current nurse")
+        #ZS = current_doc.sifra_izvajalca_ZS
+
+        print("printam pacienta card number", pacient[0:12])
+        patient_card_number = int(pacient[0:12])
+
+        try:
+            patient = Pacient.objects.get(st_kartice=patient_card_number)
+            print("patient found")
+        except:
+            return HttpResponse("Can't find patient by the card number")
+        visit_type = request.POST['visitType']
+        visit_subtype = request.POST['visitTypeDetail']
+
+        time_interval_to_visit = request.POST['timeInterval']
+        try:
+            time_period = request.POST['timePeriod']
+        except:
+            time_period = 0
+        obligatory_or_not = obveznost
+        number_of_visits = request.POST['visitCount']
+
+        type_of_visit = Vrsta_obiska.objects.get(ime=visit_subtype)
+
+        #   Okolise je treba porihtat, kr drgac ne morm dodat celotnega naloga
+
+
+        date_of_visit = request.POST['visitDate']
+        date_of_visit = fix_date(date_of_visit)
+
+
+        #   Create work task form
+        work_task_f = Delovni_nalog(st_obiskov=number_of_visits, vrsta_obiska=type_of_visit,
+                                    zdravnik=current_doc, datum_prvega_obiska=date_of_visit, cas_obiskov_dolzina=time_interval_to_visit)
+        work_task_f.save()
+
+        print("work tast form saved")
+
+        patient_wtf = Pacient_DN(delovni_nalog=work_task_f, pacient=patient)
+        patient_wtf.save()
+
+        print("work task form link to  patient saved")
+
         return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
+
+
 
     else:
         args = {}

@@ -1,0 +1,12 @@
+{% if patients.count > 0 %}
+<datalist>
+{% for patient in patients %}
+    <option value="{{ patient.st_kartice }} {{ patient.ime }} {{ patient.priimek }} {{ patient.naslov }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

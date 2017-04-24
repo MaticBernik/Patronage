@@ -116,6 +116,8 @@ class Pacient(models.Model):
             self.uporabniski_profil.email = self.email
             self.uporabniski_profil.username= self.email
 
+    def __str__(self):
+        return self.st_kartice+' '+self.ime+' '+self.priimek+' '+self.naslov
 class Sorodstveno_razmerje(models.Model):
 	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 	pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
@@ -198,6 +200,11 @@ class Zdravilo(models.Model):
     sif_razp_zdr = models.CharField(max_length=100, null=True)
     razpolozljivost_zdravila = models.CharField(max_length=100, null=True)
 
+    def __unicode__(self):
+        return self.ime
+    def __str__(self):
+        return self.ime
+
 class Vrsta_obiska(models.Model):
     TIP_OBISKA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
     VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
@@ -254,4 +261,3 @@ class Material_DN(models.Model):
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
-

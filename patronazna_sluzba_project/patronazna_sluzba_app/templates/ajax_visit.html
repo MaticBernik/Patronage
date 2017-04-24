@@ -1,0 +1,12 @@
+{% if visits.count > 0 %}
+<select>
+{% for visit in visits %}
+    <option value="{{ visit.ime }}">{{ visit.ime }}</option>
+
+    {%  endfor %}
+</select>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

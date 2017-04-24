@@ -1,0 +1,13 @@
+{% if medicine.count > 0 %}
+<datalist>
+{% for m in medicine %}
+    <!--<li><a href="/medicine/get/{{ m.nacionalna_sifra}}">{{ m.ime }}</a></li>-->
+    <option value="{{ m.ime }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

@@ -16,10 +16,13 @@
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <!--AJAX Zdravila-->
+        <script src="{% static 'script/ajax.js' %}"></script>
   <script>
   $( function() {
-    $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd-mm-yy',yearRange: "-100:+0"})
+    $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends })
   } );
+
   </script>
   
 	</head>
@@ -44,16 +47,29 @@
 							<!--<label for="myName">Številka izvajalca:</label>
 							<input type="text" name="myName" id="myName">-->
 							<label>Številka zdravnika</label>
-							{{ work_task_form.creatorId }}							
+							{{ work_task_form.creator_id }}
 						</div>
 						<div>
 							<label>Številka izvajalca</label>
-							{{ work_task_form.nurseId }}	
+							{{ work_task_form.nurse_id }}
 						</div>
-						<div>
+						<!--<div>
 							<label>Številka delovnaga naloga</label>
-							{{ work_task_form.taskId }}	
+							{{ work_task_form.task_id }}
 						</div>
+                        <div>
+							<label>Dinamcni obiski</label>
+							{{ work_task_form.tipObiska }}
+						</div>
+                         <div>
+							<label>Dinamcni obiski details</label>
+                         <select>
+							{% for o in work_task_form.tipObiska %}
+                                <option>{{ o.priimek }}</option>
+                            {% endfor %}
+                         </select>
+                            </div>
+                            -->
 					</fieldset>
 					<!--Vrsta obiskov-->
 					<fieldset id="simpleForm">
@@ -62,6 +78,7 @@
 							</legend>
 						<div>
 							<label>Vrste obiskov</label>
+                            {% csrf_token %}
 							{{ work_task_form.visitType}}
 						<!--<select>
 							<option>Preventivni</option>
@@ -86,14 +103,25 @@
 					<!--Podatki o pacientu-->
 					<fieldset id="simpleForm">
 						<legend>
-						 <h3>3　— Zavarovalna oseba</h3>
+						 <h3>3　— Zavarovana oseba</h3>
 							</legend>
 						<div>
-							<div class="input_fields_wrap">
-							<label>Številka zavarovane osebe</label>
-							{{ work_task_form.cardNumber }}
+							<div>
+							<label>Ime</label>
+                            {% csrf_token %}
+                            <input type="text" list="patientsList" id="searchPatient" name="searchPatient" />
+                            <datalist id="patientsList">
+
+                            </datalist>
+
 							<!--<input required type="number"/>-->
-							<button class="add_field_button btn btn-primary" style="display: none;">Dodaj novorojenčka</button>					
+							<button class="add-baby btn btn-primary" style="display: none;">Dodaj pacient</button>
+                            </div>
+                            <div id="baby-patient" style="display: none">
+                                <label>Izbrani pacienti</label>
+                                {{ work_task_form.addPatient }}
+                                <button class="remove-baby btn btn-primary" style="display: none;">Odstrani pacienta</button>
+                            </div>
 						</div>
 					</fieldset>
 					<!--Datum obiskov-->
@@ -104,6 +132,8 @@
 						<div>
 						<label>Datum prvega obiska</label>
 						{{ work_task_form.visitDate }}
+                            <label>Obvezen</label>
+                            {{ work_task_form.mandatory }}
 						<!--<input id="visitDate" type="date" required="required" onchange="firstVisitDate()"/>
 						<label>Obvezen</label>
 						<input type="checkbox"/>-->
@@ -124,7 +154,12 @@
 							{{ work_task_form.timePeriod }}
 							<!--<input id="timePeriod" type="text" />-->
 						</div>
-						
+                        <!--
+                        <div>
+                            <label>Radio izbira cas obiksa tip</label>
+                            {{ work_task_form.visit_date_type }}
+                        </div>
+						-->
 					</fieldset>
 					<!--Zdravila-->
 					<div id="cureId" style="display: none">
@@ -132,15 +167,20 @@
 						<legend>
 						 <h3>5　— Zdravila</h3>
 						</legend>
-						<div>
-						<label>Šifrant zdravil</label>
+                        <div>
+                            <label>Izbira zdravil</label>
+                            {% csrf_token %}
+                            <input type="text" list="search-results" id="medicine" name="medicine" />
+                            <datalist id="search-results">
+
+                            </datalist>
+                            <button class=" btn btn-primary add-medicine">Dodaj zdravilo</button>
+                        </div>
+                        <div>
+						<label>Izbrana zdravila</label>
 						{{ work_task_form.cureId }}
-						<!--<select>
-							<option>12345</option>
-							<option>67890</option>
-						</select>
-						-->
-					</div>
+                            <button class=" btn btn-primary remove-medicine">Odstrani zdravila</button>
+					    </div>
 					</div>
 					</fieldset>
 					<!--Material-->
@@ -153,95 +193,15 @@
 						<label>Barva in število euruvet</label>
 						{{ work_task_form.materialColor }}
 						{{ work_task_form.materialQuantity }}
-						<!--<select>
-							<option>Rdeča</option>
-							<option>Modra</option>
-							<option>Rumena</option>
-							<option>Zelena</option>
-						</select>
-						<select id="stEpruvet">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</select>-->
+                             <button class=" btn btn-primary add-material">Dodaj material</button>
 						</div>
+                        <div>
+                            <label>Izbran material</label>
+                            {{ work_task_form.materialDN }}
+                            <button class=" btn btn-primary remove-material">Odstrani material</button>
+                        </div>
 					</div>					
 					</fieldset>
-					<!---->
-					<!--<div>
-						<label>Vrste obiskov</label>
-						<select>
-							<option>Preventivni</option>
-							<option>Kurativni</option>
-						</select>
-					
-					</div>
-					<div>
-						<label>Podvrste obiskov</label>
-						<select id="visitType" onchange="addPatientButton()">
-							<option></option>
-							<option>Obisk nosečnice</option>
-							<option>Obisk otročnice in novorojenčka</option>
-							<option>Preventivo starostnika</option>
-							<option>Odvzem krvi</option>
-							<option>Aplikacija injekcij</option>
-							<option>Kontrola zdravstvenega stanja</option>
-						</select>
-					
-					</div>
-					
-					<div>
-						<label>Šifrant zdravil</label>
-						<select>
-							<option>12345</option>
-							<option>67890</option>
-						</select>
-					</div>
-					
-					<div>
-						<label>Barva in število euruvet</label>
-						<select>
-							<option>Rdeča</option>
-							<option>Modra</option>
-							<option>Rumena</option>
-							<option>Zelena</option>
-						</select>
-						<select id="stEpruvet">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</select>
-					</div>-->
-					<!--<div>
-						<label>Datum prvega obiska</label>
-						<input id="visitDate" type="date" required="required" onchange="firstVisitDate()"/>
-						<label>Obvezen</label>
-						<input type="checkbox"/>
-						<span id="message"></span>
-					</div>
-					<div>
-						<label>Število obiskov</label>
-						<input type="number" max=10 required />
-					</div>
-					<div>
-						<label>Časovni interval</label>
-						<input id="timeInterval" type="text"/>
-					</div>
-					<div>
-						<label>Časovno obdobje</label>
-						<input id="timeSpan" type="text" />
-					</div>
-					<h2>Podatki o pacientu</h2>
-						<div class="input_fields_wrap">
-							<label>Številka kartice zdravstvenega zavarovanja</label>
-							<input required type="number"/>
-							<button class="add_field_button" style="display: none;">Add More Fields</button>							
-						</div>
-					-->
 						<div class="clearfix">
 						  <button type="button" class="cancelbtn">Prekliči</button>
 						  <button type="submit" class="signupbtn" onclick="firstVisitDate()">Ustvari</button>

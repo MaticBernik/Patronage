@@ -7,6 +7,7 @@ from datetime import datetime
 import os
 import hashlib
 import uuid
+
 from django.utils.crypto import (pbkdf2, get_random_string)
 def hash_password(password):
 	# uuid is used to generate a random number
@@ -73,7 +74,7 @@ with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  # encoding="W
 		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
 
 #Drugs
-with open("vsa_zdravila.csv","r") as drugs_file: #encoding="Windows-1251"
+with open("vsa_zdravila.csv","r",encoding="Windows-1251") as drugs_file: #encoding="Windows-1251"
 	drugs_reader = csv.reader(drugs_file, delimiter=';')
 	next(drugs_reader, None)  # skip header
 	for line in drugs_reader:

@@ -231,7 +231,7 @@ class Meritev(models.Model): #Oz. bolje receno aktivnost?
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
 
-    datum_prvega_obiska = models.DateTimeField(null=True)
+    datum_prvega_obiska = models.DateTimeField(null=False)
     st_obiskov = models.IntegerField(null=False)
     cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=False)
     cas_obiskov_dolzina = models.IntegerField(null=False)

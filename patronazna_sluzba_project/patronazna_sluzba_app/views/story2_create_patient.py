@@ -7,6 +7,8 @@ from patronazna_sluzba_app.models import *
 from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
+from patronazna_sluzba_app.forms import *
+
 import hashlib
 import random
 import re
@@ -273,8 +275,9 @@ def register_patient(request):
             contact_address = form.cleaned_data['contact_address']
             contact_phone_number = form.cleaned_data['contact_phone_number']
             sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
+            
+            if not (add_patient_caretaker(password1, password2, first_name, last_name, mail,
 
-            if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, first_name, last_name, mail,
                                                                     card_number, address, phone_number,
                                                                     birth_date, sex, contact_first_name,
                                                                     contact_last_name, contact_address,

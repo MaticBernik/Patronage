@@ -17,60 +17,7 @@ from django.urls import reverse
 from patronazna_sluzba_app.forms import *
 from patronazna_sluzba_app.models import *
 import logging
-"""
-OLD - DEPRECATED?
-def register_medical_staff(request):
-    if request.method == 'POST':
-        #EXTRACT DATA FROM REQUEST
-        #Extract standard user data from request
-        first_name=request.POST['first_name']
-        last_name=request.POST['last_name']
-        email=request.POST['email']
-        password1=request.POST['password1']
-        password2=request.POST['password2']
-        #Extract additional staff specific data from request
-        role=request.POST['role']
-        code=request.POST['medical_id']
-        phone_number=request.POST['phone_number']
-        institution=request.POST["medical_area_id"]
-        #work_location_number=request.POST['work_location_number']
 
-        #VALIDATE FIELD VALUES
-        #Validate passwords
-        if not password1==password2 and password_validation.validate_password(password1):
-            print("Invalid password.")
-        #Validate email
-        if not validate_email(email):
-            print("Invalid email.")
-        #Check if username(email) already exists
-        if User.objects.filter(username=email).exists():
-            print("Username is already taken.")
-        #Check if nurse whith specified number already exists:
-        if role=='nurse' and Patronazna_sestra.objects.filter(sifra_patronazne_sestre=code).exists():
-            print("Account with specified nurse number already exists.")
-        elif role=='doc' and Zdravnik.objects.filter(sifra_zdravnika=code):
-            print("Account with specified doctor number already exists.")
-        elif role=='head_of_medical_service' and Vodja_PS.objects.filter(sifra_vodje_PS=code):
-            print("Account with specified head of medical service number already exists.")
-        elif role=='employee' and Sodelavec_ZD.objects.filter(sifra_sodelavca=code):
-            print("Account with specified employee number already exists.")
-        #Validate phone number
-        #Validate nurse number
-
-        #CREATE AND SAVE NEW OBJECT TO DB
-        #Create User object
-        user=User(first_name=first_name,last_name=last_name,password=password1,email=email,username=email)
-        try:
-            user.save()
-        except:
-            print("Could not create User object using given data!")
-        #Finally create Nurse object
-        nurse = Patronazna_sestra(uporabniski_profil=user,sifra_patronazne_sestre=code,telefonska_st=phone_number)
-        try:
-            nurse.save()
-        except:
-            print("Could not create Nurse object using given data!")
-"""
 
 # @user_passes_test(isAdmin,login_url='/')
 def register_medical_staff(request):
@@ -172,5 +119,5 @@ def register_medical_staff(request):
                 print("Could not create "+role+" profile using given data!")
             """
 
-        return redirect('control_panel')
+        return redirect('link_control_panel')
 

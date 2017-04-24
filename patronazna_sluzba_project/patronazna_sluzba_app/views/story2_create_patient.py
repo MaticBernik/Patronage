@@ -18,20 +18,20 @@ dolzina_card_number = 12
 dolzina_telefonske = 15
 
 
-def add_patient_caretaker(password1, password2, name, surname, mail, card_number, address, phone_number,
-                           birth_date, sex, contact_name, contact_surname, contact_address, contact_phone_number, sorodstveno_razmerje):
+def add_patient_caretaker(password1, password2, first_name, last_name, mail, card_number, address, phone_number,
+                           birth_date, sex, contact_first_name, contact_last_name, contact_address, contact_phone_number, sorodstveno_razmerje):
 
     if check_passwords(password1, password2):
         if check_mail_builtin(mail):
-            if check_contact(contact_name, contact_surname, contact_address, contact_phone_number):
-                if check_patient(name, surname, card_number, address, phone_number):
+            if check_contact(contact_first_name, contact_last_name, contact_address, contact_phone_number):
+                if check_patient(first_name, last_name, card_number, address, phone_number):
                     #   DODAJ PACIENTA
 
-                    if contact_name != "":
-                        contact = Kontaktna_oseba(ime=contact_name, priimek=contact_surname,
+                    if contact_first_name != "":
+                        contact = Kontaktna_oseba(ime=contact_first_name, priimek=contact_last_name,
                                                   naslov=contact_address, telefon=contact_phone_number)
 
-                        patient = Pacient(ime=name, priimek=surname, st_kartice=card_number, naslov=address,
+                        patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex, kontakt=contact, aktiviran=0)
                         print("patient objekt ustvarjen")
@@ -55,7 +55,7 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
                         print("user created")
                         print("patient saved")
                     else:
-                        patient = Pacient(ime=name, priimek=surname, st_kartice=card_number, naslov=address,
+                        patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
                                           datum_rojstva=birth_date, spol=sex, aktiviran=0)
                         print("patient dodan")
@@ -78,14 +78,14 @@ def add_patient_caretaker(password1, password2, name, surname, mail, card_number
     return False
 
 
-def add_patient_taken_care_of(trenutni_uporabnik, name, surname, card_number, address,
+def add_patient_taken_care_of(trenutni_uporabnik, first_name, last_name, card_number, address,
                                birth_date, sex,
-                               sorodstvo, phone):
+                               sorodstvo, phone_number):
 
-    if check_taken_care_of(name, surname, card_number, address, phone, sorodstvo):
+    if check_taken_care_of(first_name, last_name, card_number, address, phone_number, sorodstvo):
         #   Tu dodam oskrbovanca
-        patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address, ime=name, priimek=surname,
-                          telefonska_st=phone,
+        patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address, ime=first_name, priimek=last_name,
+                          telefonska_st=phone_number,
                           datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
         patient.save()
         print("Dodan oskrbovanec za: ", trenutni_uporabnik.uporabniski_profil.username)
@@ -132,13 +132,13 @@ def check_mail_builtin(email):
         return False
 
 
-def check_patient(name, surname, card_number, address, phone_number):
-    if name is not None\
-            and surname is not None\
+def check_patient(first_name, last_name, card_number, address, phone_number):
+    if first_name is not None\
+            and last_name is not None\
             and address is not None\
             and card_number is not None\
             and phone_number is not None:
-        if check_phone(phone_number) & check_card(card_number):
+        if check_phone_number(phone_number) & check_card(card_number):
             return True
         print("returnam false")
         return False
@@ -146,14 +146,14 @@ def check_patient(name, surname, card_number, address, phone_number):
     return False
 
 
-def check_taken_care_of(name, surname, card_number, address, phone_number, sorodstvo):
-    if name is not None\
-            and surname is not None\
+def check_taken_care_of(first_name, last_name, card_number, address, phone_number, sorodstvo):
+    if first_name is not None\
+            and last_name is not None\
             and address is not None\
             and card_number is not None\
             and sorodstvo is not None\
             and phone_number is not None:
-        if check_phone(phone_number) & check_card(card_number):
+        if check_phone_number(phone_number) & check_card(card_number):
             return True
         return False
     print("Taken care of dude data not cool.")
@@ -203,28 +203,28 @@ def check_card(card_number):
     return False
 
 
-def check_phone(phone_number):
+def check_phone_number(phone_number):
     if isinstance(phone_number, int):
         if len(str(phone_number)) <= dolzina_telefonske:
             return True
-        print("Phone length too... LONG (check_phone)")
+        print("phone_number length too... LONG (check_phone_number)")
         return False
-    print("Phone number should be... you've guessed it... A FCKING NUMBER, BRO. (check_phone)")
+    print("phone_number number should be... you've guessed it... A FCKING NUMBER, BRO. (check_phone_number)")
     return False
 
 
 #   Preveri, ce so vneseni vsi podatki (in pravilno) oz ce ni vneseno nic (tudi validno)
-def check_contact(name, surname, address, telefon):
-    if name == "" and surname == "" and address == "" and telefon is None:
+def check_contact(first_name, last_name, address, telefon):
+    if first_name == "" and last_name == "" and address == "" and telefon is None:
         return 1
-    elif name is not "" \
-            and surname != "" \
+    elif first_name is not "" \
+            and last_name != "" \
             and address != "" \
             and telefon is not None:
         return True
     print("All or nothing. Contact, that is. (check_contact)")
-    print(name)
-    print(surname)
+    print(first_name)
+    print(last_name)
     print(address)
     print(telefon)
     return False
@@ -235,16 +235,16 @@ def contains_number(string):
     return any(char.isdigit() for char in string)
     
     
-def register_pacient(request):
+def register_patient(request):
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
 
-        form = RegistrationFrom(request.POST)
+        form = PatientRegistrationFrom(request.POST)
 
         if form.is_valid():
             #   Preveri, da kartice slucajno ze ne obstaja.
-            card_number = form.cleaned_data['cardNumber']
+            card_number = form.cleaned_data['card_number']
             try:
                 st_kartice = Pacient.objects.get(card_number=card_number)
                 print("This card number is already in the database.")
@@ -254,8 +254,8 @@ def register_pacient(request):
 
             password1 = form.cleaned_data['password']
             password2 = form.cleaned_data['password2']
-            name = form.cleaned_data['name']
-            surname = form.cleaned_data['surname']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             mail = form.cleaned_data['email']
 
             uporabniki = User.objects.all()
@@ -265,19 +265,19 @@ def register_pacient(request):
                     return HttpResponse("Ta mail je ze v bazi")
 
             address = form.cleaned_data['address']
-            phone_number = form.cleaned_data['phone']
-            birth_date = form.cleaned_data['birthDate']
+            phone_number = form.cleaned_data['phone_number']
+            birth_date = form.cleaned_data['birth_date']
             sex = form.cleaned_data['sex']
-            contact_name = form.cleaned_data['contact_name']
-            contact_surname = form.cleaned_data['contact_surname']
+            contact_first_name = form.cleaned_data['contact_first_name']
+            contact_last_name = form.cleaned_data['contact_last_name']
             contact_address = form.cleaned_data['contact_address']
             contact_phone_number = form.cleaned_data['contact_phone_number']
             sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
 
-            if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, name, surname, mail,
+            if not (kreiranje_pacienta_zgodba2.add_patient_caretaker(password1, password2, first_name, last_name, mail,
                                                                     card_number, address, phone_number,
-                                                                    birth_date, sex, contact_name,
-                                                                    contact_surname, contact_address,
+                                                                    birth_date, sex, contact_first_name,
+                                                                    contact_last_name, contact_address,
                                                                     contact_phone_number, sorodstveno_razmerje)):
                 return HttpResponse("Nekdo posile requeste napisane na roko... Ali pa ne dela vredu front end"
                                     " validacija... al pa mi funkcije ne palijo kot morjo :D")
@@ -297,7 +297,7 @@ def register_pacient(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = RegistrationFrom()
+        form = PatientRegistrationFrom()
 
     return render(request, 'patient_registration.html', {'registration_form': form})
 
@@ -323,28 +323,28 @@ def add_nursing_patient(request):
 
         if form.is_valid():
             #   Preveri, da kartice slucajno ze ne obstaja.
-            cardNumber = form.cleaned_data['cardNumber']
+            card_number = form.cleaned_data['card_number']
             try:
-                st_kartice = Pacient.objects.get(st_kartice=cardNumber)
+                st_kartice = Pacient.objects.get(st_kartice=card_number)
                 print("This card number is already in the database. Number:", st_kartice)
                 return HttpResponse("This card number is already in our database. You may have gotten it wrong?")
             except:
                 print("Card number is not in our DB yet, all good.")
 
-            name = form.cleaned_data['name']
-            surname = form.cleaned_data['surname']
-            phone = form.cleaned_data['phone']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            phone_number = form.cleaned_data['phone_number']
             address = form.cleaned_data['address']
-            postCode = form.cleaned_data['postCode']
+            postCode = form.cleaned_data['post_code']
             district = form.cleaned_data['district']
-            birthDate = form.cleaned_data['birthDate']
+            birth_date = form.cleaned_data['birth_date']
             sex = form.cleaned_data['sex']
             relation = form.cleaned_data['relation']
 
             if not (
-                    add_patient_taken_care_of(current_pacient, name, surname, cardNumber,
+                    add_patient_taken_care_of(current_pacient, first_name, last_name, card_number,
                                                                          address,
-                                                                          birthDate, sex, relation, phone)):
+                                                                          birth_date, sex, relation, phone_number)):
                 return HttpResponse("Napaka pri dodajanju oskrbovanca");
             # return HttpResponse("Dodali ste oskrbovanca")
             return redirect('control_panel')
@@ -352,25 +352,25 @@ def add_nursing_patient(request):
         if form.is_valid():
             if request.user.is_authenticated():
                 currentUser = request.user.username
-                cardNumber = form.cleaned_data['cardNumber']
-                name = form.cleaned_data['name']
-                surname = form.cleaned_data['surname']
-                phone = form.cleaned_data['phone']
+                card_number = form.cleaned_data['card_number']
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                phone_number = form.cleaned_data['phone_number']
                 address = form.cleaned_data['address']
                 postCode = form.cleaned_data['postCode']
                 district = form.cleaned_data['district']
-                birthDate = form.cleaned_data['birthDate']
+                birth_date = form.cleaned_data['birth_date']
                 sex = form.cleaned_data['sex']
                 relation = form.cleaned_data['relation']
 
                 if not (
-                kreiranje_pacienta_zgodba2.add_patient_taken_care_of(currentUser, name, surname, cardNumber, address,
-                                                                     district, birthDate, sex, relation)):
+                kreiranje_pacienta_zgodba2.add_patient_taken_care_of(currentUser, first_name, last_name, card_number, address,
+                                                                     district, birth_date, sex, relation)):
                     return HttpResponse("Napaka pri dodajanju oskrbovanca");
         return HttpResponse("Dodali ste oskrbovanca")
         """
     else:
-        form = AddNursingPatientForm()
-        return render(request, 'add_nursing_patient.html', {'add_nursing_patient': form})
+        nursing_patient_form = AddNursingPatientForm()
+        return render(request, 'add_nursing_patient.html', {'add_nursing_patient_form': nursing_patient_form})
 
     

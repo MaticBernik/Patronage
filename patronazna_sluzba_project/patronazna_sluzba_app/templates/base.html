@@ -16,7 +16,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="{% static 'script/customScript.js' %}"></script>
 	<!-- CUSTOM CSS (PLACE AFTER BOOTSTRAP FOR OVERRIDE or use !IMPORTANT) -->		
-	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<!--<link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
 	<link rel="stylesheet" type="text/css" href="{% static '/css/base.css' %}">
 	
 	<script>
@@ -27,7 +27,7 @@
 
 </head>
 
-<body>
+<body id="full_page_content">
 <!--
 	<nav class="navbar navbar-inverse">
 	  <div class="container-fluid">
@@ -48,67 +48,65 @@
 -->
 
 
-<nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">PatronaznaSluzba</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Nadzorna plosca</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Testni dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Option 1</a></li>
-            <li><a href="#">Option 2</a></li>
-            <li><a href="#">Option 3</a></li>
-          </ul>
-        </li>
-        <li><a href="{% url 'link_register_medical_staff' %}">Dodaj zdravstveno osebje</a></li>
-        <li><a href="{% url 'link_add_nursing' %}/">Dodaj oskrbovanca</a></li>
-		<li><a href="{% url 'link_change_password' %}">Spremeni geslo</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-      	{% if user.is_authenticated %}
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{ user }}</a></li>
-        <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
-        {% else %}
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>Uporabnik</a></li>
-        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </div>
-</nav>
+	<nav class="navbar navbar-inverse navbar-static-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>                        
+	      </button>
+	      <a class="navbar-brand" href="#">PatronaznaSluzba</a>
+	    </div>
+	    <div class="collapse navbar-collapse" id="myNavbar">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Nadzorna plosca</a></li>
+	        <li class="dropdown">
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Testni dropdown <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Option 1</a></li>
+	            <li><a href="#">Option 2</a></li>
+	            <li><a href="#">Option 3</a></li>
+	          </ul>
+	        </li>
+	        <li><a href="{% url 'link_register_medical_staff' %}">Dodaj zdravstveno osebje</a></li>
+	        <li><a href="{% url 'link_add_nursing' %}/">Dodaj oskrbovanca</a></li>
+			<li><a href="{% url 'link_change_password' %}">Spremeni geslo</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	      	{% if user.is_authenticated %}
+	        <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{ user }}</a></li>
+	        <li><a href="{% url 'link_logout' %}"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
+	        {% else %}
+	        <li><a href="#"><span class="glyphicon glyphicon-user"></span>Uporabnik</a></li>
+	        <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Izpis</a></li>
+	        {% endif %}
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
 
-<div class="container cont col-lg-12 col-md-12 col-sm-12 col-xs-12" id="full_page_content">
-	<div id="left_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12">
-		{% if user.is_authenticated %}
-		<h1>Prijavljen: {{ user_role }}</h1>
-		{% endif %}
+	<div class="container cont col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+		<div id="left_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12">
+			{% if user.is_authenticated %}
+			<h1>Prijavljen: {{ user_role }}</h1>
+			{% endif %}
+		</div>
+		<div id="central_content" class="cont col-lg-8 col-md-8 col-sm-12 col-xs-12">
+			{% block main_content %}
+			
+			
+			{% endblock %}
+		</div>
+		<div id="right_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12">
+			<h4>SEZNAM OSKRBOVANCEV</h4>
+			{% if user.is_authenticated %}
+				{% for o in oskrbovanci_pacienta %}
+					<p>{{ o.ime }}</p>
+				{% endfor %}
+			{% endif %}
+		</div>
 	</div>
-	<div id="central_content" class="cont col-lg-8 col-md-8 col-sm-12 col-xs-12">
-	{% block main_content %}
-	
-	
-	
-	
-	
-	{% endblock %}
-	</div>
-	<div id="right_side_content" class="cont col-lg-2 col-md-2 col-sm-12 col-xs-12">
-		<h4>SEZNAM OSKRBOVANCEV</h4>
-		{% if user.is_authenticated %}
-			{% for o in oskrbovanci_pacienta %}
-				<p>{{ o.ime }}</p>
-			{% endfor %}
-		{% endif %}
-	</div>
-</div>
+	<footer></footer>
 </body>
 </html>

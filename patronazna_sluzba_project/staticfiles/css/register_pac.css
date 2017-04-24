@@ -1,0 +1,8 @@
+#full_page_content{
+	height: 100vh;
+	background: url(../img/back_family_20.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}

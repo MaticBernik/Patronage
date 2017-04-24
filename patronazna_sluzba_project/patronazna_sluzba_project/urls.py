@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^base/newStaffMember', register_medical_staff, name="link_register_medical_staff"),
     url(r'^base/controlPanel', base, name="link_control_panel"),
     # url(r'^base/newPatient', views.newPatientRegister, name="register_pacient"),
-	url(r'^register/', register_pacient,name='link_register_pacient'),
+	url(r'^register/', register_patient, name='link_register_patient'),
     url(r'^base/addNursingPatient', add_nursing_patient, name="link_add_nursing"),
 	url(r'^changePassword', change_password, name="link_change_password"),
     url(r'^activate/', activate),

@@ -41,29 +41,40 @@
 					<form  id="form" autocomplete="on" method="post" class="form-horizontal col-lg-offset-3 col-lg-6 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12">
 					{% csrf_token %}
 					<div class="form-group">
-						{{ registration_form.cardNumber.errors }}
-						<label for="{{ registration_form.cardNumber.id_for_label }}">Številka kartice zdravstvenega zavarovanja</label>
-						{{ registration_form.cardNumber }}
+						{{ registration_form.card_number.errors }}
+						<label class="control-label" for="{{ registration_form.card_number.id_for_label }}">{{ registration_form.card_number.label }}</label>
+						{{ registration_form.card_number }}
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+							<div class="form-group">
+								{{ registration_form.first_name.errors }}
+								<label class="control-label" for="{{ registration_form.first_name.id_for_label }}">{{ registration_form.first_name.label }}</label>
+								{{ registration_form.first_name }}
+							</div>
+						</div>
+						<div class="col-md-6 col-md-offset-1">
+							<div class="form-group">
+								{{ registration_form.last_name.errors }}
+								<label class="control-label" for="{{ registration_form.last_name.id_for_label }}">{{ registration_form.last_name.label }}</label>
+								{{ registration_form.last_name }}
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
-						<label>Ime</label>
-						{{ registration_form.name }}
-					</div>
-					<div class="form-group">
-						<label for="{{ registration_form.surname.id_for_label }}">Priimek</label>
-						{{ registration_form.surname }}
-					</div>
-					<div class="form-group">
-						<label>Naslov</label>
+						{{ registration_form.address.errors }}
+						<label class="control-label" for="{{ registration_form.address.id_for_label }}" >{{ registration_form.address.label }}</label>
 						{{ registration_form.address }}
 					</div>
 					<div class="form-group">
-						<label>Pošta</label>
-						{{ registration_form.postCode }}
+						{{ registration_form.post_code.errors }}
+						<label class="control-label" for="{{ registration_form.post_code.id_for_label }}">{{ registration_form.post_code.label }}</label>
+						{{ registration_form.post_code }}
 					</div>
 					<div class="form-group">
-						<label>Šifra zdravstvenega okoliša</label>
-						{{ registration_form.district}}
+						{{ registration_form.district.errors }}
+						<label class="control-label" for="{{ registration_form.district.id_for_label }}">{{ registration_form.district.label }}</label>
+						{{ registration_form.district }}
 						<!--<select>
 							<option>05600</option>
 							<option>05470</option>
@@ -73,30 +84,35 @@
 						-->
 					</div>
 					<div class="form-group">
-						<label>Telefon</label>
-						{{ registration_form.phone }}
+						{{ registration_form.phone_number.errors }}
+						<label class="control-label" for="{{ registration_form.phone_number.id_for_label }}">{{ registration_form.phone_number.label }}</label>
+						{{ registration_form.phone_number }}
 					</div>
 					<div class="form-group">
-						<label>Elektronski naslov</label>
+						{{ registration_form.email.errors }}
+						<label class="control-label" for="{{ registration_form.email.id_for_label }}">{{ registration_form.email.label }}</label>
 						<!--<input type="email" required="required"/>-->
 						{{ registration_form.email }}
 					</div>
 					<div class="form-group">
-						<label>Geslo</label>
+						{{ registration_form.password.errors }}
+						<label class="control-label" for="{{ registration_form.password.id_for_label }}">{{ registration_form.password.label }}</label>
 						{{ registration_form.password }}
 					</div>
 					<div class="form-group">
-						<label>Ponovi geslo</label>
+						{{ registration_form.password2.errors }}
+						<label class="control-label" for="{{ registration_form.password2.id_for_label }}">{{ registration_form.password2.label }}</label>
 						{{ registration_form.password2 }}
 					</div>
 					<div class="form-group">
-						<label>Datum rojstva</label>
-						{{ registration_form.birthDate }}
+						{{ registration_form.birth_date.errors }}
+						<label class="control-label" for="{{ registration_form.birth_date.id_for_label }}">{{ registration_form.birth_date.label }}</label>
+						{{ registration_form.birth_date }}
 						<!--<input type="date" required="required"/>-->
-						
 					</div>
 					<div class="form-group">
-						<label>Spol</label>
+						{{ registration_form.sex.errors }}
+						<label class="control-label" for="{{ registration_form.sex.id_for_label }}">{{ registration_form.sex.label }}</label>
 						{{ registration_form.sex }}
 						 <!--<select required="required">
 							<option></option>
@@ -106,32 +122,37 @@
 						 -->
 					</div>
 					<div class="form-group">
-						<label>Kontaktna oseba (neobvezno)</label>
-						<button type="button" class="btn btn-primary" onClick="myFunction()" style="float: right;">Prikazi vnos</button>
+						<label>Kontaktna oseba (opcijsko)</label>
+						<button type="button" class="btn btn-primary" onClick="myFunction()" style="float: right;">Prikaži vnos</button>
 					</div>
 					<div id="myDIV"	>
 						<div class="form-group">
-							<label>Ime</label>
-							{{ registration_form.contact_name}}
+							{{ registration_form.contact_first_name.errors}}
+							<label class="control-label" for="{{ registration_form.contact_first_name.id_for_label }}">{{ registration_form.contact_first_name.label }}</label>
+							{{ registration_form.contact_first_name}}
 							<!--<input id="contact_name" type="text"/>-->
 						</div>
 						<div class="form-group">
-							<label>Priimek</label>
-							{{ registration_form.contact_surname }}
-							<!--<input id="contact_surname"type="text"/>-->
+							{{ registration_form.contact_last_name.errors }}
+							<label class="control-label" for="{{ registration_form.contact_last_name.id_for_label }}">{{ registration_form.contact_last_name.label }}</label>
+							{{ registration_form.contact_last_name }}
+							<!--<input id="contact_last_name"type="text"/>-->
 						</div>
 						<div class="form-group">
-							<label>Naslov</label>
+							{{ registration_form.contact_address.errors }}
+							<label class="control-label" for="{{ registration_form.contact_address.id_for_label }}">{{ registration_form.contact_address.label }}</label>
 							{{ registration_form.contact_address }}
 							<!--<input id="contact_address" type="text"/>-->
 						</div>
 						<div class="form-group">
-							<label>Telefon</label>
+							{{ registration_form.contact_phone_number.errors }}
+							<label class="control-label" for="{{ registration_form.contact_phone_number.id_for_label }}">{{ registration_form.contact_phone_number.label }}</label>
 							{{ registration_form.contact_phone_number }}
 							<!--<input id="contact_phone_number" type="tel"/>-->
 						</div>
 						<div class="form-group">
-							<label>Sorodstveno razmerje</label>
+							{{ registration_form.contact_sorodstvo.errors }}
+							<label class="control-label" for="{{ registration_form.contact_sorodstvo.id_for_label }}">{{ registration_form.contact_sorodstvo.label }}</label>
 							{{ registration_form.contact_sorodstvo }}
 							<!--<input id="sorodstvo" type="text"/>-->
 						</div>

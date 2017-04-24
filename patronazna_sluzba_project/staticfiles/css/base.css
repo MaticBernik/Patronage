@@ -1,0 +1,150 @@
+html, body {
+    margin: 0;
+    max-height: 100%;
+    /*	NOT SURE ABOUT THIS YET	*/
+    /*overflow: hidden;*/
+}
+
+/*
+html{ 
+	background: url(../img/back_comp_opac22.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+*/
+
+.cont{
+	text-align: center;
+	float: left;
+	margin-left: 0px;
+	margin-right: 0px; 
+	padding: 0 0 0 0;
+	max-height: 100%;
+	/*background: rgba(0,0,0,0.50);*/
+}
+/*
+#left_side_content{
+	background-color: blue;
+}
+#right_side_content{
+	background-color: blue;
+}
+*/
+#central_content{
+/*	background-color: red;	*/
+	background-color: white;
+	opacity: 0.7;
+	height: 100%;
+}
+
+/*	MAYBE BUT NOT SURE */
+#full_page_content{
+	height: 100vh;
+	background: url(../img/back_comp_opac22.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+
+/*
+	NAVBAR SETTINGS
+	source code from: https://work.smarchal.com/twbscolor/css/e74c3cc0392becf0f1ffbbbc0 ;
+*/
+
+.navbar{
+	margin-bottom: 0px;
+}
+
+.navbar-inverse {
+  background-color: #0b82c3;
+  border-color: #15a7c7;
+}
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
+}
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: #c4ecd9;
+}
+.navbar-inverse .navbar-text {
+  color: #ffffff;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color: #c4ecd9;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu {
+  background-color: #0b82c3;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a {
+  color: #ffffff;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a:hover,
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a:focus {
+  color: #c4ecd9;
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > .divider {
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,
+.navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,
+.navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
+  color: #c4ecd9;
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  color: #c4ecd9;
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+  color: #c4ecd9;
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-toggle {
+  border-color: #15a7c7;
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #15a7c7;
+}
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form {
+  border-color: #ffffff;
+}
+.navbar-inverse .navbar-link {
+  color: #ffffff;
+}
+.navbar-inverse .navbar-link:hover {
+  color: #c4ecd9;
+}
+
+@media (max-width: 767px) {
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+  }
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #c4ecd9;
+  }
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #c4ecd9;
+    background-color: #15a7c7;
+  }
+}

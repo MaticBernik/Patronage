@@ -20,11 +20,11 @@ def change_password(request):
 
             currentUser = request.user
            # print("Uporabnik: ")
-            oldpassword =  form.cleaned_data['oldpassword']
+            old_password =  form.cleaned_data['old_password']
             #print(currentUser.check_password(oldpassword))
             if currentUser.check_password(oldpassword):
-                password1 = form.cleaned_data['password1'];
-                password2 = form.cleaned_data['password2'];
+                password1 = form.cleaned_data['new_password1'];
+                password2 = form.cleaned_data['new_password2'];
                 if password1 == password2 and len(password1)>7:
                     request.user.set_password(password1)
                     update_session_auth_hash(request, request.user)

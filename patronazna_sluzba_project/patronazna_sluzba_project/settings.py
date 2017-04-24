@@ -137,7 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # STATIC_JOIN:  ..\GitHub\TPO\patronazna_sluzba_project\patronazna_sluzba_project\static
 # FOR: static assets that arent tied to a particular app
@@ -146,7 +146,7 @@ STATICFILES_DIRS = (
 )
 
 # TEST READY PRINT's FOR OS DIR NAVIGATION
-# print("BASE_DIR: ", BASE_DIR)
-# print("PROJECT_ROOT: ", PROJECT_ROOT)
-# print("STATIC_URL: ", STATIC_URL)
-# print("STATIC_JOIN: ", os.path.join(PROJECT_ROOT, 'static'))
+#print("BASE_DIR: ", BASE_DIR)
+#print("PROJECT_ROOT: ", PROJECT_ROOT)
+#print("STATIC_URL: ", STATIC_URL)
+#print("STATIC_JOIN: ", os.path.join(PROJECT_ROOT, 'static'))

@@ -3,63 +3,63 @@
 
 {% block main_content %}
 
-	{{ medical_reg_form.non_field_errors }}
+	
 	<h3>REGISTRACIJA NOVEGA UPORABNIKA</h3>
 	<hr>
+	{{ medical_reg_form.non_field_errors }}
 	<!-- class="form-horizontal col-lg-offset-4 col-lg-4 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12" -->
-	<form method="post" id="medical_reg_form" class="left form-horizontal col-lg-10 col-lg-offset-1  col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" style="text-align: left">
+	<form method="post" id="medical_reg_form" class="form-horizontal col-lg-10 col-lg-offset-1  col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" style="text-align: left">
 		{% csrf_token %}
 		<div class="form-group">
-	  		{{ medical_reg_form.role.errors }}
-	    	<label for="{{ medical_reg_form.role.id_for_label }}">Tip zdravniskega usluzbenca:</label>
-	    	{{ medical_reg_form.role }}
-	    	<!--<inptype="password" class="form-control" id="pwd">-->  
+	  		{{ medical_reg_form.medic_role.errors }}
+	    	<label class="control-label" for="{{ medical_reg_form.medic_role.id_for_label }}">{{ medical_reg_form.medic_role.label }}</label>
+	    	{{ medical_reg_form.medic_role }}
 	  	</div>
 		<div class="form-group">
 	  		{{ medical_reg_form.medical_id.errors }}
-	    	<label for="{{ medical_reg_form.medical_id.id_for_label }}">Sifra zdravstvenega osebja:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.medical_id.id_for_label }}">{{ medical_reg_form.medical_id.label }}</label>
 	    	{{ medical_reg_form.medical_id }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.medical_area_id.errors }}
-	    	<label for="{{ medical_reg_form.medical_area_id.id_for_label }}">Sifra zdravstvenega okolisa:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.medical_area_id.id_for_label }}">{{ medical_reg_form.medical_area_id.label }}</label>
 	    	{{ medical_reg_form.medical_area_id }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.first_name.errors }}
-	    	<label for="{{ medical_reg_form.first_name.id_for_label }}">Ime:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.first_name.id_for_label }}">{{ medical_reg_form.first_name.label }}</label>
 	    	{{ medical_reg_form.first_name }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.last_name.errors }}
-	    	<label for="{{ medical_reg_form.last_name.id_for_label }}">Priimek:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.last_name.id_for_label }}">{{ medical_reg_form.last_name.label }}</label>
 	    	{{ medical_reg_form.last_name }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.email.errors }}
-	    	<label for="{{ medical_reg_form.email.id_for_label }}">E-postni naslov:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.email.id_for_label }}">{{ medical_reg_form.email.label }}</label>
 	    	{{ medical_reg_form.email }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.phone_number.errors }}
-	    	<label for="{{ medical_reg_form.phone_number.id_for_label }}">Telefonska stevilka:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.phone_number.id_for_label }}">{{ medical_reg_form.phone_number.label }}</label>
 	    	{{ medical_reg_form.phone_number }}
 	    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
 	  	</div>
 	  	<div class="form-group">
 	  		{{ medical_reg_form.password1.errors }}
-	    	<label for="{{ medical_reg_form.password1.id_for_label }}">Geslo:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.password1.id_for_label }}">{{ medical_reg_form.password1.label }}</label>
 	    	{{ medical_reg_form.password1 }}
 	    	<!--<input type="password" class="form-control" id="pwd">-->  
 	  	</div>
         <div class="form-group">
 	  		{{ medical_reg_form.password2.errors }}
-	    	<label for="{{ medical_reg_form.password2.id_for_label }}">Ponovitev gesla:</label>
+	    	<label class="control-label" for="{{ medical_reg_form.password2.id_for_label }}">{{ medical_reg_form.password2.label }}</label>
 	    	{{ medical_reg_form.password2 }}
 	    	<!--<input type="password" class="form-control" id="pwd">-->  
 	  	</div>

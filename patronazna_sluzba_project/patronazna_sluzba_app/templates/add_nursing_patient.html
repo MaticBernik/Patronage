@@ -35,60 +35,69 @@
   <div class="container">
       <section>
         <!--<div class="container">-->
-                    <h3 style="text-align: center;">REGISTRACIJA OSKRBOVANE OSEBE</h3>
-                    <hr>
-          {{ add_nursing_patient.non_field_errors }}
+          <h3 style="text-align: center;">REGISTRACIJA OSKRBOVANE OSEBE</h3>
+          <hr>
+          {{ add_nursing_patient_form.non_field_errors }}
           <form method="post" class="form-horizontal col-lg-offset-3 col-lg-6 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12">
             {% csrf_token %}
             <div class="form-group">
-              <label>Sorodsveno razmerje(izberite ali vtipkajte)</label>
-              {{ add_nursing_patient.relation }}
-
+              {{ add_nursing_patient_form.relation.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.relation.id_for_label }}">{{ add_nursing_patient_form.relation.label }}</label>
+              {{ add_nursing_patient_form.relation }}
             </div>
             <div class="form-group">
-              <label>Številka kartice zdravstvenega zavarovanja</label>
-              {{ add_nursing_patient.cardNumber }}
+              {{ add_nursing_patient_form.card_number.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.card_number.id_for_label }}">{{ add_nursing_patient_form.card_number.label }}</label>
+              {{ add_nursing_patient_form.card_number }}
             </div>
             <div class="form-group">
-              <label>Ime</label>
-              {{ add_nursing_patient.name }}
+              {{ add_nursing_patient_form.first_name.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.first_name.id_for_label }}">{{ add_nursing_patient_form.first_name.label }}</label>
+              {{ add_nursing_patient_form.first_name }}
             </div>
             <div class="form-group">
-              <label>Priimek</label>
-              {{ add_nursing_patient.surname }}
+              {{ add_nursing_patient_form.last_name.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.last_name.id_for_label }}">{{ add_nursing_patient_form.last_name.label }}</label>
+              {{ add_nursing_patient_form.last_name }}
             </div>
             <div class="form-group">
-              <label>Naslov</label>
-              {{ add_nursing_patient.address }}
+              {{ add_nursing_patient_form.address.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.address.id_for_label }}">{{ add_nursing_patient_form.address.label }}</label>
+              {{ add_nursing_patient_form.address }}
             </div>
             <div class="form-group">
-              <label>Pošta</label>
-              {{ add_nursing_patient.postCode }}
+              {{ add_nursing_patient_form.post_code.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.post_code.id_for_label }}">{{ add_nursing_patient_form.post_code.label }}</label>
+              {{ add_nursing_patient_form.post_code }}
             </div>
             <div class="form-group">
-              <label>Šifra okoliša</label>
-              {{ add_nursing_patient.district }}
+              {{ add_nursing_patient_form.district.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.district.id_for_label }}">{{ add_nursing_patient_form.district.label }}</label>
+              {{ add_nursing_patient_form.district }}
             </div>
             <div class="form-group">
-              <label>Telefon</label>
-              {{ add_nursing_patient.phone }}
+              {{ add_nursing_patient_form.phone_number.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.phone_number.id_for_label }}">{{ add_nursing_patient_form.phone_number.label }}</label>
+              {{ add_nursing_patient_form.phone_number }}
               <!--<input type="tel" required="required"/>-->
             </div>
             <div class="form-group">
-              <label>Datum rojstva</label>
-              {{ add_nursing_patient.birthDate }}
+              {{ add_nursing_patient_form.birth_date.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.birth_date.id_for_label }}">{{ add_nursing_patient_form.birth_date.label }}</label>
+              {{ add_nursing_patient_form.birth_date }}
               <!--<input type="date" required="required"/>-->
             </div>
             <div class="form-group">
-              <label>Spol</label>
-              {{ add_nursing_patient.sex }}
+              {{ add_nursing_patient_form.sex.errors }}
+              <label class="control-label" for="{{ add_nursing_patient_form.sex.id_for_label }}">{{ add_nursing_patient_form.sex.label }}</label>
+              {{ add_nursing_patient_form.sex }}
             </div>
             <br/>
               <div class="form-group clearfix">
                 <button type="submit" class="btn btn-primary form-control signupbtn">Dodaj oskrbovanca</button>
               </div>    
               <div class="form-group">
-                <a href="{% url 'link_control_panel' %}" class="btn btn-default form-control">Preklici</a>
+                <a href="{% url 'link_control_panel' %}" class="btn btn-default form-control">Prekliči</a>
               </div>
               <div class="button-padder form-group"></div>
         </form>   

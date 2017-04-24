@@ -67,7 +67,7 @@ def work_task_view(request):
             casovno_obdobje = request.POST['timePeriod']
         """
 
-        if podvrsta_vrsta_obiska == "Obisk otrocnice in novorojencka":
+        if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
             pacient_list = request.POST.getlist('addPatient')
             delovni_nalog+='Zavarovana oseba:\n'
@@ -77,7 +77,7 @@ def work_task_view(request):
 
         else:
             pacient = request.POST['searchPatient']
-            delovni_nalog += 'Zavarana oseba: '+ pacient+'\n'
+            delovni_nalog += 'Zavarovana oseba: '+ pacient+'\n'
             print('Pacient: '+pacient)
         if podvrsta_vrsta_obiska == 'Aplikacija injekcij':
             izbranaZdravila = request.POST.getlist('cureId')

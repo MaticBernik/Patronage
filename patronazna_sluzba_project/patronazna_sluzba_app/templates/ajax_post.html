@@ -1,0 +1,12 @@
+{% if post.count > 0 %}
+<datalist>
+{% for p in post %}
+    <option value="{{ p.postna_st }} {{ p.naziv_poste }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

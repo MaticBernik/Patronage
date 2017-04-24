@@ -23,6 +23,8 @@
 	<script src="{% static 'script/customScript.js' %}"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--AJAX Posta-->
+    <script src="{% static 'script/ajax.js' %}"></script>
 	<script>
 		$( function() {
 		  	$( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0"})
@@ -69,7 +71,14 @@
 					<div class="form-group">
 						{{ registration_form.post_code.errors }}
 						<label class="control-label" for="{{ registration_form.post_code.id_for_label }}">{{ registration_form.post_code.label }}</label>
-						{{ registration_form.post_code }}
+						{% csrf_token %}
+                        <input type="text" list="post_codes" id="search_post" name="search_post" class="form-control"/>
+                        <datalist id="post_codes">
+
+                        </datalist>
+
+
+                       <!-- {{ registration_form.post_code }} -->
 					</div>
 					<div class="form-group">
 						{{ registration_form.district.errors }}

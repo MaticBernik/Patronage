@@ -9,6 +9,9 @@ class Posta(models.Model):
     postna_st = models.IntegerField(primary_key=True)
     naziv_poste = models.CharField(max_length=100, null=False)
 
+    def __str__(self):
+        return self.postna_st+' '+self.naziv_poste
+
 class Okolis(models.Model):
     sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
 

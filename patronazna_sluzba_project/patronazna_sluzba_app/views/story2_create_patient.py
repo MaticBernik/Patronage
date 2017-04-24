@@ -20,6 +20,15 @@ dolzina_card_number = 12
 dolzina_telefonske = 15
 
 
+def search_post_code(request):
+    if request.method == 'POST':
+        search_post = request.POST['search_post']
+    else:
+        search_post =''
+
+    post = Posta.objects.all()#filter(ime__contains=search_patient)
+    return render_to_response('ajax_post.html',{'post':post})
+
 def add_patient_caretaker(password1, password2, first_name, last_name, mail, card_number, address, phone_number,
                            birth_date, sex, contact_first_name, contact_last_name, contact_address, contact_phone_number, sorodstveno_razmerje):
 
@@ -275,7 +284,11 @@ def register_patient(request):
             contact_address = form.cleaned_data['contact_address']
             contact_phone_number = form.cleaned_data['contact_phone_number']
             sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
-            
+
+            #uspesno izbrana posta
+            posta = request.POST['search_post']
+            print('izbrana posta '+posta)
+
             if not (add_patient_caretaker(password1, password2, first_name, last_name, mail,
 
                                                                     card_number, address, phone_number,

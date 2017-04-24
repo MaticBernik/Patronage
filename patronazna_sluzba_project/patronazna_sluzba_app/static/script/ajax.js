@@ -44,6 +44,23 @@ $(function () {
         });
 
     });
+
+    //post autocomplete
+
+     $('#search_post').keyup(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/post/",
+            data: {
+                'search_post' : $('#search_post').val(),
+                'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: searchPostSuccess,
+            dataType: 'html'
+        });
+    });
+
 });
 
 function searchSuccess(data, textStatus, jqXHR) {
@@ -62,4 +79,7 @@ function chooseVisitSuccess(data, textStatus, jqXHR) {
 		}
      /*alert('select the data')
      $('#visitType option:first-child').attr("selected", "selected");*/
+}
+function searchPostSuccess(data, textStatus, jqXHR) {
+     $('#post_codes').html(data);
 }

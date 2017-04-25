@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # @login_required(login_url='/')
 from patronazna_sluzba_app.models import *
 from patronazna_sluzba_app.forms import *

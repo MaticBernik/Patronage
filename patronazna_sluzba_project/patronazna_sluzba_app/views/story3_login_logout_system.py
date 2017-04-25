@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #from django.contrib.auth import password_validation
 from . import story2_create_patient
 from datetime import datetime

@@ -13,7 +13,11 @@ class Posta(models.Model):
         return self.postna_st+' '+self.naziv_poste
 
 class Okolis(models.Model):
-    sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
+    class Meta:
+        unique_together = (('posta', 'ime'),)
+    #sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
+    posta = models.ForeignKey(Posta)
+    ime = models.CharField(max_length=100, null=False)
 
 '''class Izvajalec_ZS(models.Model):
     #V izvorni tabeli so Izvajalci naprej deljeni na oddelke - vendar to nas tu ne zanima??

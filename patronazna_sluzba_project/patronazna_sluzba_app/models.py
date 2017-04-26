@@ -238,7 +238,10 @@ class Meritev(models.Model): #Oz. bolje receno aktivnost?
     opis = models.CharField(max_length=500, null=False)
     porocilo = models.CharField(max_length=100, null=False)
 
-#class Bolezen(models.Model):
+class Bolezen(models.Model):
+    sifra = models.CharField(max_length=6, null=False, primary_key=True)
+    ime = models.CharField(max_length=100, null=False)
+    opis = models.CharField(max_length=500, null=True)
 
 #class Material(models.Model):
 
@@ -251,7 +254,7 @@ class Delovni_nalog(models.Model):
     cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=True)
     cas_obiskov_dolzina = models.IntegerField(null=True) #dodam
     vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True) #dodam
-    #bolezen = models.ForeignKey(Bolezen,null=False)
+    bolezen = models.ForeignKey(Bolezen,null=False)
     izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
     zdravnik = models.ForeignKey(Zdravnik, null=False) #dodam
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)

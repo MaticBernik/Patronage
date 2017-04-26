@@ -178,8 +178,15 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  #enc
 			print(line)
 			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis, porocilo) VALUES (?,?,?,?)", (int(line[0]), int(line[2]), line[3], line[4]));
 
-
-
+#Bolezni
+with open("bolezni.csv", "r") as bolezni_file:  #encoding="utf8"
+	bolezni_reader = csv.reader(bolezni_file, delimiter=';')
+	next(bolezni_reader, None)  # skip header
+	for line in bolezni_reader:
+		if len(line)>2:
+			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime, opis) VALUES (?,?,?)", (line[0], line[1], line[2]));
+		else:
+			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
 
 
 

@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^visit/choice/$',choose_visit_type),
     url(r'^post/$',search_post_code),
     url(r'^district/$',search_district_name),
+    url(r'^visit/role/$',visit_based_on_role),
 ]
 
 #ADD 

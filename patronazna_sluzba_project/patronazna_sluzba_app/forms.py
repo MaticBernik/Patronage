@@ -131,7 +131,7 @@ class WorkTaskForm(forms.Form):
     task_id = forms.CharField(label='Številka naloga: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
     #visit_type = forms.ChoiceField(label='Vrsta obiska: ', choices=VRSTE_OBISKOV, widget=forms.Select(attrs={'class': 'form-control','id':'choose-visit'}))
     #visit_type_detail = forms.ChoiceField(label='Vrsta storitve: ', choices=VRSTE_OBISKOV_DETAIL,widget=forms.Select(attrs={'id':'visit_type','onchange':'addPatientButton()', 'class': 'form-control'}))
-    visitType = forms.ChoiceField(choices=VRSTE_OBISKOV, widget=forms.Select(attrs={'id': 'choose-visit'}))
+    visitType = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'id': 'choose-visit'}))
     visitTypeDetail = forms.ChoiceField(choices=[], widget=forms.Select(
         attrs={'id': 'visitType', 'onchange': 'addPatientButton()'}))
     #card_number = forms.CharField(label='Številka kartice: ', max_length=100, widget=forms.NumberInput(attrs={'id': 'card_number', 'class': 'form-control'}))

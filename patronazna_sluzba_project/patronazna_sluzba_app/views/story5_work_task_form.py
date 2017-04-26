@@ -28,6 +28,18 @@ def search_patients(request):
     patients = Pacient.objects.all()  # filter(ime__contains=search_patient)
     return render_to_response('ajax_patient.html', {'patients': patients})
 
+def visit_based_on_role(request):
+    user_role_type = 'Zdravnik'
+    print('get request to visit role')
+    if user_role_type == 'Vodja':
+        visit_role = ['','Preventivni obisk']
+    else:
+        visit_role = ['', 'Preventivni obisk','Kurativni obisk']
+    #for i in visit_role:
+    #    print('Visit : '+i[0])
+    #test='Preventivni obisk', 'Kurativni obisk';
+    return render_to_response('ajax_visit_role.html',{'visit_role': visit_role})
+
 
 def choose_visit_type(request):
     if request.method == 'POST':
@@ -36,7 +48,7 @@ def choose_visit_type(request):
     else:
         choose_visit = 'Preventivni obisk'
 
-    visits = Vrsta_obiska.objects.filter(tip__contains=choose_visit)
+    visits = Vrsta_obiska.objects.filter(tip=choose_visit)
     print('filter paremeter is: ' + choose_visit)
     return render_to_response('ajax_visit.html', {'visits': visits})
 

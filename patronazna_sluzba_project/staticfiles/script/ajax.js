@@ -27,6 +27,23 @@ $(function () {
             dataType: 'html'
         });
     });
+    // ajax za obisk glede na role
+    $(document).ready(function(){
+        alert("Document reaady");
+    });
+
+     $.ajax({
+         alert("AJAX za vloge");
+            type: "GET",
+            url: "/visit/role/",
+            data: {
+                'choose_visit': $('#choose-visit').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: chooseRoleSuccess,
+            dataType: 'html'
+        });
 
     //master detail obiski
     $('#choose-visit').on('change', function () {
@@ -64,11 +81,12 @@ $(function () {
     //district autocomplete
 
     $('#search_district').keyup(function () {
-
+        //alert("KEyup event form okolis")
         $.ajax({
             type: "POST",
             url: "/district/",
             data: {
+                'search_post': $('#search_post').val(),
                 'search_district': $('#search_district').val(),
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
@@ -102,4 +120,8 @@ function searchPostSuccess(data, textStatus, jqXHR) {
 
 function searchDistrictSuccess(data, textStatus, jqXHR) {
     $('#district_name').html(data);
+}
+
+function chooseRoleSuccess(data, textStatus, jqXHR) {
+    $('#choose-visit').html(data);
 }

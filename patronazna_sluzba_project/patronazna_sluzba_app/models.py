@@ -13,7 +13,14 @@ class Posta(models.Model):
         return self.postna_st+' '+self.naziv_poste
 
 class Okolis(models.Model):
-    sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
+    class Meta:
+        unique_together = (('posta', 'ime'),)
+    #sifra_okolisa = models.IntegerField(primary_key=True)  # Zacasno..
+    posta = models.ForeignKey(Posta)
+    ime = models.CharField(max_length=100, null=False)
+
+    def __str__(self):
+        return self.ime
 
 '''class Izvajalec_ZS(models.Model):
     #V izvorni tabeli so Izvajalci naprej deljeni na oddelke - vendar to nas tu ne zanima??
@@ -241,15 +248,17 @@ class Meritev(models.Model): #Oz. bolje receno aktivnost?
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
 
-    datum_prvega_obiska = models.DateTimeField(null=False)
-    st_obiskov = models.IntegerField(null=False)
-    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=False)
-    cas_obiskov_dolzina = models.IntegerField(null=False)
-    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=False)
+    #   Zacasno sm dal na true nulle
+    datum_prvega_obiska = models.DateTimeField(null=True) #dodam
+    st_obiskov = models.IntegerField(null=True) #dodam
+    cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=True)
+    cas_obiskov_dolzina = models.IntegerField(null=True) #dodam
+    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True) #dodam
     #bolezen = models.ForeignKey(Bolezen,null=False)
-    izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=False)
-    zdravnik = models.ForeignKey(Zdravnik, null=False)
-    vodja_PS = models.ForeignKey(Vodja_PS, null=False)
+    izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
+    zdravnik = models.ForeignKey(Zdravnik, null=False) #dodam
+    vodja_PS = models.ForeignKey(Vodja_PS, null=True)
+
 
 #class Obisk(models.Model):
 

@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from .models import *
 from django.core.validators import MaxValueValidator
 from django.db.models import When, F, Q, Case
-from dal import autocomplete
 from django.forms import  ModelForm
 
 USER_TYPES = (
@@ -101,7 +100,7 @@ class PatientRegistrationFrom(forms.Form):
     password = forms.CharField(label='Geslo: ',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1', 'class': 'form-control'}))
     password2 = forms.CharField(label='Ponovite geslo: ',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2', 'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    district = forms.ChoiceField(label='Okrožje: ', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #district = forms.ChoiceField(label='Okrožje: ', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='E-poštni naslov: ', widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Rojstni datum: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birth_date'}), input_formats=['%d.%m.%Y'])
     # UPDATE REQUIRED -> POSTAL CODE AND CITY -> TWO AUTOCOMPLETE FIELDS
@@ -123,7 +122,7 @@ class AddNursingPatientForm(forms.Form):
     birth_date = forms.DateField(label='Datum rojstva: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
     #post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     relation = forms.ChoiceField(label='Sorodstveno razmerje: ', choices = RELATIONS, widget=forms.Select(attrs={'class': 'form-control'} ))
 
 class WorkTaskForm(forms.Form):

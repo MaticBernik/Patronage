@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Create your views here.
 # import the logging library
 from django.contrib.auth import authenticate, login, logout
@@ -16,6 +17,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.urls import reverse
 from patronazna_sluzba_app.forms import *
 from patronazna_sluzba_app.models import *
+from . import story2_create_patient
 import logging
 
 
@@ -44,7 +46,7 @@ def register_medical_staff(request):
 
             password2 =  form.cleaned_data['password2']
             # Extract additional staff specific data from request
-            role =  form.cleaned_data['role']
+            role =  form.cleaned_data['medic_role']
             print("ROLE = ", role)
             code =  form.cleaned_data['medical_id']
             phone_number = form.cleaned_data['phone_number']
@@ -63,7 +65,7 @@ def register_medical_staff(request):
             if not password1 == password2 or not len(password1) > 7:
                 print("Invalid password.")
             # Validate email
-            if not kreiranje_pacienta_zgodba2.check_mail(email):
+            if not story2_create_patient.check_mail(email):
                 print("Invalid email.")
             # Check if username(email) already exists
             if User.objects.filter(username=email).exists():

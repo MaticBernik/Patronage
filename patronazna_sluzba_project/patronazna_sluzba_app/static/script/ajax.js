@@ -61,6 +61,38 @@ $(function () {
         });
     });
 
+    /*$('#search_post').change(function () {
+     alert("Izbrana je bila posta "+$('#search_post').val());
+        $.ajax({
+            type: "POST",
+            url: "/district/",
+            data: {
+                'search_post': $('#search_post').val(),
+                'search_district': $('#search_district').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: searchPostSuccess,
+            dataType: 'html'
+        });
+    });*/
+
+    //district autocomplete
+
+    $('#search_district').keyup(function () {
+        //alert("KEyup event form okolis")
+        $.ajax({
+            type: "POST",
+            url: "/district/",
+            data: {
+                'search_post': $('#search_post').val(),
+                'search_district': $('#search_district').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: searchDistrictSuccess,
+            dataType: 'html'
+        });
+    });
+
 });
 
 function searchSuccess(data, textStatus, jqXHR) {
@@ -82,4 +114,8 @@ function chooseVisitSuccess(data, textStatus, jqXHR) {
 }
 function searchPostSuccess(data, textStatus, jqXHR) {
     $('#post_codes').html(data);
+}
+
+function searchDistrictSuccess(data, textStatus, jqXHR) {
+    $('#district_name').html(data);
 }

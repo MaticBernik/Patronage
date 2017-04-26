@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^patient/search/$',search_patients),
     url(r'^visit/choice/$',choose_visit_type),
     url(r'^post/$',search_post_code),
+    url(r'^district/$',search_district_name),
 ]
 
 #ADD 

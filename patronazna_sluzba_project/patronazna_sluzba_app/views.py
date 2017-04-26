@@ -294,6 +294,7 @@ def index(request):
             return HttpResponseRedirect('/')
         return HttpResponse("Thanks for trying.")
 
+@login_required(login_url='/')
 def base(request):
     
     user=request.user

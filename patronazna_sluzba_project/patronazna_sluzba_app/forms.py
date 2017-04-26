@@ -105,7 +105,7 @@ class PatientRegistrationFrom(forms.Form):
     email = forms.EmailField(label='E-poštni naslov: ', widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Rojstni datum: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birth_date'}), input_formats=['%d.%m.%Y'])
     # UPDATE REQUIRED -> POSTAL CODE AND CITY -> TWO AUTOCOMPLETE FIELDS
-    post_code =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #post_code =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
 
     #kontaktna oseba
     contact_last_name = forms.CharField(label='Priimek: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_last_name', 'class': 'form-control'}))
@@ -121,7 +121,7 @@ class AddNursingPatientForm(forms.Form):
     address = forms.CharField(label='Naslov: ', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
     phone_number = forms.IntegerField(label='Telefon: ', widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Datum rojstva: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
-    post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     relation = forms.ChoiceField(label='Sorodstveno razmerje: ', choices = RELATIONS, widget=forms.Select(attrs={'class': 'form-control'} ))

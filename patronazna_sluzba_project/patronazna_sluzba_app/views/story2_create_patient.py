@@ -351,7 +351,10 @@ def add_nursing_patient(request):
             last_name = form.cleaned_data['last_name']
             phone_number = form.cleaned_data['phone_number']
             address = form.cleaned_data['address']
-            postCode = form.cleaned_data['post_code']
+            #postCode = form.cleaned_data['post_code']
+            #posta oskrbovanca
+            post_code = request.POST['search_post']
+            print('posta oskrbovanca '+post_code)
             district = form.cleaned_data['district']
             birth_date = form.cleaned_data['birth_date']
             sex = form.cleaned_data['sex']

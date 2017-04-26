@@ -5,12 +5,14 @@ from django.utils import timezone
 from django.contrib.auth.models import Group
 from django.conf import settings
 
+
 class Posta(models.Model):
     postna_st = models.IntegerField(primary_key=True)
     naziv_poste = models.CharField(max_length=100, null=False)
 
     def __str__(self):
         return self.postna_st+' '+self.naziv_poste
+
 
 class Okolis(models.Model):
     class Meta:
@@ -45,12 +47,14 @@ class Okolis(models.Model):
     izvajalec_samo1X = models.BooleanField(null=False, default=False)
     stevilo_vrstic_VZDjev = models.IntegerField(null=False)'''
 
+
 class Izvajalec_ZS(models.Model):
     st_izvajalca = models.IntegerField(primary_key=True)
     #st_izvajalca = models.DecimalField(max_digits=5,decimal_places=0,primary_key=True)
     naziv = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     posta = models.ForeignKey(Posta, null=True)
+
 
 class Zdravnik(models.Model):
     #uporabniski_profil = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -62,6 +66,7 @@ class Zdravnik(models.Model):
     def __str__(self):
         return self.sifra_zdravnika+' '+self.uporabniski_profil.firstName+''+self.uporabniski_profil.lastName
 
+
 class Vodja_PS(models.Model):
     #uporabniski_profil = models.ForeignKey(User, on_delete=models.CASCADE)
     uporabniski_profil = models.OneToOneField(User)
@@ -69,6 +74,7 @@ class Vodja_PS(models.Model):
     #sifra_vodje_PS = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
+
 
 class Patronazna_sestra(models.Model):
     #uporabniski_profil = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -79,6 +85,7 @@ class Patronazna_sestra(models.Model):
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     okolis = models.OneToOneField(Okolis,default=1)
 
+
 class Sodelavec_ZD(models.Model):
     #uporabniski_profil = models.ForeignKey(User, on_delete=models.CASCADE)
     uporabniski_profil = models.OneToOneField(User)
@@ -87,12 +94,14 @@ class Sodelavec_ZD(models.Model):
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
 
+
 class Kontaktna_oseba(models.Model):
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
     #sorodstvo = models.ForeignKey(Sorodstveno_razmerje,null=True)
+
 
 class Pacient(models.Model):
     SEX = (('M', 'Moski'), ('Z', 'Zenska'))
@@ -125,10 +134,13 @@ class Pacient(models.Model):
 
     def __str__(self):
         return self.st_kartice+' '+self.ime+' '+self.priimek+' '+self.naslov
+
+
 class Sorodstveno_razmerje(models.Model):
 	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
 	pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
 	tip_razmerja = models.CharField(max_length=100, null=False)
+
 
 class Zdravilo(models.Model):
     nacionalna_sifra = models.IntegerField(primary_key=True)
@@ -212,6 +224,7 @@ class Zdravilo(models.Model):
     def __str__(self):
         return self.ime
 
+
 class Vrsta_obiska(models.Model):
     TIP_OBISKA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
     VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
@@ -229,6 +242,7 @@ class Vrsta_obiska(models.Model):
         else:
             self.tip=self.TIP_OBISKA[1]
 
+
 class Meritev(models.Model): #Oz. bolje receno aktivnost?
     class Meta:
         unique_together = (('sifra', 'vrsta_obiska'),)
@@ -245,30 +259,35 @@ class Bolezen(models.Model):
 
 #class Material(models.Model):
 
+
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
+    OBVEZNOST = (("Obvezen","Prvi obisk se mora opraviti na tocen dan"), ("Okviren","Prvi obisk se lahko opravi v vec dnevih"))
 
-    #   Zacasno sm dal na true nulle
-    datum_prvega_obiska = models.DateTimeField(null=True) #dodam
-    st_obiskov = models.IntegerField(null=True) #dodam
+    datum_prvega_obiska = models.DateTimeField(null=True)
+    st_obiskov = models.IntegerField(null=True)
     cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=True)
     cas_obiskov_dolzina = models.IntegerField(null=True) #dodam
     vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True) #dodam
     bolezen = models.ForeignKey(Bolezen,null=False)
     izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
-    zdravnik = models.ForeignKey(Zdravnik, null=False) #dodam
+    zdravnik = models.ForeignKey(Zdravnik, null=True)
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)
 
+    obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
 
 #class Obisk(models.Model):
+
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)
     pacient = models.ForeignKey(Pacient, null=True)
 
+
 class Material_DN(models.Model):
     #material = models.ForeignKey(Material, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+
 
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)

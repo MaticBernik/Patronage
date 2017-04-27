@@ -388,6 +388,6 @@ def add_nursing_patient(request):
         """
     else:
         nursing_patient_form = AddNursingPatientForm()
-        return render(request, 'add_nursing_patient.html', {'add_nursing_patient_form': nursing_patient_form})
+        return render(request, 'add_nursing_patient.html', {'add_nursing_patient_form': nursing_patient_form, 'nbar': 'add_nursing'})
 
     

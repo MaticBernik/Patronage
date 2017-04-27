@@ -115,6 +115,23 @@ def is_coworker(user):
 def is_admin(user):
     return user.is_superuser
 
+def get_patient_role_string():
+
+    if is_patient(user):
+        return "patient"
+    elif is_nurse(user):
+        return "nurse"
+    elif is_doctor(user):
+        return "doctor"
+    elif is_leader_ps(user):
+        return "nursing_officer"
+    elif is_coworker(user):
+        return "coworker"
+    elif is_admin(user):
+        return "admin"
+    else:
+        return "unknown_user_type"
+
 # Create your views here.
 def index(request):
     global IP_FAILED_LOGIN
@@ -147,16 +164,7 @@ def index(request):
 
 
                 login(request, user)
-                if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
-                    return HttpResponseRedirect('home_nurse/')
-                elif Vodja_PS.objects.filter(uporabniski_profil=user).exists():
-                    return HttpResponseRedirect('home_ps_leader/')
-                elif Zdravnik.objects.filter(uporabniski_profil=user).exists():
-                    return HttpResponseRedirect('home_doctor/')
-                elif Sodelavec_ZD.objects.filter(uporabniski_profil=user).exists():
-                    return HttpResponseRedirect('home_employee/')
-                elif Pacient.objects.filter(uporabniski_profil=user).exists():
-                    return HttpResponseRedirect('base/controlPanel/')
+                return HttpResponseRedirect(reverse('link_control_panel'))
             else:
                 print("Unsuccessful user authentication.")
                 print(IP_FAILED_LOGIN)
@@ -171,18 +179,39 @@ def index(request):
 def base(request):
     
     user=request.user
+    link_list = []
+
+    control_panel_arr = ["link_control_panel", "Pregledna plošča", "ctrl_panel"]
+    # possible functionalities
+    add_medical_staff_arr = ["link_register_medical_staff", "Dodaj zdravstveno osebje", "add_medic"]
+    add_nursing_patient_arr = ["link_add_nursing", "Dodajte oskrbovano osebo", "add_nursing"]
+    change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass"]
+    create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk"]
+    view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs"]
+    view_visitations_arr = ["link_empty", "Pregled obiskov", "v_visits"]
+    view_work_tasks_arr = ["link_empty", "Pregled delovnih nalogov", "v_wrk_tsk"]
+
+    # adapt the list based on user role and task privleges
     if is_admin(user):
         role="Admin"
-    elif is_coworker(user):
-        role="Sodelavec"
+        link_list = [control_panel_arr, arr_add_medical_staff, change_password_arr]
     elif is_doctor(user):
-        role="Doktor"
+        role="Zdravnik"
+        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
     elif is_leader_ps(user):
         role="Vodja PS"
+        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
     elif is_nurse(user):
-        role="med.Sestra"
+        role="medicinska sestra"
+        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
+    elif is_coworker(user):
+        role="Sodelavec"
+        link_list = [control_panel_arr, view_visitations_arr, view_substitutes_arr, change_password_arr ]
     else:
-        role="pacient"
+        role="Pacient"
+        link_list = [control_panel_arr, view_visitations_arr, add_nursing_patient_arr, change_password_arr ]
+
+    oskrbovanci = None
 
     if Pacient.objects.filter(uporabniski_profil=user).exists():
         pacient = Pacient.objects.get(uporabniski_profil=user)
@@ -196,9 +225,9 @@ def base(request):
         return HttpResponse("Thanks, for trying.")
         # if a GET (or any other method) we'll create a blank form
     else:
-        global context
-        context={'user_role': role, 'oskrbovanci_pacienta':oskrbovanci}
+        context={'user_role': role, 'oskrbovanci_pacienta':oskrbovanci, 'link_list':link_list, 'nbar': 'ctrl_panel'}
         # return render(request, 'medical_registration.html', context)
+        # Assign role-based navbar
         #form = LoginForm()
         print("base_function")
         # return render(request, 'base.html')
@@ -232,3 +261,6 @@ def activate(request):
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def empty(request):
+    return render(request, 'empty.html')

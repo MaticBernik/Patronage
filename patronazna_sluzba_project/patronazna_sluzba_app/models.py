@@ -100,7 +100,7 @@ class Kontaktna_oseba(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     naslov = models.CharField(max_length=100, null=False)
     telefon = models.CharField(max_length=15, null=False)  # +368
-    #sorodstvo = models.ForeignKey(Sorodstveno_razmerje,null=True)
+    sorodstvo = models.ForeignKey('Sorodstveno_razmerje',null=True)
 
 
 class Pacient(models.Model):
@@ -118,7 +118,7 @@ class Pacient(models.Model):
     kontakt = models.ForeignKey(Kontaktna_oseba, null=True)
     posta = models.ForeignKey(Posta, null=True)
     okolis = models.ForeignKey(Okolis, null=True)
-    #sorodstvo = models.ForeignKey(Sorodstveno_razmerje,null=True)
+    sorodstvo = models.ForeignKey('Sorodstveno_razmerje',null=True)
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=True)
@@ -137,8 +137,8 @@ class Pacient(models.Model):
 
 
 class Sorodstveno_razmerje(models.Model):
-	kontaktna_oseba = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
-	pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
+	kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
+	pacient_id = models.ForeignKey(Pacient, on_delete=models.CASCADE)
 	tip_razmerja = models.CharField(max_length=100, null=False)
 
 
@@ -257,8 +257,12 @@ class Bolezen(models.Model):
     ime = models.CharField(max_length=100, null=False)
     opis = models.CharField(max_length=500, null=True)
 
-#class Material(models.Model):
-
+class Material(models.Model):
+    ime = models.CharField(max_length=100, null=False)
+    proizvajalec = models.CharField(max_length=100, null=False)
+    opis = models.CharField(max_length=500, null=False)
+    kolicina_osnovne_enote = models.IntegerField(null=False, default=-1)
+    oznaka_osnovne_enote = models.CharField(max_length=100, null=True)
 
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
@@ -276,7 +280,9 @@ class Delovni_nalog(models.Model):
 
     obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
 
-#class Obisk(models.Model):
+class Obisk(models.Model):
+    delovni_nalog = models.ForeignKey(Delovni_nalog,null=False)
+    datum = models.DateTimeField(null=True)
 
 
 class Pacient_DN(models.Model):
@@ -285,10 +291,12 @@ class Pacient_DN(models.Model):
 
 
 class Material_DN(models.Model):
-    #material = models.ForeignKey(Material, null=True)
+    material = models.ForeignKey(Material, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+    kolicina = models.IntegerField(null=False, default=1)
 
 
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+    kolicina = models.IntegerField(null=False, default=1)

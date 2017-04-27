@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Create your views here.
 # import the logging library
 from django.contrib.auth import authenticate, login, logout

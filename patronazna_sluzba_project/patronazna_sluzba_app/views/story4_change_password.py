@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #from . import story2_create_pacient
 from patronazna_sluzba_app.models import *
 from patronazna_sluzba_app.forms import *

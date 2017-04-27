@@ -104,7 +104,7 @@ class PatientRegistrationFrom(forms.Form):
     email = forms.EmailField(label='E-poštni naslov: ', widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Rojstni datum: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birth_date'}), input_formats=['%d.%m.%Y'])
     # UPDATE REQUIRED -> POSTAL CODE AND CITY -> TWO AUTOCOMPLETE FIELDS
-    post_code =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+    search_post =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
 
     #kontaktna oseba
     contact_last_name = forms.CharField(label='Priimek: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_last_name', 'class': 'form-control'}))

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail

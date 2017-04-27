@@ -69,14 +69,6 @@ body{
 }
 
 
-.navbar-fixed-top {
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: 1030;
-    top: 0;
-}
-
 /*
 	NAVBAR SETTINGS
 	source code from: https://work.smarchal.com/twbscolor/css/e74c3cc0392becf0f1ffbbbc0 ;
@@ -84,7 +76,6 @@ body{
 
 .navbar{
 	margin-bottom: 0px;
-    max-height: 50px;
 }
 
 .navbar-inverse {

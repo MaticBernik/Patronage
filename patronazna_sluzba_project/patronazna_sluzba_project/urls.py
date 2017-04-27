@@ -29,13 +29,14 @@ urlpatterns = [
     url(r'^base/addNursingPatient', add_nursing_patient, name="link_add_nursing"),
 	url(r'^changePassword', change_password, name="link_change_password"),
     url(r'^activate/', activate),
-	url(r'^workTask/', work_task_view),
+	url(r'^workTask/', work_task_view, name="link_work_task"),
 	url(r'^logout', logout_user, name="link_logout"),
 	url(r'^$', index, name="link_home"),
     url(r'^medicine/search/$',search_titles),
     url(r'^patient/search/$',search_patients),
     url(r'^visit/choice/$',choose_visit_type),
     url(r'^post/$',search_post_code),
+    url(r'^base/empty$', empty, name="link_empty"),
 ]
 
 #ADD 

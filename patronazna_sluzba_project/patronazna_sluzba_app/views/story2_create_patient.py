@@ -27,7 +27,7 @@ def search_post_code(request):
     else:
         search_post =''
 
-    post = Posta.objects.all()#filter(ime__contains=search_patient)
+    post = Posta.objects.all()
     return render_to_response('ajax_post.html',{'post':post})
 
 def search_district_name(request):
@@ -35,15 +35,17 @@ def search_district_name(request):
     post_code = "1000"
     if request.method == 'POST':
         # preberi posto, ki je izbrana
-       # print("POST FROM DISTRICT")
+        #print("POST FROM DISTRICT")
         chosen_post = request.POST['search_post']
         post_code = chosen_post.split()
         post_code = post_code[0]
+        #print("POST Code is: "+post_code)
         search_district = request.POST['search_district']
     else:
         search_district =''
+        #print("District GET: ")
     #print('Posta ajax '+post_code)
-    district = Okolis.objects.filter(posta_id=post_code).filter(ime__contains=search_district)
+    district = Okolis.objects.filter(posta_id=post_code).filter(ime__icontains=search_district)
     return render_to_response('ajax_district.html',{'district':district})
 
 def add_patient_caretaker(password1, password2, first_name, last_name, mail, card_number, address, phone_number,

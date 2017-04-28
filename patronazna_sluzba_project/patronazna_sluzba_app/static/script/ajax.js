@@ -42,6 +42,20 @@ $(document).ready(function(){
             success: chooseRoleSuccess,
             dataType: 'html'
         });
+
+     //second AJAX
+    //alert("Second AJAX MS");
+      $.ajax({
+
+            type: "GET",
+            url: "/visit_list/",
+            data: {
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: planVisitSuccess,
+            dataType: 'html'
+        });
 });
 /*
 
@@ -96,6 +110,27 @@ $(document).ready(function(){
         });
     });
 
+    //master detail delovni nalog MS
+    $('#plan_detail').on('click', function () {
+       // alert("THIS WOKRS");
+        var selected_data = String($('#visit_list').val());
+        //selected_data=selected_data.split(' ');
+        //selected_data=selected_data[0];
+        alert("Klick registered  "+ selected_data);
+        $.ajax({
+            type: "POST",
+            url: "/plan_detail/",
+            data: {
+                'visit_list': selected_data,//'3 | Mislejeva',
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: planDetailSuccess,
+            dataType: 'html'
+        });
+
+    });
+
 });
 
 function searchSuccess(data, textStatus, jqXHR) {
@@ -125,4 +160,14 @@ function searchDistrictSuccess(data, textStatus, jqXHR) {
 
 function chooseRoleSuccess(data, textStatus, jqXHR) {
     $('#choose-visit').html(data);
+}
+
+
+function planVisitSuccess(data, textStatus, jqXHR) {
+    $('#visit_list').html(data);
+}
+
+
+function planDetailSuccess(data, textStatus, jqXHR) {
+    $('.modal-body').html(data);
 }

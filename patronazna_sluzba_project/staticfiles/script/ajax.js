@@ -1,5 +1,4 @@
 $(function () {
-
     $('#medicine').keyup(function () {
 
         $.ajax({
@@ -28,12 +27,11 @@ $(function () {
         });
     });
     // ajax za obisk glede na role
-    $(document).ready(function(){
-        alert("Document reaady");
-    });
+$(document).ready(function(){
+   // alert("TEST FOR AJAX");
 
      $.ajax({
-         alert("AJAX za vloge");
+
             type: "GET",
             url: "/visit/role/",
             data: {
@@ -45,6 +43,23 @@ $(function () {
             dataType: 'html'
         });
 
+     //second AJAX
+    //alert("Second AJAX MS");
+      $.ajax({
+
+            type: "GET",
+            url: "/visit_list/",
+            data: {
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: planVisitSuccess,
+            dataType: 'html'
+        });
+});
+/*
+
+*/
     //master detail obiski
     $('#choose-visit').on('change', function () {
 
@@ -95,6 +110,24 @@ $(function () {
         });
     });
 
+    //master detail delovni nalog MS
+    $('#plan_detail').on('click', function () {
+        var selected_data = $('#visit_list').val();
+        alert("Klick registered  data"+ data);
+        $.ajax({
+            type: "POST",
+            url: "/plan_detail/",
+            data: {
+                'donkey': selected_data,
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: planDetailSuccess,
+            dataType: 'html'
+        });
+
+    });
+
 });
 
 function searchSuccess(data, textStatus, jqXHR) {
@@ -124,4 +157,14 @@ function searchDistrictSuccess(data, textStatus, jqXHR) {
 
 function chooseRoleSuccess(data, textStatus, jqXHR) {
     $('#choose-visit').html(data);
+}
+
+
+function planVisitSuccess(data, textStatus, jqXHR) {
+    $('#visit_list').html(data);
+}
+
+
+function planDetailSuccess(data, textStatus, jqXHR) {
+    $('.modal-body').html(data);
 }

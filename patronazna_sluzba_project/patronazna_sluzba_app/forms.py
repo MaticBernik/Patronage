@@ -179,3 +179,7 @@ class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(label='Trenutno geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'old_pass', 'class': 'form-control'}))
     new_password1 = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'new_pass', 'class': 'form-control'}))
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'new_pass2', 'class': 'form-control'}))
+
+class plan_visit_form(forms.Form):
+    visit_list = forms.MultipleChoiceField(label='Neopravljeni obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control','id':'visit_list'}))
+    plan_list = forms.MultipleChoiceField(label='Izbrani obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control'}))

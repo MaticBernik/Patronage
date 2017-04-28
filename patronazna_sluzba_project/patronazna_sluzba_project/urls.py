@@ -38,6 +38,9 @@ urlpatterns = [
     url(r'^post/$',search_post_code),
     url(r'^district/$',search_district_name),
     url(r'^visit/role/$',visit_based_on_role),
+    url(r'^plan_visit', plan_visit_view, name="link_plan_visit"),
+    url(r'^visit_list/$',plan_list_ajax),
+    url(r'^plan_detail/$',work_task_plan),
 ]
 
 #ADD 

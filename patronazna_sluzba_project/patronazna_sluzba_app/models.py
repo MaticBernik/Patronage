@@ -283,7 +283,8 @@ class Delovni_nalog(models.Model):
 class Obisk(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog,null=False)
     datum = models.DateTimeField(null=True)
-
+    p_sestra = models.ForeignKey(Patronazna_sestra, null=True)
+    obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)

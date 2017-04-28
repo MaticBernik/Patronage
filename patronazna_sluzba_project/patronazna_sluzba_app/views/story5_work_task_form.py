@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # @login_required(login_url='/')
-from patronazna_sluzba_app.models import *
-from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
-from django.template.context_processors import csrf
 from django.template import Context, loader, RequestContext
-
+from django.template.context_processors import csrf
+from patronazna_sluzba_app.forms import *
+from patronazna_sluzba_app.models import *
+import datetime
 
 def search_titles(request):
     if request.method == 'POST':
@@ -141,24 +141,26 @@ def work_task_view(request):
         current_vodja_PS = None
         current_user = request.user
         try:
-            us = User.objects.get(email='joze.dolenc@mail.si')
-            current_doc = Zdravnik.objects.get(uporabniski_profil=us)
-            print("hardcodan doc")
+            #us = User.objects.get(email='joze.dolenc@mail.si')
+            #current_doc = Zdravnik.objects.get(uporabniski_profil=us)
+            #print("hardcodan doc")
 
-            #current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
+            current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
             ZS = current_doc.sifra_izvajalca_ZS
+            print("DOC DELOVNI NALOG")
         except:
             current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
             ZS = current_vodja_PS.sifra_izvajalca_ZS
+            print("VODJA PS DELOVNI NALOG")
 
 
         #   Adding time frames
         cas_obisk = 0
-        obisk_tip = "Interval"
+        obisk_tip = "Obdobje"
         if casovni_interval == 0:
             cas_obisk = casovno_obdobje
         elif casovno_obdobje == 0:
-            obisk_tip = "Obdobje"
+            obisk_tip = "Interval"
             cas_obisk = casovni_interval
         else:
             print("wtf is happening?")
@@ -173,12 +175,22 @@ def work_task_view(request):
 
         print("work tast form saved")
 
-
         #   PATIENT====================================================================
 
         #   Add more patients
         if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
+            pacient_list = request.POST.getlist('addPatient')
+
+            main_patient = Pacient.objects.get(st_kartice=pacient_list[0][0:12])
+            print("main patient", main_patient.ime)
+            for i in pacient_list:
+                card_list = i[0:12]
+                print("card", card_list)
+                patient = Pacient.objects.get(st_kartice=card_list)
+                patient_wtf = Pacient_DN(delovni_nalog=work_task_f, pacient=patient)
+                patient_wtf.save()
+                print("Shranjen pacient in delovni nalog")
             #dobi ven paciente
         #   Add one patient
         else:
@@ -186,9 +198,84 @@ def work_task_view(request):
             patient_card_number = int(pacient[0:12])
 
             patient = Pacient.objects.get(st_kartice=patient_card_number)
+            main_patient = patient
             patient_wtf = Pacient_DN(delovni_nalog=work_task_f, pacient=patient)
             patient_wtf.save()
             print("work task form link to  patient saved")
+
+            if podvrsta_vrsta_obiska == 'Odvzem krvi':
+                print("odvzem krvi")
+
+                izbran_material = request.POST.getlist('materialDN')
+                for i in izbran_material:
+                    quantity = int(i[-1:])
+                    sep = ' '
+                    material_name = i.split(sep, 1)[0]
+                    print(quantity)
+                    print(material_name)
+                    mat = Material.objects.get(ime=material_name)
+                    material_wtf = Material_DN(material=mat, delovni_nalog=work_task_f, kolicina=quantity)
+                    material_wtf.save()
+                    print("Shranjen material", quantity, ",", material_name)
+            elif podvrsta_vrsta_obiska == 'Aplikacija injekcij':
+                # napisem kodo, ko se mi bojo prikazala zdravila.. trenutno se mi iz neznaneega razloga ne :(
+                return HttpResponse("Uspesno kreiranje delovnega naloga RAZEN ZDRAVILA NISO DODANA!!!!!! "+delovni_nalog);
+
+        # VISITS====================================================================
+        interval_period = int(cas_obisk)
+        type = obisk_tip
+        number_of_visits = int(stevilo_obiskov)
+        date_current = datetime.datetime.strptime(first_visit_date, "%Y-%m-%d")
+
+        # if we have interval type of visitation
+        if type == 'Interval':
+            for i in range(int(number_of_visits)):
+                date_next = date_current + datetime.timedelta(days=int(interval_period))
+                weekno = date_next.weekday()
+                if weekno == 6 or weekno == 0:
+                    date_next = date_next + datetime.timedelta(days=2)
+                    weekno = date_next.weekday()
+
+                p_sestra = Patronazna_sestra.objects.get(okolis=main_patient.okolis)
+                obv = 0
+                if obveznost == "Obvezen":
+                    obv = 1
+                    obveznost = "Okviren"
+
+                visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
+                visit.save()
+                date_current = date_next
+                print("Obisk shranjen (INTERVAL); datum: ", date_current)
+        else:
+            # space = number of days so that visits are the most balanced throughout the period
+            space = int(interval_period / number_of_visits)
+            for i in range(int(number_of_visits)):
+                #   If there are 1 or more days between visits
+                if int(interval_period) >= int(number_of_visits):
+                    date_next = date_current + datetime.timedelta(days=int(space))
+                    #   check if its weekend
+                    weekno = date_next.weekday()
+
+                    if weekno == 6 or weekno == 0:
+                        date_next = date_next + datetime.timedelta(days=2)
+                        weekno = date_next.weekday()
+
+                    # find the appropriate nurse for the county
+                    p_sestra = Patronazna_sestra.objects.get(okolis=main_patient.okolis)
+                    #   check if the first visit is mandatory on that day
+                    obv = 0
+                    if obveznost == "Obvezen":
+                        obv = 1
+                        obveznost = "Okviren"
+
+                    visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra,
+                                  obvezen_obisk=obv)
+                    visit.save()
+                    date_current = date_next
+                    print("Obisk shranjen (OBDOBJE); datum: ", date_current)
+                else:
+                    return HttpResponse(
+                        "Uspesno kreiranje delovnega naloga AMPAK NISO DODANI OBISKI KER JE PREKRATKO OBDOBJE" + delovni_nalog);
 
         return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
 

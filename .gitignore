@@ -6,3 +6,5 @@ patronazna_sluzba_project/patronazna_sluzba_app/__pycache__/
 patronazna_sluzba_project/patronazna_sluzba_app/migrations/__pycache__/
 
 patronazna_sluzba_project/patronazna_sluzba_project/__pycache__/
+*.pyc
+*.pyc

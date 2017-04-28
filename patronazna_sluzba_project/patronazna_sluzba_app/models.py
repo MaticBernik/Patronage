@@ -271,9 +271,9 @@ class Delovni_nalog(models.Model):
     datum_prvega_obiska = models.DateTimeField(null=True)
     st_obiskov = models.IntegerField(null=True)
     cas_obiskov_tip = models.CharField(choices=CAS_OBISKOV, max_length=10, blank=True)
-    cas_obiskov_dolzina = models.IntegerField(null=True) #dodam
-    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True) #dodam
-    bolezen = models.ForeignKey(Bolezen,null=False)
+    cas_obiskov_dolzina = models.IntegerField(null=True)
+    vrsta_obiska = models.ForeignKey(Vrsta_obiska,null=True)
+    bolezen = models.ForeignKey(Bolezen,null=True)
     izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
     zdravnik = models.ForeignKey(Zdravnik, null=True)
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)

@@ -178,6 +178,14 @@ def work_task_view(request):
         #   Add more patients
         if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
+            pacient_list = request.POST.getlist('addPatient')
+            for i in pacient_list:
+                card_list = i[0:12]
+                print("card", card_list)
+                patient = Pacient.objects.get(st_kartice=card_list)
+                patient_wtf = Pacient_DN(delovni_nalog=work_task_f, pacient=patient)
+                patient_wtf.save()
+                print("Shranjen pacient in delovni nalog")
             #dobi ven paciente
         #   Add one patient
         else:
@@ -188,6 +196,24 @@ def work_task_view(request):
             patient_wtf = Pacient_DN(delovni_nalog=work_task_f, pacient=patient)
             patient_wtf.save()
             print("work task form link to  patient saved")
+
+            if podvrsta_vrsta_obiska == 'Odvzem krvi':
+                print("odvzem krvi")
+
+                izbran_material = request.POST.getlist('materialDN')
+                for i in izbran_material:
+                    quantity = int(i[-1:])
+                    sep = ' '
+                    material_name = i.split(sep, 1)[0]
+                    print(quantity)
+                    print(material_name)
+                    mat = Material.objects.get(ime=material_name)
+                    material_wtf = Material_DN(material_name=mat, delovni_nalog=work_task_f, kolicina=quantity)
+                    material_wtf.save()
+                    print("dodan material", quantity, ", ", material_name)
+            elif podvrsta_vrsta_obiska == 'Aplikacija injekcij':
+                # napisem kodo, ko se mi bojo prikazala zdravila.. trenutno se mi iz neznaneega razloga ne :(
+                return HttpResponse("Uspesno kreiranje delovnega naloga RAZEN ZDRAVILA NISO DODANA!!!!!! "+delovni_nalog);
 
         return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
 

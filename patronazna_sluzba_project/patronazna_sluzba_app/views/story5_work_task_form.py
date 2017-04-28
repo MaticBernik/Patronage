@@ -208,7 +208,7 @@ def work_task_view(request):
                     print(quantity)
                     print(material_name)
                     mat = Material.objects.get(ime=material_name)
-                    material_wtf = Material_DN(material_name=mat, delovni_nalog=work_task_f, kolicina=quantity)
+                    material_wtf = Material_DN(material=mat, delovni_nalog=work_task_f, kolicina=quantity)
                     material_wtf.save()
                     print("dodan material", quantity, ", ", material_name)
             elif podvrsta_vrsta_obiska == 'Aplikacija injekcij':

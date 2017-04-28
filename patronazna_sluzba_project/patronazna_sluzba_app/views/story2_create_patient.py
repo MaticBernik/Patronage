@@ -27,8 +27,26 @@ def search_post_code(request):
     else:
         search_post =''
 
-    post = Posta.objects.all()#filter(ime__contains=search_patient)
+    post = Posta.objects.all()
     return render_to_response('ajax_post.html',{'post':post})
+
+def search_district_name(request):
+
+    post_code = "1000"
+    if request.method == 'POST':
+        # preberi posto, ki je izbrana
+        #print("POST FROM DISTRICT")
+        chosen_post = request.POST['search_post']
+        post_code = chosen_post.split()
+        post_code = post_code[0]
+        #print("POST Code is: "+post_code)
+        search_district = request.POST['search_district']
+    else:
+        search_district =''
+        #print("District GET: ")
+    #print('Posta ajax '+post_code)
+    district = Okolis.objects.filter(posta_id=post_code).filter(ime__icontains=search_district)
+    return render_to_response('ajax_district.html',{'district':district})
 
 def add_patient_caretaker(password1, password2, first_name, last_name, mail, card_number, address, phone_number,
                            birth_date, sex, contact_first_name, contact_last_name, contact_address, contact_phone_number, sorodstveno_razmerje):
@@ -289,6 +307,9 @@ def register_patient(request):
             #uspesno izbrana posta
             posta = request.POST['search_post']
             print('izbrana posta '+posta)
+            # uspesno izbran okolis
+            district = request.POST['search_district']
+            print('izbrana posta ' + district)
 
             if not (add_patient_caretaker(password1, password2, first_name, last_name, mail,
 
@@ -352,8 +373,12 @@ def add_nursing_patient(request):
             last_name = form.cleaned_data['last_name']
             phone_number = form.cleaned_data['phone_number']
             address = form.cleaned_data['address']
-            postCode = form.cleaned_data['post_code']
-            district = form.cleaned_data['district']
+            #postCode = form.cleaned_data['post_code']
+            #posta oskrbovanca
+            post_code = request.POST['search_post']
+            district_name = request.POST['search_district']
+            print('posta oskrbovanca '+post_code +' okolis '+district_name)
+            #district = form.cleaned_data['district']
             birth_date = form.cleaned_data['birth_date']
             sex = form.cleaned_data['sex']
             relation = form.cleaned_data['relation']

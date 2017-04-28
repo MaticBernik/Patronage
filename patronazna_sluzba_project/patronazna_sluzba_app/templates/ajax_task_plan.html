@@ -1,0 +1,17 @@
+{% if task.count > 0 %}
+{% for t in task %}
+    <div>
+    <label>Ime poste</label>
+    <input type="text" value="{{ t.ime }}" disabled>
+    </div>
+    <div>
+    <label>Id poste</label>
+    <input type="text" value="{{ t.posta_id }}" disabled>
+    </div>
+    {%  endfor %}
+
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

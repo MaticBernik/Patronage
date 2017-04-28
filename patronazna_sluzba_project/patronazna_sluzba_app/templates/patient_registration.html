@@ -70,9 +70,9 @@
 					</div>
 					<div class="form-group">
 						{{ registration_form.post_code.errors }}
-						<label class="control-label" for="{{ registration_form.post_code.id_for_label }}">{{ registration_form.post_code.label }}</label>
+						<label class="control-label" >Pošta</label>
 						{% csrf_token %}
-                        <input type="text" list="post_codes" id="search_post" name="search_post" class="form-control"/>
+                        <input type="text" list="post_codes" id="search_post" name="search_post" class="form-control" required/>
                         <datalist id="post_codes">
 
                         </datalist>
@@ -82,8 +82,13 @@
 					</div>
 					<div class="form-group">
 						{{ registration_form.district.errors }}
-						<label class="control-label" for="{{ registration_form.district.id_for_label }}">{{ registration_form.district.label }}</label>
-						{{ registration_form.district }}
+						<label class="control-label" >Okoliš</label>
+						{% csrf_token %}
+                        <input type="text" list="district_name" id="search_district" name="search_district" class="form-control" required/>
+                        <datalist id="district_name">
+
+                        </datalist>
+						<!--{{ registration_form.district }}-->
 						<!--<select>
 							<option>05600</option>
 							<option>05470</option>

@@ -1,0 +1,12 @@
+{% if visit_role|length > 0 %}
+<select>
+{% for visit in visit_role %}
+    <option value="{{ visit}}">{{ visit }}</option>
+
+    {%  endfor %}
+</select>
+{% else %}
+
+<li>None to show! Count is: {{ visit_role|length }}</li>
+
+{%  endif %}

@@ -4,6 +4,7 @@ from patronazna_sluzba_app.models import *
 from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
+from django.template import Context, loader, RequestContext
 #OLD: SPREMEMBA GESLA
 # def change_password(pass1, pass2, id):
 #   if story2_create_pacient.check_passwords(pass1, pass2):
@@ -38,7 +39,7 @@ def change_password(request):
                     return HttpResponse("Napaka pri potrditvi novega gesla!")
             else:
                 return HttpResponse("Napačen vnos trenutnega gesla!")
-
     else:
-        form = ChangePasswordForm()
-    return render(request, 'change_password.html', {'change_password_form': form})
+        change_password_form = ChangePasswordForm()
+        context={'nbar': 'chng_pass', 'change_password_form': change_password_form}
+    return render(request, 'change_password.html', context)

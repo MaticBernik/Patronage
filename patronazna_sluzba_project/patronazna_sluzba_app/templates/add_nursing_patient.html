@@ -27,7 +27,7 @@
     <script src="{% static 'script/ajax.js' %}"></script>
   <script>
     $( function() {
-        $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd-mm-yy',yearRange: "-100:+0"})
+        $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0"})
     } );
     </script>
 
@@ -69,9 +69,9 @@
             </div>
             <div class="form-group">
               {{ add_nursing_patient_form.post_code.errors }}
-              <label class="control-label" for="{{ add_nursing_patient_form.post_code.id_for_label }}">{{ add_nursing_patient_form.post_code.label }}</label>
+              <label class="control-label">Pošta</label>
               {% csrf_token %}
-                <input type="text" list="post_codes" id="search_post" name="search_post" class="form-control"/>
+                <input type="text" list="post_codes" id="search_post" name="search_post" required class="form-control"/>
                 <datalist id="post_codes">
 
                 </datalist>
@@ -82,8 +82,14 @@
             </div>
             <div class="form-group">
               {{ add_nursing_patient_form.district.errors }}
-              <label class="control-label" for="{{ add_nursing_patient_form.district.id_for_label }}">{{ add_nursing_patient_form.district.label }}</label>
-              {{ add_nursing_patient_form.district }}
+              <label class="control-label" >Okoliš</label>
+                {% csrf_token %}
+                <input type="text" list="district_name" id="search_district" name="search_district" class="form-control" required/>
+                <datalist id="district_name">
+
+                </datalist>
+
+                <!-- {{ add_nursing_patient_form.district }}-->
             </div>
             <div class="form-group">
               {{ add_nursing_patient_form.phone_number.errors }}

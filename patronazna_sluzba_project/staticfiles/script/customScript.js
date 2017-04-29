@@ -169,7 +169,7 @@ function firstVisitDate(){
 	var firstVisit = datum.value.split(".");
 	//alert("today:"+firstVisit[2]);
 	if(firstVisit[2]<year1){
-		alert("Napacno letnico");
+		alert("Napacno leto! Datum ne more biti v preteklosti");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -184,7 +184,9 @@ function firstVisitDate(){
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
-	
+
+	//preveri se dodatna polja
+	//if($(''))
 	$(".signupbtn").removeAttr('disabled');
 	return true;
 	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();

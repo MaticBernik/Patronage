@@ -1,0 +1,12 @@
+{% if district.count > 0 %}
+<datalist>
+{% for d in district %}
+    <option value="{{ d.ime }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

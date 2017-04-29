@@ -21,6 +21,9 @@ class Okolis(models.Model):
     posta = models.ForeignKey(Posta)
     ime = models.CharField(max_length=100, null=False)
 
+    def __str__(self):
+        return self.ime
+
 '''class Izvajalec_ZS(models.Model):
     #V izvorni tabeli so Izvajalci naprej deljeni na oddelke - vendar to nas tu ne zanima??
     class Meta:

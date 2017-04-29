@@ -100,11 +100,11 @@ class PatientRegistrationFrom(forms.Form):
     password = forms.CharField(label='Geslo: ',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass1', 'class': 'form-control'}))
     password2 = forms.CharField(label='Ponovite geslo: ',max_length=100, widget=forms.PasswordInput(attrs={'id': 'pass2', 'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    district = forms.ChoiceField(label='Okrožje: ', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #district = forms.ChoiceField(label='Okrožje: ', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='E-poštni naslov: ', widget=forms.EmailInput(attrs={'placeholder':'uporabnik@gmail.com', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Rojstni datum: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birth_date'}), input_formats=['%d.%m.%Y'])
     # UPDATE REQUIRED -> POSTAL CODE AND CITY -> TWO AUTOCOMPLETE FIELDS
-    search_post =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #post_code =  forms.ChoiceField(label='Pošta: ',choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
 
     #kontaktna oseba
     contact_last_name = forms.CharField(label='Priimek: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_last_name', 'class': 'form-control'}))
@@ -120,9 +120,9 @@ class AddNursingPatientForm(forms.Form):
     address = forms.CharField(label='Naslov: ', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
     phone_number = forms.IntegerField(label='Telefon: ', widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control'}))
     birth_date = forms.DateField(label='Datum rojstva: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
-    post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     relation = forms.ChoiceField(label='Sorodstveno razmerje: ', choices = RELATIONS, widget=forms.Select(attrs={'class': 'form-control'} ))
 
 class WorkTaskForm(forms.Form):
@@ -131,7 +131,7 @@ class WorkTaskForm(forms.Form):
     task_id = forms.CharField(label='Številka naloga: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
     #visit_type = forms.ChoiceField(label='Vrsta obiska: ', choices=VRSTE_OBISKOV, widget=forms.Select(attrs={'class': 'form-control','id':'choose-visit'}))
     #visit_type_detail = forms.ChoiceField(label='Vrsta storitve: ', choices=VRSTE_OBISKOV_DETAIL,widget=forms.Select(attrs={'id':'visit_type','onchange':'addPatientButton()', 'class': 'form-control'}))
-    visitType = forms.ChoiceField(choices=VRSTE_OBISKOV, widget=forms.Select(attrs={'id': 'choose-visit'}))
+    visitType = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'id': 'choose-visit'}))
     visitTypeDetail = forms.ChoiceField(choices=[], widget=forms.Select(
         attrs={'id': 'visitType', 'onchange': 'addPatientButton()'}))
     #card_number = forms.CharField(label='Številka kartice: ', max_length=100, widget=forms.NumberInput(attrs={'id': 'card_number', 'class': 'form-control'}))
@@ -179,3 +179,7 @@ class ChangePasswordForm(forms.Form):
     old_password = forms.CharField(label='Trenutno geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'old_pass', 'class': 'form-control'}))
     new_password1 = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'new_pass', 'class': 'form-control'}))
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'new_pass2', 'class': 'form-control'}))
+
+class plan_visit_form(forms.Form):
+    visit_list = forms.MultipleChoiceField(label='Neopravljeni obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control','id':'visit_list'}))
+    plan_list = forms.MultipleChoiceField(label='Izbrani obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control'}))

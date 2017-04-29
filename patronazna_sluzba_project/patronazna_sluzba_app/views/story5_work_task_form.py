@@ -8,24 +8,38 @@ from patronazna_sluzba_app.forms import *
 from patronazna_sluzba_app.models import *
 import datetime
 
+# zdravila
 def search_titles(request):
     if request.method == 'POST':
         search_text = request.POST['search_text']
     else:
-        search_text =''
+        search_text = ''
 
-    medicine = Zdravilo.objects.filter(ime__contains=search_text)
-    return render_to_response('ajax_search.html',{'medicine':medicine})
+    # medicine = Zdravilo.objects.filter(ime__contains=search_text).distinct()[1:10]
+    medicine = Zdravilo.objects.values('ime').distinct().filter(ime__contains=search_text)[1:10]
+    return render_to_response('ajax_search.html', {'medicine': medicine})
 
 
 def search_patients(request):
     if request.method == 'POST':
         search_patient = request.POST['search_patient']
     else:
-        search_patient =''
+        search_patient = ''
 
-    patients = Pacient.objects.all()#filter(ime__contains=search_patient)
-    return render_to_response('ajax_patient.html',{'patients':patients})
+    patients = Pacient.objects.all()  # filter(ime__contains=search_patient)
+    return render_to_response('ajax_patient.html', {'patients': patients})
+
+def visit_based_on_role(request):
+    user_role_type = 'Zdravnik'
+    print('get request to visit role')
+    if user_role_type == 'Vodja':
+        visit_role = ['','Preventivni obisk']
+    else:
+        visit_role = ['', 'Preventivni obisk','Kurativni obisk']
+    #for i in visit_role:
+    #    print('Visit : '+i[0])
+    #test='Preventivni obisk', 'Kurativni obisk';
+    return render_to_response('ajax_visit_role.html',{'visit_role': visit_role})
 
 
 def choose_visit_type(request):
@@ -35,9 +49,9 @@ def choose_visit_type(request):
     else:
         choose_visit = 'Preventivni obisk'
 
-    visits = Vrsta_obiska.objects.filter(tip__contains=choose_visit)
-    print('filter paremeter is: '+choose_visit)
-    return render_to_response('ajax_visit.html',{'visits':visits})
+    visits = Vrsta_obiska.objects.filter(tip=choose_visit)
+    print('filter paremeter is: ' + choose_visit)
+    return render_to_response('ajax_visit.html', {'visits': visits})
 
 
 def fix_date(date_of_visit):
@@ -64,7 +78,6 @@ def return_patient():
     return
 
 def work_task_view(request):
-
     if request.method == 'POST':
         form = WorkTaskForm(request.POST)
 
@@ -94,30 +107,30 @@ def work_task_view(request):
         if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
             pacient_list = request.POST.getlist('addPatient')
-            delovni_nalog+='Zavarovana oseba:\n'
+            delovni_nalog += 'Zavarovana oseba:\n'
             for i in pacient_list:
                 print(i)
-                delovni_nalog += '                '+i+'\n'
+                delovni_nalog += '                ' + i + '\n'
 
         else:
             pacient = request.POST['searchPatient']
-            delovni_nalog += 'Zavarovana oseba: '+ pacient+'\n'
-            print('Pacient: '+pacient)
+            delovni_nalog += 'Zavarovana oseba: ' + pacient + '\n'
+            print('Pacient: ' + pacient)
         if podvrsta_vrsta_obiska == 'Aplikacija injekcij':
             izbranaZdravila = request.POST.getlist('cureId')
 
             delovni_nalog += 'Izbrana zdravila:\n'
             for i in izbranaZdravila:
                 print("Zdravilo " + i)
-                delovni_nalog += '          '+i+'\n'
+                delovni_nalog += '          ' + i + '\n'
         elif podvrsta_vrsta_obiska == 'Odvzem krvi':
             print("odvzem krvi")
 
             delovni_nalog += 'Material:\n'
             izbran_material = request.POST.getlist('materialDN')
             for i in izbran_material:
-                print('material: '+i)
-                delovni_nalog += '          '+i+'\n'
+                print('material: ' + i)
+                delovni_nalog += '          ' + i + '\n'
 
         delovni_nalog += 'Datum prvega obiska: '+prvi_obisk+'\nObveznost obiska: '+obveznost+'\nStevilo obiskov: '+stevilo_obiskov+'\n'
         #zdravilo = request.POST['medicine']
@@ -287,6 +300,6 @@ def work_task_view(request):
 
         args['medicine'] = Zdravilo.objects.all()
         args['work_task_form'] = WorkTaskForm()
-        #form = WorkTaskForm()
+        # form = WorkTaskForm()
 
     return render(request, 'work_task.html', args)

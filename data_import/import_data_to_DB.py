@@ -7,6 +7,7 @@ from datetime import datetime
 import os
 import hashlib
 import uuid
+import random
 
 from django.utils.crypto import (pbkdf2, get_random_string)
 def hash_password(password):
@@ -129,6 +130,37 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 			conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)", (line[3], line[5], line[6], id, id_okrozje));
 		else: # line[0]=="sodelavec":
 			conn.execute("INSERT INTO patronazna_sluzba_app_sodelavec_zd (sifra_sodelavca,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id) VALUES (?,?,?,?)", (line[3], line[5], line[6], id));
+
+#Make sure, that every area has its nurse
+first_names=['Jana','Ana','Anja','Andreja','Zala','Lisa','Sara','Eva','Spela','Lara','Larisa','Marko','Luka','Martina','Franja','Ursa']
+last_names=['Novak','Kovac','Savic','Bohinc','Jakopin','Kozamernik','Bostjancic','Klepec','Saje','Godler','Mlakar','Mihalic','Zavec','Zajec','Petkovsek','Trubar']
+email_domains=['@gmail.com','@hotmail.com','@siol.net','@arnes.si']
+cursor = conn.execute("select id,ime,posta_id from patronazna_sluzba_app_okolis;")
+okolisi = cursor.fetchall()
+for okolis in okolisi:
+	cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where okolis_id=="+str(okolis[0])+";")
+	sestre = cursor.fetchall()
+	if len(sestre)==0:
+		while True:
+			first_name=random.choice(first_names)
+			last_name=random.choice(last_names)
+			email=first_name+"."+last_name+random.choice(email_domains)
+			cursor = conn.execute("select id from auth_user where email='"+email+"';")
+			nurse = cursor.fetchall()
+			if len(nurse)==0:
+				break
+
+		while True:
+			sifra = random.randint(10000,99999)
+			cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where sifra_patronazne_sestre="+str(sifra)+";")
+			nurse=cursor.fetchall()
+			if len(nurse)==0:
+				break
+
+		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(email, email, first_name, last_name, 'geslo123', True, False, True, datetime.now()));
+		cursor = conn.execute("select id from auth_user where username = '" + email + "';")
+		id = int(cursor.fetchall()[0][0])
+		conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)",	(sifra, '031 111 111', line[6], id, okolis[0]));
 
 #Poste
 with open("seznam_post.csv", "r") as poste_file:  #encoding="utf8"

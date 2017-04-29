@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 from django.contrib.auth import authenticate, login, logout, password_validation, update_session_auth_hash
 from django.contrib.auth.decorators import login_required,  user_passes_test

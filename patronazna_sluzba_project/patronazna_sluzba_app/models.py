@@ -265,7 +265,7 @@ class Material(models.Model):
 
 class Delovni_nalog(models.Model):
     CAS_OBISKOV = (("Interval","Casovni interval med zaporednima obiskoma v dnevih"), ("Obdobje","Stevilo dni, v katerih mora biti obisk opravljen"))
-    OBVEZNOST = (("Obvezen","Prvi obisk se mora opraviti na tocen dan"), ("Okviren","Prvi obisk se lahko opravi v vec dnevih"))
+    #OBVEZNOST = (("Obvezen","Prvi obisk se mora opraviti na tocen dan"), ("Okviren","Prvi obisk se lahko opravi v vec dnevih"))
 
     datum_prvega_obiska = models.DateTimeField(null=True)
     st_obiskov = models.IntegerField(null=True)
@@ -277,12 +277,12 @@ class Delovni_nalog(models.Model):
     zdravnik = models.ForeignKey(Zdravnik, null=True)
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)
 
-    obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
+    #obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
 
 class Obisk(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog,null=False)
     datum = models.DateTimeField(null=True)
-    p_sestra = models.ForeignKey(Patronazna_sestra, null=True)
+    #p_sestra = models.ForeignKey(Patronazna_sestra, null=True) Je ze znana - Tista, ki pripada okolisu v katerem je pacient
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
 
 class Pacient_DN(models.Model):

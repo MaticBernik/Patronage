@@ -112,13 +112,16 @@ $(document).ready(function(){
 
     //master detail delovni nalog MS
     $('#plan_detail').on('click', function () {
-        var selected_data = $('#visit_list').val();
-        alert("Klick registered  data"+ data);
+        //alert("THIS WOKRS");
+        var selected_data = String($('#visit_list').val());
+        selected_data=selected_data.split(' ');
+        selected_data=selected_data[0];
+        alert("Klick registered  "+ selected_data);
         $.ajax({
             type: "POST",
             url: "/plan_detail/",
             data: {
-                'donkey': selected_data,
+                'visit_list': selected_data,//'3 | Mislejeva',
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
 
@@ -127,7 +130,20 @@ $(document).ready(function(){
         });
 
     });
-
+    //alert("BEFOR AJAx");
+    $( document ).ajaxStop(function() {
+     // alert("Document is ready ajax");
+      $("#visit_list > option").each(function () {
+        var plan_data = $(this).text().split('&emsp;&emsp;');
+        alert("This is data: "+plan_data[1]);
+        if(plan_data[1] == "True") {
+          //alert("This is data: "+plan_data[1]);
+           $(this).remove().appendTo("#id_plan_list");
+         }
+           // $(this).remove().appendTo("#id_plan_list");
+            //rearrangeList("#list2");
+        });
+    });
 });
 
 function searchSuccess(data, textStatus, jqXHR) {

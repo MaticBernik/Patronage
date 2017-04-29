@@ -26,22 +26,25 @@ def work_task_plan(request):
     else:
         visit_list ='7'
 
-    task_fk = Okolis.objects.filter(id__iexact=visit_list)
-    print('Id poste za izbran okollis: '+str(task_fk))
+    task_fk = Pacient_DN.objects.select_related().filter(delovni_nalog_id=visit_list) #Delovni_nalog.objects.select_related().get(id=visit_list) #filter(id__iexact=visit_list)    #Okolis.objects.filter(id__iexact=visit_list)
+    material = Material_DN.objects.select_related().filter(delovni_nalog_id=visit_list)#get(delovni_nalog_id=visit_list)
+    #print('QUERY RESULT: '+str(task_fk.delovni_nalog.vrsta_obiska_id)+'    '+str(material.delovni_nalog.vrsta_obiska_id))
    # task = Posta.objects.all()[1:10]
-    return render_to_response('ajax_task_plan.html',{'task':task_fk})
+    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material})
 
 def plan_list_ajax(request):
 
 
     #print('Posta ajax '+post_code)
-    visit_list = Okolis.objects.values_list('id','ime')
+    visit_list = Obisk.objects.all().order_by('datum') #Okolis.objects.values_list('id','ime')
+    """
     better_list =[x[1] for x in visit_list]
     better_list_id = [x[0] for x in visit_list]
     for i in range(len(better_list)):
         better_list[i] = str(better_list_id[i])+' | '+better_list[i]
     #    print(i)
-    return render_to_response('ajax_plan_visit.html',{'visit_list':better_list})
+    """
+    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list})
 
 def plan_visit_view(request):
     if request.method == "POST":

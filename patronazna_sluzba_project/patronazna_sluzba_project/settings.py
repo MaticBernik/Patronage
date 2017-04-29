@@ -62,6 +62,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'patronazna_sluzba_project.urls'
 
+# GOOD TEMPLATES TUTORIAL ~ request context 
+# @http://www.b-list.org/weblog/2006/jun/14/django-tips-template-context-processors/
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,6 +76,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
+                'django.template.context_processors.csrf',
+                'patronazna_sluzba_app.custom_processors.navbar_list_processor',
             ],
         },
     },

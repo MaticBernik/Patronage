@@ -60,7 +60,7 @@ VRSTE_OBISKOV_DETAIL = (
 
 EPRUVETE_BARVA = (
     ('Zelena', 'Zelena'),
-    ('Rdeča', 'Rdeča'),
+    ('Rdeca', 'Rdeca'),
     ('Modra', 'Modra'),
     ('Rumena', 'Rumena'),
 )

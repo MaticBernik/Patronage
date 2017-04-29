@@ -9,6 +9,7 @@ from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 from patronazna_sluzba_app.forms import *
+from django.template import Context, loader, RequestContext
 
 import hashlib
 import random

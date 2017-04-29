@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block main_content %}
+
+<!-- 
+SNIPPET SOURCE ~ basic format
+http://bootsnipp.com/snippets/g0Re
+-->
+<link rel="stylesheet" type="text/css" href="{% static '/css/base_panel.css' %}">
+
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <!--  PICTURE -->
+          <div id="img_holder" class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+            <img src="{% static '/img/user_icon.png' %}" alt="" class="img-circle img-responsive" id="user_icon_img" />
+          </div>
+          <!-- INFO -->
+          <div id="info_holder" class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                <h3><strong>{{ role.upper }}</strong></h3>
+                <hr>
+                <h3><i class="glyphicon glyphicon-user"></i> <strong>{{ user.first_name }} {{ user.last_name }}</strong></h3>
+                  <cite title="Mest, Ul">
+                    <i class="glyphicon glyphicon-map-marker"></i> City. ST
+                  </cite>
+                  <br>
+                <i class="glyphicon glyphicon-envelope"></i> <a href="#">{{ user.email }}</a>
+                <br>
+                <cite title="Uporabnik od: ">
+                    <i class="glyphicon glyphicon-time"></i> <a href="#">{{ user.date_joined }}</a>
+                </cite>
+                <br>
+                <cite title="Čas zadnje prijave: ">
+                    <i class="glyphicon glyphicon-lock"></i> <a href="#">{{ user.last_login }}</a>
+                </cite>
+                <!-- <i class="glyphicon glyphicon-globe"></i> <a href="#">http://domain.com</a>-->
+                    <!--
+                        <br />
+                        <i class="glyphicon glyphicon-gift"></i> July 07, 1977</p>
+                    -->
+                    <!-- Split button -->
+                    <!--
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success">
+                            Professional</button>
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                          <span class="caret"></span>
+                          <span class="sr-only">Professional</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://linkedin.com/in/user">LinkedIn</a></li>
+                            <li><a href="https://google.com/user">Google +</a></li>
+                            <li><a href="https://www.facebook.com/user">Facebook</a></li>
+                            <li><a href="https://coderbits.com/user">Coderbits</a></li>
+                            <li><a href="http://bootsnipp.com/user">BootSnips</a></li>
+                            <li><a href="http://domain.com">Website</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success">
+                            Personal</button>
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                          <span class="caret"></span>
+                          <span class="sr-only">Personal</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://twitter.com/user">Twitter</a></li>
+                            <li><a href="https://google.com/+user">Google +</a></li>
+                            <li><a href="https://www.facebook.com/user">Facebook</a></li>
+                            <li><a href="http://github.com/user">Github</a></li>
+                        </ul>
+                    </div>
+                    -->
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+{% endblock %}

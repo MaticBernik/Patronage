@@ -1,0 +1,36 @@
+#user_icon_img {
+	max-height: 150px;
+	max-width: 150px;
+    border-color: #0b82c3;
+    border-style: solid;
+    border-width: 2px;
+}
+
+#img_holder {
+	padding-top: 10px;
+	float: left;
+}
+
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#info_holder {
+	text-align: center;
+}
+
+
+@media screen and (min-width: 768px) {
+    #info_holder {
+    	padding-top: 10px;
+		text-align: left;
+	}
+}
+
+/*
+	POSSIBLE BORDER REQUIRED
+	https://github.com/twbs/bootstrap/issues/4521
+*/

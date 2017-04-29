@@ -125,7 +125,7 @@ class Pacient(models.Model):
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=True)
-    #aktiviran = models.IntegerField(null=True,default=0) Naj se uporabi polje  uporabniski_profil.is_active !!!
+    aktiviran = models.IntegerField(null=True,default=0)    # Naj se uporabi polje  uporabniski_profil.is_active !!!
 
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:

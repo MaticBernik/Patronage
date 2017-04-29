@@ -177,7 +177,8 @@ def base(request):
         #form = LoginForm()
         print("base_function")
         # return render(request, 'base.html')
-        return render(request, 'base.html', context)
+        # return render(request, 'base.html', context)
+        return render(request, 'base_panel.html', context)
         # form = RegisterMedicalStaffForm()
         # return render(request, 'medical_registration.html', {'medical_reg_form': form})
 

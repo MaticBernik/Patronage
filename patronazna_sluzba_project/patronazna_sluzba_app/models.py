@@ -123,7 +123,7 @@ class Pacient(models.Model):
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=True)
 
-    aktiviran = models.IntegerField(null=True,default=0)
+    aktiviran = models.In tegerField(null=True,default=0)
 
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:

@@ -1,7 +1,7 @@
 {% if visit_list|length > 0 %}
 <select>
 {% for visit in visit_list %}
-    <option value="{{ visit }}">{{ visit }}</option>
+    <option value="{{ visit.delovni_nalog_id }}  {{ visit.obvezen_obisk }} {{ visit.datum }}">{{ visit.delovni_nalog_id }} {{ visit.obvezen_obisk }} {{ visit.datum }}</option>
 
     {%  endfor %}
 </select>

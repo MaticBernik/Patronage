@@ -85,14 +85,6 @@ for okrozje in imena_okrozij_kr:
 		id = 4000
 	conn.execute("INSERT INTO patronazna_sluzba_app_okolis (posta_id,ime) VALUES (?,?)",	(id,okrozje));
 
-#Material
-with open("material.csv", "r") as material_file:  #encoding="utf8"
-	material_reader = csv.reader(material_file, delimiter=';')
-	next(material_reader, None)  # skip header
-	for line in material_reader:
-		print(line)
-		conn.execute("INSERT INTO patronazna_sluzba_app_material (ime,proizvajalec,opis,kolicina_osnovne_enote,oznaka_osnovne_enote) VALUES (?,?,?,?,?)", (line[0], line[1], line[2], line[3], line[4]));
-
 #Patients
 with open("testni_pacienti.csv","r") as patients_file: #encoding="utf8"
 	patients_reader = csv.reader(patients_file, delimiter=';')
@@ -227,6 +219,8 @@ with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime, opis) VALUES (?,?,?)", (line[0], line[1], line[2]));
 		else:
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
+
+
 
 
 

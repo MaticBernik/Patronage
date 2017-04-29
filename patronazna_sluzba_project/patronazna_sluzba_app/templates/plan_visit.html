@@ -10,7 +10,7 @@
 		{% csrf_token %}
 		<div class="form-group">
 			<!--{{ plan_visit_form.errors }}-->
-            <input type="number" name="test_id" id="test_id">
+            <!--<input type="number" name="test_id" id="test_id">-->
 			<label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.visit_list.label }}</label>
 			<!--<input id="pass0" name="pass0" type="password" required/>-->
             {% csrf_token %}

@@ -183,7 +183,7 @@ def work_task_view(request):
         work_task_f = Delovni_nalog(st_obiskov=stevilo_obiskov, vrsta_obiska=visity_type,
                                     zdravnik=current_doc, datum_prvega_obiska=first_visit_date,
                                     cas_obiskov_dolzina=cas_obisk, izvajalec_zs=ZS,
-                                    vodja_PS=current_vodja_PS, cas_obiskov_tip=obisk_tip, obveznost_obiska=obveznost)
+                                    vodja_PS=current_vodja_PS, cas_obiskov_tip=obisk_tip)#, obveznost_obiska=obveznost
         work_task_f.save()
 
         print("work tast form saved")

@@ -276,7 +276,6 @@ class Delovni_nalog(models.Model):
     izvajalec_zs = models.ForeignKey(Izvajalec_ZS,null=True)
     zdravnik = models.ForeignKey(Zdravnik, null=True)
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)
-
     #obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
 
 class Obisk(models.Model):
@@ -285,9 +284,31 @@ class Obisk(models.Model):
     #p_sestra = models.ForeignKey(Patronazna_sestra, null=True) Je ze znana - Tista, ki pripada okolisu v katerem je pacient
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
 
+
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)
     pacient = models.ForeignKey(Pacient, null=True)
+
+
+class Plan(models.Model):
+    #Pripadajoca sestra, ki planira obisk je ze dolocena z izbiro obiska
+    #V primeru, da sestra1 nadomesca sestro2, se ji pac prikazejo tudi obiski, ki jih planira sestra2,
+    #zaradi cesar se vnosi v tej tabeli ne bodo spreminjali..
+    planirani_obisk = models.ForeignKey(Obisk) #Obisk, ki ga sestra planera
+    datum = models.DateTimeField(null=False,default=datetime.now()+timedelta(days=1)) #Kdaj bo sestra obisk opravila
+
+    def remove_expired(self):
+        #Iz plana je potrebno izbrisati pretecene zastavljene obiske
+        if datetime.now() >= self.datum:
+            self.delete()
+
+    def nurse(self):
+        #Metoda vrne sestro, kateri plan pripada
+        delovni_nalog = Obisk.objects.get(id=self.planirani_obisk)
+        pacient = Pacient_DN.objects.get(delovni_nalog_id=delovni_nalog).pacient
+        okolis = pacient.okolis
+        sestra = Patronazna_sestra.objects.get(okolis_id=okolis)
+        return sestra
 
 
 class Material_DN(models.Model):

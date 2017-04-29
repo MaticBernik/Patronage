@@ -96,7 +96,7 @@
 	    <div class="collapse navbar-collapse" id="myNavbar">
 	      <ul class="nav navbar-nav">
 	        {% for link in link_list %}
-	        	<li class="{% if nbar == link.2 %}active{% endif %}" ><a href="{% url link.0 %}">{{ link.1 }}</a></li>
+	        	<li class="{% if nbar == link.2 %}active{% endif %}" ><a href="{% url link.0 %}"><span class="glyphicon {{link.3}}"></span>{{ link.1 }}</a></li>
 	        {% endfor %}
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">

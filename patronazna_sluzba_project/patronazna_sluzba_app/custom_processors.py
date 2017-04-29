@@ -17,15 +17,15 @@ def navbar_list_processor(request):
 
         link_list = []
 
-        control_panel_arr = ["link_control_panel", "Pregledna plošča", "ctrl_panel"]
+        control_panel_arr = ["link_control_panel", "Pregledna plošča", "ctrl_panel", "glyphicon-home"]
         # possible functionalities
-        add_medical_staff_arr = ["link_register_medical_staff", "Dodaj zdravstveno osebje", "add_medic"]
-        add_nursing_patient_arr = ["link_add_nursing", "Dodajte oskrbovano osebo", "add_nursing"]
-        change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass"]
-        create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk"]
-        view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs"]
-        view_visitations_arr = ["link_empty", "Pregled obiskov", "v_visits"]
-        view_work_tasks_arr = ["link_empty", "Pregled delovnih nalogov", "v_wrk_tsk"]
+        add_medical_staff_arr = ["link_register_medical_staff", "Dodaj zdravstveno osebje", "add_medic", "glyphicon-plus" ]
+        add_nursing_patient_arr = ["link_add_nursing", "Dodajte oskrbovano osebo", "add_nursing", "glyphicon-plus" ]
+        change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass", "glyphicon-erase" ]
+        create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk", "glyphicon-file" ]
+        view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs", "glyphicon-th-list" ]
+        view_visitations_arr = ["link_empty", "Pregled obiskov", "v_visits", "glyphicon-th-list" ]
+        view_work_tasks_arr = ["link_empty", "Pregled delovnih nalogov", "v_wrk_tsk", "glyphicon-th-list" ]
 
         # adapt the list based on user role and task privleges
         if is_admin(user):

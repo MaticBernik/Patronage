@@ -69,6 +69,13 @@ body{
 }
 
 
+.glyphicon:before {
+  margin-right: 5px;
+}
+
+
+
+
 /*
 	NAVBAR SETTINGS
 	source code from: https://work.smarchal.com/twbscolor/css/e74c3cc0392becf0f1ffbbbc0 ;
@@ -178,7 +185,7 @@ body{
 */
 /*  https://coderwall.com/p/wpjw4w/change-the-bootstrap-navbar-breakpoint  */
 
-@media (max-width: 1200px) {
+@media (max-width: 1260px) {
     .navbar-header {
         float: none;
     }

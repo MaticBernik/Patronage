@@ -6,12 +6,7 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core.validators import validate_email
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import render
-from django.template import Context, loader
-from django.template import RequestContext
+from django.template import Context, loader, RequestContext
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 from django.urls import reverse

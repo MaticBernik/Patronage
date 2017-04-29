@@ -7,8 +7,8 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-
 	<!-- Latest compiled and minified CSS -->
+
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -21,7 +21,6 @@
     <!--CUSTOM AJAX-->
     <script src="{% static 'script/ajax.js' %}"></script>
     <script src="{% static 'script/listbox_control.js' %}"></script>
-
 
 </head>
 
@@ -100,7 +99,7 @@
 	    <div class="collapse navbar-collapse" id="myNavbar">
 	      <ul class="nav navbar-nav">
 	        {% for link in link_list %}
-	        	<li class="{% if nbar == link.2 %}active{% endif %}" ><a href="{% url link.0 %}">{{ link.1 }}</a></li>
+	        	<li class="{% if nbar == link.2 %}active{% endif %}" ><a href="{% url link.0 %}"><span class="glyphicon {{link.3}}"></span>{{ link.1 }}</a></li>
 	        {% endfor %}
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">

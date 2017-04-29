@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # @login_required(login_url='/')
-from patronazna_sluzba_app.models import *
-from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
+from django.template import Context, loader, RequestContext
 from django.template.context_processors import csrf
+from patronazna_sluzba_app.forms import *
+from patronazna_sluzba_app.models import *
 import datetime
 
 # zdravila

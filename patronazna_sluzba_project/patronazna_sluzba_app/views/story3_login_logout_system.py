@@ -14,29 +14,14 @@ from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
 from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm
 from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import render, render_to_response, redirect
 import csv
 import django.contrib.auth
 import logging
 import os
-#def index(request):
-#
-#   # if this is a POST request we need to process the form data
-#    if request.method == 'POST':
-#            #return HttpResponseRedirect('/thanks/')
-#            return HttpResponse("Thanks, for trying.")
-#    # if a GET (or any other method) we'll create a blank form
-#    else:
-#        form = LoginForm()
-#
-#    return render(request, 'index.html', {'login_form': form})
+
 IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=3
 VAR = 0
-
-context={}
-
 
 def valid_login(ip):
     global IP_FAILED_LOGIN
@@ -140,10 +125,11 @@ def index(request):
     if ip_blacklisted(ip_naslov):
         print("***IP naslov je bil zacasno blokiran, zaradi 3 neveljavnih poskusov prijave.")
         return HttpResponse("Vas IP naslov je blokiran, ponovno lahko poskusite cez 3 minute.")
+    
     if request.method=='GET':
         form = LoginForm()
-
         return render(request, 'index.html', {'login_form': form})
+
     elif request.method=='POST':
         form = LoginForm(request.POST)
 
@@ -178,46 +164,6 @@ def index(request):
 
 def base(request):
     
-    user=request.user
-    link_list = []
-
-    control_panel_arr = ["link_control_panel", "Pregledna plošča", "ctrl_panel"]
-    # possible functionalities
-    add_medical_staff_arr = ["link_register_medical_staff", "Dodaj zdravstveno osebje", "add_medic"]
-    add_nursing_patient_arr = ["link_add_nursing", "Dodajte oskrbovano osebo", "add_nursing"]
-    change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass"]
-    create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk"]
-    view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs"]
-    view_visitations_arr = ["link_empty", "Pregled obiskov", "v_visits"]
-    view_work_tasks_arr = ["link_empty", "Pregled delovnih nalogov", "v_wrk_tsk"]
-
-    # adapt the list based on user role and task privleges
-    if is_admin(user):
-        role="Admin"
-        link_list = [control_panel_arr, arr_add_medical_staff, change_password_arr]
-    elif is_doctor(user):
-        role="Zdravnik"
-        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
-    elif is_leader_ps(user):
-        role="Vodja PS"
-        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
-    elif is_nurse(user):
-        role="medicinska sestra"
-        link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
-    elif is_coworker(user):
-        role="Sodelavec"
-        link_list = [control_panel_arr, view_visitations_arr, view_substitutes_arr, change_password_arr ]
-    else:
-        role="Pacient"
-        link_list = [control_panel_arr, view_visitations_arr, add_nursing_patient_arr, change_password_arr ]
-
-    oskrbovanci = None
-
-    if Pacient.objects.filter(uporabniski_profil=user).exists():
-        pacient = Pacient.objects.get(uporabniski_profil=user)
-        oskrbovanci = Pacient.objects.filter(skrbnistvo=pacient)
-
-
     print("base_function")
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -225,7 +171,7 @@ def base(request):
         return HttpResponse("Thanks, for trying.")
         # if a GET (or any other method) we'll create a blank form
     else:
-        context={'user_role': role, 'oskrbovanci_pacienta':oskrbovanci, 'link_list':link_list, 'nbar': 'ctrl_panel'}
+        context={'nbar': 'ctrl_panel'}
         # return render(request, 'medical_registration.html', context)
         # Assign role-based navbar
         #form = LoginForm()

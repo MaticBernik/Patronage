@@ -24,6 +24,19 @@ html{
     padding: 10px;
 }
 
+@media (max-width: 991px) {
+  #left_side_content{
+      text-align: left;
+      padding: 0px;
+  }
+
+  #right_side_content{
+      text-align: left;
+      padding: 0px;
+  }
+}
+
+
 .cont{
 	text-align: center;
 	float: left;

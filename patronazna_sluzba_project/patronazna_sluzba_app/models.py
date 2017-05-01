@@ -121,7 +121,7 @@ class Pacient(models.Model):
     kontakt = models.ForeignKey(Kontaktna_oseba, null=True)
     posta = models.ForeignKey(Posta, null=True)
     okolis = models.ForeignKey(Okolis, null=True)
-    sorodstvo = models.ForeignKey('Sorodstveno_razmerje',null=True)
+    sorodstvo = models.ForeignKey('Sorodstveno_razmerje',null=True) #Kaze na skrbnika doticnega pacienta
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=True)

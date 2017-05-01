@@ -1,4 +1,6 @@
 #REGISTRIRAN?;IME;PRIIMEK;NASLOV;ST_KARTICE;EMAIL;TELEFON;SPOL;DATUM_ROJSTVA;GESLO;POSTA
 da;Tone;Breskvar;"cesta 1";062022222222;tone.breskvar@mail.si;051 222 222;M;02.02.1992;geslo;1000
 da;Majda;Breskvar;"cesta 1";072044444444;majda.breskvar@mail.si;051 444 444;Z;04.04.1994;geslo;2000
-ne;Ales;Breskvar;"cesta 1";062088888888;ales.breskvar@email.si;051 888 888;M;08.08.2008;geslo;1000
+ne;Ales;Breskvar;"cesta 1";062088888888;ales.breskvar@email.si;051 888 888;M;08.08.2005;geslo;2000
+ne;Andrej;Breskvar;"cesta 1";062088888887;andrej.breskvar@email.si;051 888 887;M;08.08.2008;geslo;2000
+ne;Aleksander;Breskvar;"cesta 1";062088888886;aleksander.breskvar@email.si;051 888 886;M;08.08.2008;geslo;2000

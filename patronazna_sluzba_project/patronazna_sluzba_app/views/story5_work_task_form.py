@@ -15,7 +15,7 @@ def search_titles(request):
         search_text = ''
 
     # medicine = Zdravilo.objects.filter(ime__contains=search_text).distinct()[1:10]
-    medicine = Zdravilo.objects.values('ime').distinct().filter(ime__contains=search_text)[1:10]
+    medicine = Zdravilo.objects.filter(kratko_poimenovanje__icontains=search_text)[:30]#values('ime').distinct().filter(ime__contains=search_text)[1:10]
     return render_to_response('ajax_search.html', {'medicine': medicine})
 
 
@@ -52,6 +52,30 @@ def choose_visit_type(request):
     print('filter paremeter is: ' + choose_visit)
     return render_to_response('ajax_visit.html', {'visits': visits})
 
+# bolezen
+def illness_list_view(request):
+    if request.method == 'POST':
+        illness_list = request.POST['illness_list']
+    else:
+        illness_list = ''
+
+
+    illness = Bolezen.objects.filter(ime__icontains=illness_list)
+    return render_to_response('ajax_illness.html', {'illness': illness})
+
+#vec patronaznih sester v istem okolišu
+def health_visitor_view(request):
+    if request.method == 'POST':
+        patient_id = request.POST['patient_id']
+        print("POST CALL")
+
+    else:
+        patient_id = '72044444444'
+    print("The method is: "+request.method)
+    patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
+    sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
+    print('Okolis pacienta: ' + str(patient.okolis_id))
+    return render_to_response('ajax_health_visitor.html', {'sisters':sisters})
 
 def fix_date(date_of_visit):
     dd = date_of_visit[0:2]

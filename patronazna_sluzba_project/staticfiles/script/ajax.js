@@ -111,9 +111,18 @@ $(document).ready(function(){
     });
 
     //master detail delovni nalog MS
-    $('#plan_detail').on('click', function () {
+    $('#plan_detail').on('click', function (e) {
         //alert("THIS WOKRS");
-        var selected_data = String($('#visit_list').val());
+        var selected_data;
+        if($('#visit_list').val()!=''){
+            selected_data = $('#visit_list').val();
+        }else if($('#id_plan_list').val() != ''){
+            selected_data = $('#id_plan_list').val();
+        }else{
+            alert("Ni izbran noben obisk");
+            e.preventDefault();
+        }
+        selected_data = String(selected_data);
         selected_data=selected_data.split(' ');
         selected_data=selected_data[0];
         alert("Klick registered  "+ selected_data);
@@ -130,12 +139,34 @@ $(document).ready(function(){
         });
 
     });
+    //unselect the first list
+    $("#id_plan_list").on('change',function(){
+
+
+        //alert("BEFORE");
+        $("#visit_list > option").prop('selected',false);
+        //alert("AFTER");
+
+    });
+
+    //unselect the second list
+    $("#visit_list").on('change',function(){
+
+
+        //alert("BEFORE");
+        $("#id_plan_list > option").prop('selected',false);
+        //alert("AFTER");
+
+    });
     //alert("BEFOR AJAx");
     $( document ).ajaxStop(function() {
      // alert("Document is ready ajax");
       $("#visit_list > option").each(function () {
-        var plan_data = $(this).text().split('&emsp;&emsp;');
-        alert("This is data: "+plan_data[1]);
+        var plan_data = $(this).text().split(' ');
+        //alert(/\t/ +"This is data updated: "+plan_data.indexOf(/\t/));
+
+
+
         if(plan_data[1] == "True") {
           //alert("This is data: "+plan_data[1]);
            $(this).remove().appendTo("#id_plan_list");
@@ -159,6 +190,8 @@ function chooseVisitSuccess(data, textStatus, jqXHR) {
     if ($("#visitType").find("option:first-child").val() == "Aplikacija injekcij") {
         //prikazi opcijo za izbiro zdravil
         $('#cureId').show();
+        //add required atribute
+        $('#id_cureId').prop('required',true);
     }
     /*alert('select the data')
      $('#visitType option:first-child').attr("selected", "selected");*/

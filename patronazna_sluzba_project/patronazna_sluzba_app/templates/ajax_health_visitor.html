@@ -1,0 +1,12 @@
+{% if sisters.count > 0 %}
+<select>
+{% for sister in sisters %}
+    <option value="{{ sister.sifra_patronazne_sestre }}">{{ sister.sifra_patronazne_sestre }}</option>
+
+    {%  endfor %}
+</select>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

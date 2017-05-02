@@ -2,7 +2,7 @@
 <datalist>
 {% for m in medicine %}
     <!--<li><a href="/medicine/get/{{ m.nacionalna_sifra}}">{{ m.ime }}</a></li>-->
-    <option value="{{ m.ime }}">
+    <option value="{{ m.kratko_poimenovanje }}">
 
     {%  endfor %}
 </datalist>

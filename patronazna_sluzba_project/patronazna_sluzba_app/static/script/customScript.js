@@ -240,12 +240,14 @@ function addPatientButton(){
 		document.getElementById('materialId').style.display = 'none';
 		
 		document.getElementsByClassName("add-baby").style.display='block';
-		document.getElementById("#baby-patient").style.display ='block';
+		document.getElementById("baby-patient").style.display ='block';
 		document.getElementsByClassName("remove-baby").style.display='block';
 		
 	}else if(s == 'Aplikacija injekcij'){
 		//alert("changed to injection");
 		document.getElementById("cureId").style.display = 'block';
+		//make required
+		document.getElementById("id_cureId").required = true;
 		//hide this
 		document.getElementById('materialId').style.display = 'none';
 	}else if (s == 'Odvzem krvi'){
@@ -254,15 +256,32 @@ function addPatientButton(){
 		document.getElementById("cureId").style.display = 'none';
 	}
 	else{
-		document.getElementById("message").innerHTML = this.options[this.selectedIndex].innerHTML;
+		//document.getElementById("message").innerHTML = this.options[this.selectedIndex].innerHTML;
+		$(".add-baby").attr('disabled','disabled');
+		$(".add-baby").hide();
+		$(".remove-baby").attr('disabled','disabled');
+		$(".remove-baby").hide();
+		$("#baby-patient").hide();
+		$("#materialId").hide();
+		$("#cureId").hide();
+
 	}
 }
 
 $(document).ready(function() {
 
-	/*$("#choose-visit").change(function(){
-		alert($("#visitType").find("option:first-child").val());
-	});*/
+	$("#choose-visit").change(function(){
+		//alert($("#visitType").find("option:first-child").val());
+
+		$(".add-baby").attr('disabled','disabled');
+		$(".add-baby").hide();
+		$(".remove-baby").attr('disabled','disabled');
+		$(".remove-baby").hide();
+		$("#baby-patient").hide();
+		$("#materialId").hide();
+		$("#cureId").hide();
+	});
+
 	$("#visitType").change(function() {
 		if($("#visitType option:selected").text() == "Obisk otrocnice"||$("#visitType option:selected").text() == "Obisk novorojencka" ){
 			$(".add-baby").show();
@@ -270,11 +289,14 @@ $(document).ready(function() {
 
 			$(".remove-baby").show();
 			$(".remove-baby").removeAttr('disabled');
-			//skrij listo ce pacient ni otrocnica
+
 			$("#baby-patient").show();
 		}else{
 			$(".add-baby").attr('disabled','disabled');
+			$(".add-baby").hide();
 			$(".remove-baby").attr('disabled','disabled');
+			$(".remove-baby").hide();
+			$("#baby-patient").hide();
 		}
 		
 });

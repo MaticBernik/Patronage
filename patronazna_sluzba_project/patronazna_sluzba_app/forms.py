@@ -127,7 +127,7 @@ class AddNursingPatientForm(forms.Form):
 
 class WorkTaskForm(forms.Form):
     creator_id = forms.CharField(label='Številka zdravnika: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
-    nurse_id = forms.CharField(label='Številka izvajalca: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
+    nurse_id = forms.ChoiceField(choices=[],label='Številka izvajalca: ')
     task_id = forms.CharField(label='Številka naloga: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
     #visit_type = forms.ChoiceField(label='Vrsta obiska: ', choices=VRSTE_OBISKOV, widget=forms.Select(attrs={'class': 'form-control','id':'choose-visit'}))
     #visit_type_detail = forms.ChoiceField(label='Vrsta storitve: ', choices=VRSTE_OBISKOV_DETAIL,widget=forms.Select(attrs={'id':'visit_type','onchange':'addPatientButton()', 'class': 'form-control'}))

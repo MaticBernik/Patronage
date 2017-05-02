@@ -13,6 +13,21 @@ $(function () {
         });
     });
 
+    //bolezen
+    $('#search_illness').keyup(function () {
+       // alert("Bolezen: "+$('#search_illness').val());
+        $.ajax({
+            type: "POST",
+            url: "/illness_list/",
+            data: {
+                'illness_list': $('#search_illness').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: searchIllnessSuccess,
+            dataType: 'html'
+        });
+    });
+
     $('#searchPatient').keyup(function () {
 
         $.ajax({
@@ -77,7 +92,7 @@ $(document).ready(function(){
 
     });
 
-    //post autocomplete
+    //posta autocomplete
 
     $('#search_post').keyup(function () {
 
@@ -139,6 +154,26 @@ $(document).ready(function(){
         });
 
     });
+
+    $('#searchPatient').on('change', function () {
+        var input_value = String($('#searchPatient').val());
+        input_value=input_value.split(' ');
+        //alert("Input has changed "+input_value[0]);
+
+        $.ajax({
+            type: "POST",
+            url: "/health_visitor/",
+            data: {
+                'patient_id': input_value[0],
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: chooseSisterSuccess,
+            dataType: 'html'
+        });
+
+    });
+
     //unselect the first list
     $("#id_plan_list").on('change',function(){
 
@@ -190,6 +225,8 @@ function chooseVisitSuccess(data, textStatus, jqXHR) {
     if ($("#visitType").find("option:first-child").val() == "Aplikacija injekcij") {
         //prikazi opcijo za izbiro zdravil
         $('#cureId').show();
+        //add required atribute
+        $('#id_cureId').prop('required',true);
     }
     /*alert('select the data')
      $('#visitType option:first-child').attr("selected", "selected");*/
@@ -214,4 +251,12 @@ function planVisitSuccess(data, textStatus, jqXHR) {
 
 function planDetailSuccess(data, textStatus, jqXHR) {
     $('.modal-body').html(data);
+}
+
+function searchIllnessSuccess(data, textStatus, jqXHR) {
+     $('#illness_list').html(data);
+}
+
+function chooseSisterSuccess(data, textStatus, jqXHR) {
+     $('#id_nurse_id').html(data);
 }

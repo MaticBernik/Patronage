@@ -1,0 +1,13 @@
+{% if illness.count > 0 %}
+<datalist>
+{% for i in illness %}
+
+    <option value="{{ i.sifra }} {{ i.ime }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

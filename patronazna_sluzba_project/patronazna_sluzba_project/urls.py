@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^plan_visit', plan_visit_view, name="link_plan_visit"),
     url(r'^visit_list/$',plan_list_ajax),
     url(r'^plan_detail/$',work_task_plan),
+    url(r'^illness_list/$',illness_list_view),
+    url(r'^health_visitor/$',health_visitor_view),
 ]
 
 #ADD 

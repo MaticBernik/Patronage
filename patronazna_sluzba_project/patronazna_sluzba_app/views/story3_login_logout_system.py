@@ -145,7 +145,7 @@ def index(request):
                 u = User.objects.get(username=username)
                 if Pacient.objects.filter(uporabniski_profil=u).exists():
                     pacient = Pacient.objects.get(uporabniski_profil=u)
-                    if pacient.aktiviran == 0:
+                    if u.is_active == 0:
                         return HttpResponse("Potrebna je aktivacija uporabniskega racuna pacienta.")
 
 
@@ -194,10 +194,8 @@ def activate(request):
 
             try:
                 user = User.objects.get(username=value)
-                pacient = Pacient.objects.get(uporabniski_profil=user)
-                pacient.aktiviran = 1
                 user.is_active = 1
-                pacient.save()
+                user.save()
                 print("Pacient je aktiviran")
                 return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
             except:

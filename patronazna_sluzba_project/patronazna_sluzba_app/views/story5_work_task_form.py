@@ -165,23 +165,11 @@ def work_task_view(request):
         #   ===========================   BACK BACK  ===============================
         #   =====================>>>>>>==============<<<<<<<========================
 
-        #   Adding material if or meds if needed
-        if podvrsta_vrsta_obiska == 'Aplikacija injekcij':
-            print("aplikacija injekcij")
-            izbranaZdravila
-        elif podvrsta_vrsta_obiska == 'Odvzem krvi':
-            print("odvzem krvi")
-            izbran_material
-
         #   Adding doctor and leader of PS
         current_doc = None
         current_vodja_PS = None
         current_user = request.user
         try:
-            #us = User.objects.get(email='joze.dolenc@mail.si')
-            #current_doc = Zdravnik.objects.get(uporabniski_profil=us)
-            #print("hardcodan doc")
-
             current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
             ZS = current_doc.sifra_izvajalca_ZS
             print("DOC DELOVNI NALOG")
@@ -273,7 +261,7 @@ def work_task_view(request):
                     date_next = date_next + datetime.timedelta(days=2)
                     weekno = date_next.weekday()
 
-                p_sestra = Patronazna_sestra.objects.get(okolis=main_patient.okolis)
+                p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
                 obv = 0
                 if obveznost == "Obvezen":
                     obv = 1
@@ -298,7 +286,9 @@ def work_task_view(request):
                         weekno = date_next.weekday()
 
                     # find the appropriate nurse for the county
-                    p_sestra = Patronazna_sestra.objects.get(okolis=main_patient.okolis)
+                    p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+                    
+                    print("p_sestra", p_sestra)
                     #   check if the first visit is mandatory on that day
                     obv = 0
                     if obveznost == "Obvezen":

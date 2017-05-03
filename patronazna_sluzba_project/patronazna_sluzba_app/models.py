@@ -125,7 +125,6 @@ class Pacient(models.Model):
     ime = models.CharField(max_length=100, null=False)
     priimek = models.CharField(max_length=100, null=False)
     email=models.EmailField(unique=True,null=True)
-    aktiviran = models.IntegerField(null=True,default=0)    # Naj se uporabi polje  uporabniski_profil.is_active !!!
 
     def copy_redundant_fiends(self):
         if self.uporabniski_profil:
@@ -284,7 +283,7 @@ class Delovni_nalog(models.Model):
 class Obisk(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog,null=False)
     datum = models.DateTimeField(null=True)
-    #p_sestra = models.ForeignKey(Patronazna_sestra, null=True) Je ze znana - Tista, ki pripada okolisu v katerem je pacient
+    p_sestra = models.ForeignKey(Patronazna_sestra, null=True) #lahko jih je vec, ocitno -.-"
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
 
 

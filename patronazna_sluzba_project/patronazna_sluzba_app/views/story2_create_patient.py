@@ -64,7 +64,7 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
 
                         patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex, kontakt=contact, aktiviran=0)
+                                          datum_rojstva=birth_date, spol=sex, kontakt=contact)
                         print("patient objekt ustvarjen")
 
 
@@ -72,7 +72,7 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
 
                         user = User.objects.create_user(username=mail,
                                                         password=password1,
-                                                        email=mail)
+                                                        email=mail, is_active=0)
 
                         patient.uporabniski_profil = user
 
@@ -88,13 +88,13 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
                     else:
                         patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex, aktiviran=0)
+                                          datum_rojstva=birth_date, spol=sex)
                         print("patient dodan")
                         #patient.save()
 
                         user = User.objects.create_user(username=mail,
                                                         password=password1,
-                                                        email=mail,)
+                                                        email=mail, is_active=0)
 
                         patient.uporabniski_profil = user
                         patient.save()
@@ -131,7 +131,7 @@ def add_patient_taken_care_of(trenutni_uporabnik, first_name, last_name, card_nu
 def sendEmail(activation_key, customer_mail):
 
     link="http://127.0.0.1:8000/activate?token="+activation_key
-    sporocilo = "Click the activation link to finish registration.   "+link
+    sporocilo = "Greetings. Thank you for working with PARSEK. We would like to ask you to click the link below for email verification.  "+link+" Have a nice day. Parsek team."
 
     send_mail(
         'Parsek RULES. You will want to activate',

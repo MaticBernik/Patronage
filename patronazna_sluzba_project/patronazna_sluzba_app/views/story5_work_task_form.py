@@ -191,7 +191,7 @@ def work_task_view(request):
             print("wtf is happening?")
 
         sep = ' '
-        bolezen_id = request.POST['search_illness'].split(sep, 1)[0] # Kako se rece polju kjer je bolezen?
+        bolezen_id = request.POST['search_illness'].split(sep, 1)[0]
         print("BOLEZEN", bolezen_id)
         bolezen = Bolezen.objects.get(sifra=bolezen_id)
 
@@ -248,8 +248,12 @@ def work_task_view(request):
                     material_wtf.save()
                     print("Shranjen material", quantity, ",", material_name)
             elif podvrsta_vrsta_obiska == 'Aplikacija injekcij':
-                # napisem kodo, ko se mi bojo prikazala zdravila.. trenutno se mi iz neznaneega razloga ne :(
-                return HttpResponse("Uspesno kreiranje delovnega naloga RAZEN ZDRAVILA NISO DODANA!!!!!! "+delovni_nalog);
+                for i in izbranaZdravila:
+                    sickness = Zdravilo.objects.get(kratko_poimenovanje=i)
+
+                    zdr = Zdravilo_DN(zdravilo=sickness, delovni_nalog=work_task_f)
+                    zdr.save()
+                return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
 
 
 

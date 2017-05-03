@@ -190,12 +190,17 @@ def work_task_view(request):
         else:
             print("wtf is happening?")
 
+        sep = ' '
+        bolezen_id = request.POST['search_illness'].split(sep, 1)[0] # Kako se rece polju kjer je bolezen?
+        print("BOLEZEN", bolezen_id)
+        bolezen = Bolezen.objects.get(sifra=bolezen_id)
+
 
         #   Create work task form
         work_task_f = Delovni_nalog(st_obiskov=stevilo_obiskov, vrsta_obiska=visity_type,
                                     zdravnik=current_doc, datum_prvega_obiska=first_visit_date,
                                     cas_obiskov_dolzina=cas_obisk, izvajalec_zs=ZS,
-                                    vodja_PS=current_vodja_PS, cas_obiskov_tip=obisk_tip)#, obveznost_obiska=obveznost
+                                    vodja_PS=current_vodja_PS, cas_obiskov_tip=obisk_tip, bolezen=bolezen)
         work_task_f.save()
 
         print("work tast form saved")
@@ -246,6 +251,8 @@ def work_task_view(request):
                 # napisem kodo, ko se mi bojo prikazala zdravila.. trenutno se mi iz neznaneega razloga ne :(
                 return HttpResponse("Uspesno kreiranje delovnega naloga RAZEN ZDRAVILA NISO DODANA!!!!!! "+delovni_nalog);
 
+
+
         # VISITS====================================================================
         interval_period = int(cas_obisk)
         type = obisk_tip
@@ -287,7 +294,7 @@ def work_task_view(request):
 
                     # find the appropriate nurse for the county
                     p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
-                    
+
                     print("p_sestra", p_sestra)
                     #   check if the first visit is mandatory on that day
                     obv = 0

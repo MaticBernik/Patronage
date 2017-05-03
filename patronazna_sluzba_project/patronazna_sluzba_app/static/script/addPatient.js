@@ -24,9 +24,15 @@ $(document).ready(function() {
         e.preventDefault();
        // alert("dodaj zdravilo search-results "+$("#search").val());
         var patient = $("#searchPatient").val();
-        $('#id_addPatient').append('<option value="'+patient+'"'+' selected="true">'+patient+'</option>');
-        //$("#search").val().appendTo("#id_cureId");
-       // $("#id_cureId").append($("#search").val());
+        if(patient ==""){
+            alert("Niste izbrali pacienta");
+        }else{
+
+
+            $('#id_addPatient').append('<option value="'+patient+'"'+' selected="true">'+patient+'</option>');
+            //$("#search").val().appendTo("#id_cureId");
+           // $("#id_cureId").append($("#search").val());
+        }
 
     });
 
@@ -47,10 +53,14 @@ $(document).ready(function() {
         e.preventDefault();
        // alert("dodaj zdravilo search-results "+$("#search").val());
         var medicine = $("#medicine").val();
-        $('#id_cureId').append('<option value="'+medicine+'"'+' selected="true">'+medicine+'</option>');
-        //$("#search").val().appendTo("#id_cureId");
-       // $("#id_cureId").append($("#search").val());
 
+        if(medicine ==""){
+            alert("Niste izbrali zdravila");
+        }else{
+            $('#id_cureId').append('<option value="'+medicine+'"'+' selected="true">'+medicine+'</option>');
+            //$("#search").val().appendTo("#id_cureId");
+           // $("#id_cureId").append($("#search").val());
+        }
     });
 
      //gumb za odstranjevanje zdravil pri aplikaciji injekcij

@@ -30,7 +30,21 @@ def search_patients(request):
     return render_to_response('ajax_patient.html', {'patients': patients})
 
 def visit_based_on_role(request):
-    user_role_type = 'Zdravnik'
+    current_doc = None
+    current_vodja_PS = None
+    current_user = request.user
+    try:
+        current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
+        ZS = current_doc.sifra_izvajalca_ZS
+        print("DOC DELOVNI NALOG "+str(current_doc.sifra_zdravnika))
+        user_role_type = 'Zdravnik'
+    except:
+        current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
+        ZS = current_vodja_PS.sifra_izvajalca_ZS
+        print("VODJA PS DELOVNI NALOG ")
+        user_role_type = 'Vodja'
+
+
     print('get request to visit role')
     if user_role_type == 'Vodja':
         visit_role = ['','Preventivni obisk']
@@ -169,10 +183,12 @@ def work_task_view(request):
         current_doc = None
         current_vodja_PS = None
         current_user = request.user
+        creator_id = None
         try:
             current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
             ZS = current_doc.sifra_izvajalca_ZS
             print("DOC DELOVNI NALOG")
+
         except:
             current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
             ZS = current_vodja_PS.sifra_izvajalca_ZS
@@ -320,11 +336,26 @@ def work_task_view(request):
 
 
     else:
+        current_doc = None
+        current_vodja_PS = None
+        current_user = request.user
+        creator_id = None
+        try:
+            current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
+            print("DOCTOR " + str(current_doc.sifra_zdravnika))
+            creator_id = current_doc.sifra_zdravnika
+        except:
+            current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
+            ZS = current_vodja_PS.sifra_izvajalca_ZS
+            print("VODJA  ")
+            creator_id = current_vodja_PS.sifra_vodje_PS
+
         args = {}
         args.update(csrf(request))
 
         args['medicine'] = Zdravilo.objects.all()
         args['work_task_form'] = WorkTaskForm()
+        args['creator_id'] = creator_id
         # form = WorkTaskForm()
 
     return render(request, 'work_task.html', args)

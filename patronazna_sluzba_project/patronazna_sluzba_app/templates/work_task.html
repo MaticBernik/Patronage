@@ -57,7 +57,8 @@
 							<!--<label for="myName">?tevilka izvajalca:</label>
 							<input type="text" name="myName" id="myName">-->
 							<label >Številka zdravnika/vodje PS</label>
-							{{ work_task_form.creator_id }}
+                            <input id="id_creator_id" type="text" name="id_creator_id" value="{{ creator_id }}" disabled required>
+
 						</div>
 						<div>
 							<label>Številka izvajalca</label>

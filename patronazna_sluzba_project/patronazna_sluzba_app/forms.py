@@ -134,6 +134,7 @@ class AddNursingPatientForm(forms.Form):
     relation = forms.ChoiceField(label='Sorodstveno razmerje: ', choices = RELATIONS, widget=forms.Select(attrs={'class': 'form-control'} ))
 
 class WorkTaskForm(forms.Form):
+
     creator_id = forms.CharField(label='Številka zdravnika: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
     nurse_id = forms.ChoiceField(choices=[],label='Številka izvajalca: ')
     task_id = forms.CharField(label='Številka naloga: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))

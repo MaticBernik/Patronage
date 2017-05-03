@@ -37,18 +37,22 @@ function task_validation(){
 	//casovni interval
 	if(patient_name ==''){
 	    alert("Ime pacienta je obvezen podatek");
-            return false;
+	    swal("Napaka", "Ime pacienta je obvezen podatek", "error");
+		return false;
 	}
 	if(illness ==''){
 	    alert("Bolezen je obvezen podatek");
+	    swal("Napaka", "Bolezen je obvezen podatek", "error");
             return false;
 	}
 	if(visit_count =='' ){
 	    alert("Število obiskov je obvezen podatek");
+		swal("Napaka", "Število obiskov je obvezen podatek", "error");
             return false;
 	}
 	if(visit_count > 10 ){
 	    alert("Število obiskov ne more biti večje od 10");
+		swal("Napaka", "Število obiskov ne more biti večje od 10", "error");
             return false;
 	}
 	if(time_interval !=''){
@@ -64,6 +68,7 @@ function task_validation(){
 		//alert("inside time period: ");
 	    if(parseInt(visit_count) > parseInt(time_period)){
 	    alert("Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju "+ visit_count+'  '+time_period);
+	    swal("Napaka", "Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju", "error");
             return false;
         }
 

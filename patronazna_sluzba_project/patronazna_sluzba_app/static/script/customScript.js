@@ -1,5 +1,109 @@
 $(document).ready(function() {
-	
+
+
+    $('#confirm').click(function(e){
+        e.preventDefault();
+		var work_task_validation = task_validation();
+		//alert("Validacija rezultat "+work_task_validation);
+        if(!work_task_validation){
+			//alert("Insite the if statement");
+        	swal("Napaka", "Napaka pri validaciji", "error");
+		}else{
+        	var form = $(this).parents('form');
+
+        	//zajem vseh podatkov za preview
+			var preview_form ='';
+        	var visit_type = $("#choose-visit").val();
+        	var visit_type_detail = $("#visitType").val();
+
+        	preview_form +='Vrsta obiska: '+visit_type+'\nPodvrsta obiska: '+visit_type_detail+'\nPacient: ';
+        	var patient = '';
+        	if(visit_type_detail =='Obisk otrocnice' || visit_type_detail =='Obisk novorojencka'){
+
+        		$('#id_addPatient :selected').each(function(i, selected){
+				  patient += $(selected).text()+' , ';
+				});
+			}else{
+				patient= $("#searchPatient").val();
+			}
+			preview_form += patient;
+
+        	var illness = $("#search_illness").val();
+        	var visit_date =$("#visitDate").val();
+        	var mandatory = $("#id_mandatory").val();
+        	var visit_count =$("#id_visitCount").val();
+        	var time_interval = $("#timeInterval").val();
+
+        	if(mandatory =='on'){
+				mandatory = 'Obvezen';
+			}else{
+				mandatory = 'Okviren';
+			}
+
+
+        	if(time_interval !=''){
+
+        		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
+					'\nČasovni interval: '+time_interval;
+			}else{
+				var time_period = $("#timePeriod").val();
+        		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
+					'\nČasovno obdobje: '+time_period;
+			}
+
+
+
+
+        	if(visit_type_detail =='Aplikacija injekcij'){
+				var medicine = '\nZdravila: ';
+
+        		$('#id_cureId :selected').each(function(i, selected){
+				  medicine += $(selected).text()+' , ';
+				});
+        		preview_form += medicine;
+			}
+
+
+        	if(visit_type_detail =='Odvzem krvi'){
+				var material = '\nEpruvete: ';
+
+        		$('#id_materialDN :selected').each(function(i, selected){
+				  material += $(selected).text()+' , ';
+				});
+        		preview_form += material;
+			}
+			preview_form +='\n';
+				swal({
+				  title: "Potrditev podatkov",
+				  text: preview_form,
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#3add86",
+				  confirmButtonText: "Da, Potrdi",
+				  cancelButtonText: "Ne, Zavrni",
+				  closeOnConfirm: false,
+				  closeOnCancel: true
+				},
+				function(isConfirm){
+				  if (isConfirm) {
+					  form.submit();
+				   // swal("Deleted!", "Your imaginary file has been deleted.", "success");
+				  } else {
+					swal("Cancelled", "Your imaginary file is safe :)", "error");
+				  }
+				});
+			   //alert("Hello modal form" +$("#visitType").val());
+			   /* $("#modal_visit_type").val($("#choose-visit").val());
+				$("#modal_visit_detail").val($("#visitType").val());
+				$("#modal_patient").val($("#searchPatient").val());
+				$("#modal_date").val($("#visitDate").val());
+		*/
+
+
+		}
+	});
+
+	//VALIDACIJA PRI REGISTRACIJI PACIENTA/OSKRBOVANCA
     $(".signupbtn").click(function(){
 		//alert("hello world");
 		var birthResult = birthDate();

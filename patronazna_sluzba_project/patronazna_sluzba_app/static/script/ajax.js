@@ -227,6 +227,8 @@ function chooseVisitSuccess(data, textStatus, jqXHR) {
         $('#cureId').show();
         //add required atribute
         $('#id_cureId').prop('required',true);
+        $('#id_addPatient').prop('required',false);
+        $('#id_materialDN').prop('required',false);
     }
     /*alert('select the data')
      $('#visitType option:first-child').attr("selected", "selected");*/

@@ -243,7 +243,7 @@ function addPatientButton(){
 		document.getElementsByClassName("add-baby").style.display='block';
 		document.getElementById("baby-patient").style.display ='block';
 		document.getElementsByClassName("remove-baby").style.display='block';*/
-		alert("BEFORE Make required");
+		//alert("BEFORE Make required");
 		//make required
 		document.getElementById("id_addPatient").required = true;
 		//remove required

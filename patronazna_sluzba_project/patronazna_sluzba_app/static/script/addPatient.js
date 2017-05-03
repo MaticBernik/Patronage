@@ -107,15 +107,5 @@ $(document).ready(function() {
     });
 
     //modal form preview before submit
-/*
-    $("#task_preview").click(function(e){
-        e.preventDefault();
-       //alert("Hello modal form" +$("#visitType").val());
-        $("#modal_visit_type").val($("#choose-visit").val());
-        $("#modal_visit_detail").val($("#visitType").val());
-        $("#modal_patient").val($("#searchPatient").val());
-        $("#modal_date").val($("#visitDate").val());
 
-    });
-*/
 });

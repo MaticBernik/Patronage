@@ -28,30 +28,35 @@ function task_validation(){
 		return false;
 	}
 
-	var visit_count  = parseInt(document.getElementById('id_visitCount').value);
-	var time_interval = parseInt(document.getElementById('timeInterval').value);
-	var time_period = parseInt( document.getElementById('timePeriod').value);
+	var visit_count  = document.getElementById('id_visitCount').value;
+	var time_interval = document.getElementById('timeInterval').value;
+	var time_period = document.getElementById('timePeriod').value;
 	var patient_name = document.getElementById('searchPatient').value;
 	var illness = document.getElementById('search_illness').value;
-	//alert("Before visit count "+patient_name+'; '+illness);
+	//alert("Before visit count "+visit_count+'; '+time_period+ "empty time interval "+time_interval);
 	//casovni interval
 	if(patient_name ==''){
-	    alert("Ime pacienta je obvezen podatek");
+	    //alert("Ime pacienta je obvezen podatek");
+	    swal("Napaka", "Ime pacienta je obvezen podatek", "error");
             return false;
 	}
 	if(illness ==''){
-	    alert("Bolezen je obvezen podatek");
+	    //alert("Bolezen je obvezen podatek");
+	    swal("Napaka", "Bolezen je obvezen podatek", "error");
             return false;
 	}
 	if(visit_count =='' ){
-	    alert("Število obiskov je obvezen podatek");
+	   // alert("Število obiskov je obvezen podatek");
+		swal("Napaka", "Število obiskov je obvezen podatek", "error");
             return false;
 	}
 	if(visit_count > 10 ){
-	    alert("Število obiskov ne more biti večje od 10");
+	    //alert("Število obiskov ne more biti večje od 10");
+		swal("Napaka", "Število obiskov ne more biti večje od 10", "error");
             return false;
 	}
 	if(time_interval !=''){
+		//alert("TIME INTERVAL IS NOT EMPTY");
 	    /*if(visit_count<=time_interval){
 	    alert("Število obiskov mora biti večje od časovnega intervala");
             return false;
@@ -60,8 +65,10 @@ function task_validation(){
     }
     //casovno obdobje
     else{
-	    if(visit_count>=time_period){
-	    alert("Število obiskov mora biti manjše od časovnega obdobja "+ visit_count+'  '+time_period);
+		//alert("inside time period: ");
+	    if(parseInt(visit_count) > parseInt(time_period)){
+	    //alert("Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju "+ visit_count+'  '+time_period);
+	    swal("Napaka", "Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju", "error");
             return false;
         }
 

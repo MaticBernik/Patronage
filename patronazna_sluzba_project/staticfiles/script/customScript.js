@@ -1,5 +1,47 @@
 $(document).ready(function() {
-	
+
+
+    $('#confirm').click(function(e){
+
+        e.preventDefault();
+		var work_task_validation = task_validation();
+		//alert("Validacija rezultat "+work_task_validation);
+        if(!work_task_validation){
+			//alert("Insite the if statement");
+        	swal("Napaka", "Napaka pri validaciji", "error");
+		}else{
+        	var form = $(this).parents('form');
+				swal({
+				  title: "Potrditev podatkov",
+				  text: "Ali so vsi podatki pravilni ?",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#dd6b55",
+				  confirmButtonText: "Da, Potrdi",
+				  cancelButtonText: "Ne, Zavrni",
+				  closeOnConfirm: false,
+				  closeOnCancel: true
+				},
+				function(isConfirm){
+				  if (isConfirm) {
+					  form.submit();
+				   // swal("Deleted!", "Your imaginary file has been deleted.", "success");
+				  } else {
+					swal("Cancelled", "Your imaginary file is safe :)", "error");
+				  }
+				});
+			   //alert("Hello modal form" +$("#visitType").val());
+			   /* $("#modal_visit_type").val($("#choose-visit").val());
+				$("#modal_visit_detail").val($("#visitType").val());
+				$("#modal_patient").val($("#searchPatient").val());
+				$("#modal_date").val($("#visitDate").val());
+		*/
+
+
+		}
+	});
+
+	//VALIDACIJA PRI REGISTRACIJI PACIENTA/OSKRBOVANCA
     $(".signupbtn").click(function(){
 		//alert("hello world");
 		var birthResult = birthDate();
@@ -239,16 +281,16 @@ function addPatientButton(){
 		//hide these fields
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
-		
+		/*alert("Before mumbo jumbo");
 		document.getElementsByClassName("add-baby").style.display='block';
 		document.getElementById("baby-patient").style.display ='block';
-		document.getElementsByClassName("remove-baby").style.display='block';
-
+		document.getElementsByClassName("remove-baby").style.display='block';*/
+		//alert("BEFORE Make required");
 		//make required
 		document.getElementById("id_addPatient").required = true;
 		//remove required
-		document.getElementById("id_cureId").required = false;
-		document.getElementById("id_materialDN").required = false;
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
 	}else if(s == 'Aplikacija injekcij'){
 		//alert("changed to injection");
 		document.getElementById("cureId").style.display = 'block';
@@ -256,8 +298,8 @@ function addPatientButton(){
 		//make required
 		document.getElementById("id_cureId").required = true;
 		//remove required
-		document.getElementById("id_addPatient").required = false;
-		document.getElementById("id_materialDN").required = false;
+		document.getElementById("id_addPatient").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
 
 		//hide this
 		document.getElementById('materialId').style.display = 'none';
@@ -266,8 +308,8 @@ function addPatientButton(){
 		//make required
 		document.getElementById("id_materialDN").required = true;
 		//remove required
-		document.getElementById("id_cureId").required = false;
-		document.getElementById("id_addPatient").required = false;
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_addPatient").removeAttribute("required");
 		//hide this
 		document.getElementById("cureId").style.display = 'none';
 	}
@@ -280,6 +322,10 @@ function addPatientButton(){
 		$("#baby-patient").hide();
 		$("#materialId").hide();
 		$("#cureId").hide();
+		//remove required
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_addPatient").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
 
 	}
 }

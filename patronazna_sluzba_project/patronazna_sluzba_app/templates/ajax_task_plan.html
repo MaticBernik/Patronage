@@ -1,33 +1,59 @@
-<p>task: {{ task.delovni_nalog.cas_obiskov_tip }}</p>
+
 
 {% if task.count > 0 %}
-{% for t in task %}
-            <div>
-        <label class="form-control-static" >Obvznost obiska</label>
-        <input type="text" value="{{ t.delovni_nalog.obveznost_obiska }}" disabled class="form-control">
-        </div>
-        <div>
-        <label class="form-control-static">Časovni tip</label>
-        <input type="text" value="{{ t.delovni_nalog.cas_obiskov_tip }}" disabled class="form-control">
-        </div>
-        <div>
-        <label class="form-control-static">Vrsta obiska</label>
-        <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.tip }}" disabled class="form-control">
-        </div>
-        <div>
-        <label class="form-control-static">Podvrsta obiska</label>
-        <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.ime }}" disabled class="form-control">
-        </div>
-        <div>
-        <label class="form-control-static">Pacient</label>
-        <input type="text" value="{{ t.pacient.ime }}" disabled class="form-control">
-        </div>
-       <!-- <div>
-        <label class="form-control-static">Material na DN</label>
-        <input type="text" value="{{ material.material.ime }}" disabled class="form-control">
-        </div>-->
 
-    {%  endfor %}
+{% for t in task %}
+    {% if forloop.first  %}
+            <div>
+            <label class="form-control-static">Vrsta obiska</label>
+            <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.tip }}" disabled class="form-control">
+            </div>
+            <div>
+            <label class="form-control-static">Podvrsta obiska</label>
+            <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.ime }}" disabled class="form-control">
+            </div>
+            <div>
+            <label class="form-control-static" >Obveznost obiska</label>
+            <input type="text" value="{{ t.delovni_nalog.obveznost_obiska }}" disabled class="form-control">
+            </div>
+            <div>
+            <label class="form-control-static">Časovni tip</label>
+            <input type="text" value="{{ t.delovni_nalog.cas_obiskov_tip }}" disabled class="form-control">
+            </div>
+            <div>
+    {%  endif %}
+{%  endfor %}
+
+        <label class="form-control-static">Pacient</label>
+        {% for t in task %}
+            <input type="text" value="{{ t.pacient.ime }} {{ t.pacient.priimek }}" disabled class="form-control">
+        {%  endfor %}
+        </div>
+
+{% for t in task %}
+        {% if t.delovni_nalog.vrsta_obiska.ime == 'Odvzem krvi'  %}
+
+                <div>
+                    <label class="form-control-static">Epruvete</label>
+                    {% for m in material %}
+                        <input type="text" value="{{ m.material.ime }}" disabled class="form-control">
+                    {%  endfor %}
+                </div>
+
+        {%  endif %}
+
+        {% if t.delovni_nalog.vrsta_obiska.ime == 'Aplikacija injekcij'  %}
+
+                <div>
+                    <label class="form-control-static">Zdravila</label>
+                    {% for m in medicine %}
+                        <input type="text" value="{{ m.zdravilo.kratko_poimenovanje }}" disabled class="form-control">
+                    {%  endfor %}
+                </div>
+
+        {%  endif %}
+
+{%  endfor %}
 
 {% else %}
 

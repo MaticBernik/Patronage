@@ -73,7 +73,7 @@ $(document).ready(function() {
 
         var testTube = $("#id_materialColor").val();
         var num = $("#stEpruvet").val();
-         alert("dodaj material "+testTube+' : '+num);
+        // alert("dodaj material "+testTube+' : '+num);
         $('#id_materialDN').append('<option value="'+testTube+' : '+num+'"'+' selected="true">'+testTube+' : '+num+'</option>');
 
         //$('#id_materialDN option').prop('selected', true);

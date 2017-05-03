@@ -28,26 +28,47 @@ function task_validation(){
 		return false;
 	}
 
-	var visit_count  = document.getElementById('id_visitCount').value;
-	var time_interval = document.getElementById('timeInterval').value;
-	var time_period = document.getElementById('timePeriod').value;
+	var visit_count  = parseInt(document.getElementById('id_visitCount').value);
+	var time_interval = parseInt(document.getElementById('timeInterval').value);
+	var time_period = parseInt( document.getElementById('timePeriod').value);
+	var patient_name = document.getElementById('searchPatient').value;
+	var illness = document.getElementById('search_illness').value;
+	//alert("Before visit count "+patient_name+'; '+illness);
 	//casovni interval
-	if(time_interval !=''){
-	    if(visit_count<=time_interval){
-	    alert("Število obiskov mora biti večje od časovnega intervala")
+	if(patient_name ==''){
+	    alert("Ime pacienta je obvezen podatek");
             return false;
-        }
+	}
+	if(illness ==''){
+	    alert("Bolezen je obvezen podatek");
+            return false;
+	}
+	if(visit_count =='' ){
+	    alert("Število obiskov je obvezen podatek");
+            return false;
+	}
+	if(visit_count > 10 ){
+	    alert("Število obiskov ne more biti večje od 10");
+            return false;
+	}
+	if(time_interval !=''){
+	    /*if(visit_count<=time_interval){
+	    alert("Število obiskov mora biti večje od časovnega intervala");
+            return false;
+        }*/
+
     }
     //casovno obdobje
     else{
 	    if(visit_count>=time_period){
-	    alert("Število obiskov mora biti manjše od časovnega obdobja")
+	    alert("Število obiskov mora biti manjše od časovnega obdobja "+ visit_count+'  '+time_period);
             return false;
         }
 
     }
-
+	//alert("Prisli smo do konca");
 	$(".signupbtn").removeAttr('disabled');
+
 	return true;
 	/*var currentDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var chosenDate = Date.parse(datum.value);

@@ -148,8 +148,8 @@ class WorkTaskForm(forms.Form):
     mandatory = forms.BooleanField(required=False)
     visitCount = forms.CharField(label='Stevilo obiskov', max_length=100, widget=forms.NumberInput(attrs={'max': '10'}))
 
-    timeInterval = forms.CharField(label='Casovni interval', widget=forms.TextInput(attrs={'id': 'timeInterval'}))
-    timePeriod = forms.CharField(label='Casovno obdobje', widget=forms.TextInput(attrs={'id': 'timePeriod'}))
+    timeInterval = forms.CharField(label='Casovni interval', widget=forms.NumberInput(attrs={'id': 'timeInterval'}))
+    timePeriod = forms.CharField(label='Casovno obdobje', widget=forms.NumberInput(attrs={'id': 'timePeriod'}))
 
     # cureList = Zdravila.objects.all();
 

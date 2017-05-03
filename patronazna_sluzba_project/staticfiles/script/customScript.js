@@ -229,6 +229,7 @@ function birthDate(){
 	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
 	
 }
+
 function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
@@ -242,28 +243,51 @@ function addPatientButton(){
 		document.getElementsByClassName("add-baby").style.display='block';
 		document.getElementById("baby-patient").style.display ='block';
 		document.getElementsByClassName("remove-baby").style.display='block';
-		
+
+		//make required
+		document.getElementById("id_addPatient").required = true;
+		//remove required
+		document.getElementById("id_cureId").required = false;
+		document.getElementById("id_materialDN").required = false;
 	}else if(s == 'Aplikacija injekcij'){
 		//alert("changed to injection");
 		document.getElementById("cureId").style.display = 'block';
+
 		//make required
 		document.getElementById("id_cureId").required = true;
+		//remove required
+		document.getElementById("id_addPatient").required = false;
+		document.getElementById("id_materialDN").required = false;
+
 		//hide this
 		document.getElementById('materialId').style.display = 'none';
 	}else if (s == 'Odvzem krvi'){
 		document.getElementById('materialId').style.display = 'block';
+		//make required
+		document.getElementById("id_materialDN").required = true;
+		//remove required
+		document.getElementById("id_cureId").required = false;
+		document.getElementById("id_addPatient").required = false;
 		//hide this
 		document.getElementById("cureId").style.display = 'none';
 	}
 	else{
-		document.getElementById("message").innerHTML = this.options[this.selectedIndex].innerHTML;
+		//document.getElementById("message").innerHTML = this.options[this.selectedIndex].innerHTML;
+		$(".add-baby").attr('disabled','disabled');
+		$(".add-baby").hide();
+		$(".remove-baby").attr('disabled','disabled');
+		$(".remove-baby").hide();
+		$("#baby-patient").hide();
+		$("#materialId").hide();
+		$("#cureId").hide();
+
 	}
 }
 
 $(document).ready(function() {
 
 	$("#choose-visit").change(function(){
-		alert($("#visitType").find("option:first-child").val());
+		//alert($("#visitType").find("option:first-child").val());
 
 		$(".add-baby").attr('disabled','disabled');
 		$(".add-baby").hide();
@@ -281,8 +305,9 @@ $(document).ready(function() {
 
 			$(".remove-baby").show();
 			$(".remove-baby").removeAttr('disabled');
-			//skrij listo ce pacient ni otrocnica
 			$("#baby-patient").show();
+			$("#baby-patient").prop('required',true);
+
 		}else{
 			$(".add-baby").attr('disabled','disabled');
 			$(".add-baby").hide();

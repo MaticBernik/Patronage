@@ -229,6 +229,7 @@ function birthDate(){
 	message.innerHTML ='today:' +currentDate+' , chosen: '+datum.value;*/
 	
 }
+
 function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
@@ -238,20 +239,35 @@ function addPatientButton(){
 		//hide these fields
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
-		
+		/*alert("Before mumbo jumbo");
 		document.getElementsByClassName("add-baby").style.display='block';
 		document.getElementById("baby-patient").style.display ='block';
-		document.getElementsByClassName("remove-baby").style.display='block';
-		
+		document.getElementsByClassName("remove-baby").style.display='block';*/
+		alert("BEFORE Make required");
+		//make required
+		document.getElementById("id_addPatient").required = true;
+		//remove required
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
 	}else if(s == 'Aplikacija injekcij'){
 		//alert("changed to injection");
 		document.getElementById("cureId").style.display = 'block';
+
 		//make required
 		document.getElementById("id_cureId").required = true;
+		//remove required
+		document.getElementById("id_addPatient").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
+
 		//hide this
 		document.getElementById('materialId').style.display = 'none';
 	}else if (s == 'Odvzem krvi'){
 		document.getElementById('materialId').style.display = 'block';
+		//make required
+		document.getElementById("id_materialDN").required = true;
+		//remove required
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_addPatient").removeAttribute("required");
 		//hide this
 		document.getElementById("cureId").style.display = 'none';
 	}
@@ -264,6 +280,10 @@ function addPatientButton(){
 		$("#baby-patient").hide();
 		$("#materialId").hide();
 		$("#cureId").hide();
+		//remove required
+		document.getElementById("id_cureId").removeAttribute("required");
+		document.getElementById("id_addPatient").removeAttribute("required");
+		document.getElementById("id_materialDN").removeAttribute("required");
 
 	}
 }
@@ -289,8 +309,9 @@ $(document).ready(function() {
 
 			$(".remove-baby").show();
 			$(".remove-baby").removeAttr('disabled');
-
 			$("#baby-patient").show();
+			$("#baby-patient").prop('required',true);
+
 		}else{
 			$(".add-baby").attr('disabled','disabled');
 			$(".add-baby").hide();

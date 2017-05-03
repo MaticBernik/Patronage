@@ -51,10 +51,16 @@ def navbar_list_processor(request):
         oskrbovanci = None
 
         if Pacient.objects.filter(uporabniski_profil=user).exists():
+            print("User exits in patient filters")
             pacient = Pacient.objects.get(uporabniski_profil=user)
+            print(pacient.uporabniski_profil.first_name)
             oskrbovanci = Pacient.objects.filter(skrbnistvo=pacient)
+            print(oskrbovanci)
+            print(pacient.st_kartice)
+        else:
+            print("user missing in patient filters")
         
-        return {'link_list': link_list, 'role': role, 'oskrbovanci': oskrbovanci}
+        return {'link_list': link_list, 'role': role, 'oskrbovanci_pacienta': oskrbovanci}
 
     else:
         return {}

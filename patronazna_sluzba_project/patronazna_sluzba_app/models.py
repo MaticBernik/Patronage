@@ -4,7 +4,15 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 
+
+# SOME VALIDATORS 
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+numberic_only = RegexValidator(r'^[0-9]*$', 'Dovoljena zgolj stevilska vrednost.')
+min_len_12 = MinLengthValidator(12, "Stevilka kartica je dolzine 12 znakov.")
+max_len_12 = MaxLengthValidator(12, "Stevilka kartica je dolzine 12 znakov.")
 
 class Posta(models.Model):
     postna_st = models.IntegerField(primary_key=True)
@@ -112,7 +120,7 @@ class Pacient(models.Model):
     uporabniski_profil = models.OneToOneField(User,on_delete=models.CASCADE, null=True)#pacient je lahko registriran (lahko pa tudi ne v primeru skrbnistva)
     #   Dolzino kartice sem dal na 11, tako kot imam na svoji kartici zdravstvenega zavarovanja
     #   MAX_LEN does not get used in combo with IntegerField.. "max_length=11,"
-    st_kartice = models.IntegerField(null=False,default=-1, primary_key=True)
+    st_kartice = models.CharField(validators=[numberic_only, min_len_12, max_len_12], max_length=12, null=False,default=-1, primary_key=True)
     telefonska_st = models.CharField(max_length=15, null=False)
     naslov = models.CharField(max_length=100, null=False)
     spol = models.CharField(max_length=1,choices=SEX,blank=False)

@@ -3,6 +3,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 
 from .models import *
 from django.core.validators import MaxValueValidator
@@ -73,6 +74,12 @@ EPRUVETE_NUMBER = (
     ('5', '5'),
 )
 
+# SOME VALIDATORS
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+numberic_only = RegexValidator(r'^[0-9]*$', 'Dovoljena zgolj stevilska vrednost.')
+min_len_12 = MinLengthValidator(12, "Stevilka kartica je dolzine 12 znakov.")
+max_len_12 = MaxLengthValidator(12, "Stevilka kartica je dolzine 12 znakov.")
+
 #so far the conditionst are very basic, to be strickend
 class LoginForm(forms.Form):
     username = forms.CharField(label='Uporabniško ime:', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -92,7 +99,8 @@ class RegisterMedicalStaffForm(forms.Form):
 
 
 class PatientRegistrationFrom(forms.Form):
-    card_number = forms.IntegerField(label='Številka zdravstvene kartice: ', widget=forms.NumberInput(attrs={'id': 'card_number','placeholder':'Sifra zdrav. kartice (12 mest)', 'class': 'form-control'}))
+    # card_number = forms.IntegerField(label='Številka zdravstvene kartice: ', widget=forms.NumberInput(attrs={'id': 'card_number','placeholder':'Sifra zdrav. kartice (12 mest)', 'class': 'form-control'}))
+    card_number = forms.CharField(label='Številka zdravstvene kartice: ', validators=[numberic_only, min_len_12, max_len_12], widget=forms.NumberInput(attrs={'id': 'card_number','placeholder':'Sifra zdrav. kartice (12 mest)', 'class': 'form-control'}))
     last_name = forms.CharField(label='Priimek: ', max_length=100, widget=forms.TextInput(attrs={'id': 'last_name', 'class': 'form-control'}))
     first_name = forms.CharField(label='Ime: ', max_length=100, widget=forms.TextInput(attrs={'id': 'first_name', 'class': 'form-control'}))
     address = forms.CharField(label='Naslov: ', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))

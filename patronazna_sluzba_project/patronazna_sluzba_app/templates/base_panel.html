@@ -48,6 +48,7 @@ http://bootsnipp.com/snippets/g0Re
                     <div>
                         <a href="#close" title="Close" class="close">X</a>
                         <h3>Oskrbovane osebe: </h3>
+                        {{ oskrbovanci_pacienta }}
                         {% if oskrbovanci_pacienta %}
                             {% for o in oskrbovanci_pacienta %}
                                 <p>{{ o.ime }}</p>

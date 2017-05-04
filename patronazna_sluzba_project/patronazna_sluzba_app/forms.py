@@ -152,7 +152,7 @@ class WorkTaskForm(forms.Form):
     addPatient = forms.MultipleChoiceField(choices=[], required=False)
 
     visitDate = forms.DateField(
-        widget=forms.TextInput(attrs={'class': 'datepicker', 'id': 'visitDate', 'onchange': 'firstVisitDate()'}),
+        widget=forms.TextInput(attrs={'class': 'datepicker', 'id': 'visitDate'}),
         input_formats=['%d.%m.%Y'])
     mandatory = forms.BooleanField(required=False)
     visitCount = forms.CharField(label='Stevilo obiskov', max_length=100, widget=forms.NumberInput(attrs={'max': '10'}))
@@ -190,5 +190,5 @@ class ChangePasswordForm(forms.Form):
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'new_pass2', 'class': 'form-control'}))
 
 class plan_visit_form(forms.Form):
-    visit_list = forms.MultipleChoiceField(label='Neopravljeni obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control','id':'visit_list'}))
-    plan_list = forms.MultipleChoiceField(label='Izbrani obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+    visit_list = forms.MultipleChoiceField(required=False, label='Neopravljeni obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control','id':'visit_list'}))
+    plan_list = forms.MultipleChoiceField(required=False, label='Izbrani obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control'}))

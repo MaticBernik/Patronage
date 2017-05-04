@@ -30,8 +30,7 @@ $(document).ready(function() {
 
 
             $('#id_addPatient').append('<option value="'+patient+'"'+' selected="true">'+patient+'</option>');
-            //$("#search").val().appendTo("#id_cureId");
-           // $("#id_cureId").append($("#search").val());
+
         }
 
     });

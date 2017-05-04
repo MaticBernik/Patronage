@@ -27,7 +27,7 @@ def search_patients(request):
         if added_patient =='':
             patients = Pacient.objects.filter(ime__contains=search_patient)
         else:
-            added_patient = added_patient[1:]
+           # added_patient = added_patient[1:]
             print("imam stevilko skrbnika: ")
             print(int(added_patient))
             patients = Pacient.objects.filter(skrbnistvo_id=int(added_patient))

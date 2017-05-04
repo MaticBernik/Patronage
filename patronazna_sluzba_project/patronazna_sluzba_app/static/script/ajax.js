@@ -151,13 +151,14 @@ $(document).ready(function(){
         }
         selected_data = String(selected_data);
         selected_data=selected_data.split(' ');
-        selected_data=selected_data[0];
+        //selected_data=selected_data[0];
         alert("Klick registered  "+ selected_data);
         $.ajax({
             type: "POST",
             url: "/plan_detail/",
             data: {
-                'visit_list': selected_data,//'3 | Mislejeva',
+                'visit_list': selected_data[0],//'3 | Mislejeva',
+                'obisk_id' : selected_data[1],
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
 
@@ -205,16 +206,20 @@ $(document).ready(function(){
         //alert("AFTER");
 
     });
-    //alert("BEFOR AJAx");
+
+    //Obvezne obiske dodaj v plan
     $( document ).ajaxStop(function() {
      // alert("Document is ready ajax");
+        //parse the value
       $("#visit_list > option").each(function () {
-        var plan_data = $(this).text().split(' ');
+        var plan_data = $(this).val().split(' ');
+        var plan_option =$(this).text().split(' ');
         //alert(/\t/ +"This is data updated: "+plan_data.indexOf(/\t/));
+          alert("TEXT: "+plan_data+"\nVALUES: "+plan_option);
 
 
 
-        if(plan_data[1] == "True") {
+        if(plan_data[2] == "True") {
           //alert("This is data: "+plan_data[1]);
            $(this).remove().appendTo("#id_plan_list");
          }

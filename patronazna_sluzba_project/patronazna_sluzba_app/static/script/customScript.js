@@ -22,7 +22,10 @@ $(document).ready(function() {
 
         		$('#id_addPatient :selected').each(function(i, selected){
 				  patient += $(selected).text()+' , ';
+
 				});
+
+
 			}else{
 				patient= $("#searchPatient").val();
 			}
@@ -278,13 +281,13 @@ function firstVisitDate(){
 		return false;
 	}
 	if(firstVisit[2]==year1 && firstVisit[1]<month1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
-	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] < day1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] <= day1){
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -339,8 +342,7 @@ function addPatientButton(){
 	var s = document.getElementById("visitType").value;
 	//alert(s);
 	if((s == "Obisk otrocnice" )|| (s== "Obisk novorojencka")){
-		//alert("changed to prevention");
-		//hide these fields
+
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
 		/*alert("Before mumbo jumbo");

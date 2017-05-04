@@ -1,0 +1,265 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Delovni nalog</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<link rel="stylesheet" href="{% static 'css/workTask.css' %}">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="{% static 'script/customScript.js' %}"></script>
+		<script src="{% static 'script/addPatient.js' %}"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <!--AJAX Zdravila-->
+        <script src="{% static 'script/ajax.js' %}"></script>
+        <!--CLIENT SIDE VALIDATION-->
+        <script src="{% static 'script/work_task_validation.js' %}"></script>
+
+        <!--MODAL -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!--sweetalert js-->
+       <script src="{% static 'script/dist/sweetalert.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'script/dist/sweetalert.css' %}">
+  <script>
+
+  $( function() {
+    $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends })
+  } );
+
+
+  </script>
+  
+	</head>
+	<body>
+		<header>
+			Header for the Application
+		</header>
+		<h2>Kreiranje delovnega naloga</h2>
+
+		<div class="container">
+			<section>
+				<!--<div class="container">-->
+				{{ work_task_form.non_field_errors }}
+					<form method="post" style="border:1px solid #ccc">
+					{% csrf_token %}
+					<!--Fieldset goes here-->
+                    <fieldset id="simpleForm">
+						<legend>
+						 <h3>1 - Zdravnik</h3>
+							</legend>
+						<div>
+							<!--<label for="myName">?tevilka izvajalca:</label>
+							<input type="text" name="myName" id="myName">-->
+							<label >Številka zdravnika/vodje PS</label>
+                            <input id="id_creator_id" type="text" name="id_creator_id" value="{{ creator_id }}" disabled required>
+
+						</div>
+						<div>
+							<label>Številka izvajalca</label>
+							{{ work_task_form.nurse_id }}
+						</div>
+
+					</fieldset>
+
+
+					<!--Vrsta obiskov-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>2　— Vrste obiskov</h3>
+							</legend>
+						<div>
+							<label for="choose-visit">Vrste obiskov</label>
+                            {% csrf_token %}
+							{{ work_task_form.visitType}}
+
+					</div>
+					<div>
+						<label for="visitType">Podvrste obiskov</label>
+						{{ work_task_form.visitTypeDetail }}
+
+					</div>
+					</fieldset>
+					<!--Podatki o pacientu-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>3　— Zavarovana oseba</h3>
+							</legend>
+						<div>
+							<div>
+							<label for="searchPatient">Ime</label>
+                            {% csrf_token %}
+                            <input type="text" list="patientsList" id="searchPatient" name="searchPatient" />
+                            <datalist id="patientsList">
+
+                            </datalist>
+
+							<!--<input required type="number"/>-->
+							<button class="add-baby btn btn-primary" style="display: none;">Dodaj pacient</button>
+                            </div>
+                            <div id="baby-patient" style="display: none">
+                                <label for="id_addPatient">Izbrani pacienti</label>
+                                {{ work_task_form.addPatient }}
+                                <button class="remove-baby btn btn-primary" style="display: none;">Odstrani pacienta</button>
+                            </div>
+						</div>
+					</fieldset>
+                        <!--SIFRANT BOLEZNI-->
+
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>4　— Bolezen</h3>
+							</legend>
+						<div>
+							<label for="illness">Vrsta bolezni</label>
+                            {% csrf_token %}
+							<input type="text" list="illness_list" id="search_illness" name="search_illness" required />
+                            <datalist id="illness_list">
+
+                            </datalist>
+
+					</div>
+					</fieldset>
+					<!--Datum obiskov-->
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>5　— Datum obiska</h3>
+							</legend>
+						<div>
+						<label for="visitDate">Datum prvega obiska</label>
+						{{ work_task_form.visitDate }}
+                            <label for="id_mandatory">Obvezen</label>
+                            {{ work_task_form.mandatory }}
+						<!--<input id="visitDate" type="date" required="required" onchange="firstVisitDate()"/>
+						<label>Obvezen</label>
+						<input type="checkbox"/>-->
+						<span id="message"></span>
+						</div>
+						<div>
+							<label for="id_visitCount">Število obiskov</label>
+							{{ work_task_form.visitCount }}
+							<!--<input type="number" max=10 required />-->
+						</div>
+						<div>
+							<label for="timeInterval">Časovni interval(v dnevih)</label>
+							<!--<input id="timeInterval" type="text"/>-->
+							{{ work_task_form.timeInterval }}
+						</div>
+						<div>
+							<label for="timePeriod">Časovno obdobje(v dnevih)</label>
+							{{ work_task_form.timePeriod }}
+							<!--<input id="timePeriod" type="text" />-->
+						</div>
+                        <!--
+                        <div>
+                            <label>Radio izbira cas obiksa tip</label>
+                            {{ work_task_form.visit_date_type }}
+                        </div>
+						-->
+					</fieldset>
+					<!--Zdravila-->
+					<div id="cureId" style="display: none">
+                        <fieldset id="simpleForm">
+                            <legend>
+                             <h3>6　— Zdravila</h3>
+                            </legend>
+                            <div>
+                                <label for="medicine">Izbira zdravil</label>
+                                {% csrf_token %}
+                                <input type="text" list="search-results" id="medicine" name="medicine" />
+                                <datalist id="search-results">
+
+                                </datalist>
+                                <button class=" btn btn-primary add-medicine">Dodaj zdravilo</button>
+                            </div>
+                            <div>
+                            <label for="id_cureId">Izbrana zdravila</label>
+                            {{ work_task_form.cureId }}
+                                <button class=" btn btn-primary remove-medicine">Odstrani zdravila</button>
+					         </div>
+                        </fieldset>
+                    </div>
+					</fieldset>
+					<!--Material-->
+					<div id="materialId" style="display:none">
+					<fieldset id="simpleForm">
+						<legend>
+						 <h3>7　— Material</h3>
+						</legend>
+						<div>
+						<label for="id_materialColor">Barva in število euruvet</label>
+						{{ work_task_form.materialColor }}
+						{{ work_task_form.materialQuantity }}
+                             <button class=" btn btn-primary add-material">Dodaj material</button>
+						</div>
+                        <div>
+                            <label for="id_materialDN">Izbran material</label>
+                            {{ work_task_form.materialDN }}
+                            <button class=" btn btn-primary remove-material">Odstrani material</button>
+                        </div>
+					</fieldset>
+                    </div>
+						<div class="clearfix">
+						  <button type="button" class="cancelbtn">Prekliči</button>
+						  <button type="button" id="confirm" class="signupbtn" >Ustvari</button>
+                        </div>
+				</form>				
+            </section>
+		</div>
+
+
+
+
+
+  <!-- Modal -->
+ <!-- <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+            <div>
+                <label>Vrste obiskov</label>
+                <input id="modal_visit_type"type="text" disabled>
+            </div>
+            <div>
+                <label>Podvrste obiskov</label>
+                <input id="modal_visit_detail" type="text" disabled>
+            </div>
+            <div>
+                <label>Pacient</label>
+                <input id="modal_patient" type="text" disabled>
+            </div>
+            <div>
+                <label>Datum obiska</label>
+                <input id ="modal_date" type="text" disabled>
+            </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button  id="create_task" type="submit" class="btn btn-info btn-lg" >Ok</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+-->
+
+
+	</body>
+
+</html>

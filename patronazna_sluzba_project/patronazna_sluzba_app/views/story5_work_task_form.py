@@ -85,7 +85,7 @@ def health_visitor_view(request):
         print("POST CALL")
 
     else:
-        patient_id = '72044444444'
+        patient_id = '072044444444'
     print("The method is: "+request.method)
     patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
     sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
@@ -241,7 +241,7 @@ def work_task_view(request):
         #   Add one patient
         else:
             print("printam pacienta card number", pacient[0:12])
-            patient_card_number = int(pacient[0:12])
+            patient_card_number = pacient[0:12]
 
             patient = Pacient.objects.get(st_kartice=patient_card_number)
             main_patient = patient

@@ -11,8 +11,8 @@ function task_validation(){
 
 	//prvi datum obiska
 	if(datum.value ==''){
-	    alert("Prvi datum obiska je obvezen podatek");
-	    swal("Napaka", "Prvi datum obiska je obvezen podatek", "error");
+	    alert("Datum prvega obiska je obvezen podatek");
+	    swal("Napaka", "Datum prvega obiska je obvezen podatek", "error");
 		return false;
 	}
 	var message = document.getElementById('message');
@@ -107,7 +107,7 @@ function task_validation(){
     }
     //casovno obdobje
     else{
-		alert("inside time period: ");
+		//alert("inside time period: ");
 		if(time_period !=''){
 			if(parseInt(visit_count) > parseInt(time_period)){
 				alert("Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju "+ visit_count+'  '+time_period);

@@ -252,7 +252,7 @@ def work_task_view(request):
         #   Add one patient
         else:
             print("printam pacienta card number", pacient[0:12])
-            patient_card_number = int(pacient[0:12])
+            patient_card_number = pacient[0:12]#int(pacient[0:12])
 
             patient = Pacient.objects.get(st_kartice=patient_card_number)
             main_patient = patient

@@ -342,7 +342,9 @@ def work_task_view(request):
                     return HttpResponse(
                         "Uspesno kreiranje delovnega naloga AMPAK NISO DODANI OBISKI KER JE PREKRATKO OBDOBJE" + delovni_nalog);
 
-        return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
+        #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
+
+        return render(request, 'task_creation_success.html')
 
 
 

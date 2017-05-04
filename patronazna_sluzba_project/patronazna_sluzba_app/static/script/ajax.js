@@ -29,12 +29,24 @@ $(function () {
     });
 
     $('#searchPatient').keyup(function () {
+        //preveri če je pacient že v listi
+        var added_patient = '';
 
+            added_patient = $('#id_addPatient').find("option:first-child").val();
+            if(added_patient != undefined){
+                added_patient=added_patient.split(' ');
+                added_patient = added_patient[0];
+               // alert("AJAX FIRST SELECTED PATIENT IS: "+added_patient);
+            }else{
+                added_patient ='';
+            }
+            //alert("added patient value: "+added_patient);
         $.ajax({
             type: "POST",
             url: "/patient/search/",
             data: {
                 'search_patient': $('#searchPatient').val(),
+                'added_patient' : added_patient,
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
             success: searchPatientSuccess,
@@ -158,7 +170,7 @@ $(document).ready(function(){
     $('#searchPatient').on('change', function () {
         var input_value = String($('#searchPatient').val());
         input_value=input_value.split(' ');
-        //alert("Input has changed "+input_value[0]);
+       // alert("from health visitorInput has changed "+input_value[0]);
 
         $.ajax({
             type: "POST",

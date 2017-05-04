@@ -21,6 +21,7 @@ import os
 
 IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=3
+BLACKLIST_ATTEMPTS_BEFORE_LOCK=20
 VAR = 0
 
 def valid_login(ip):
@@ -42,7 +43,7 @@ def invalid_login(ip):
     if ((len(IP_FAILED_LOGIN) > 0) and (ip in failed_ip_list)):
         i=failed_ip_list.index(ip)
         IP_FAILED_LOGIN[i][1]+=1
-        if IP_FAILED_LOGIN[i][1]>=3:
+        if IP_FAILED_LOGIN[i][1]>=BLACKLIST_ATTEMPTS_BEFORE_LOCK:
             with open("IP_BLACKLIST.csv", "a+") as blacklist_file:
                 blacklist_writer = csv.writer(blacklist_file,delimiter=';')
                 blacklist_writer.writerow([ip,datetime.now()])

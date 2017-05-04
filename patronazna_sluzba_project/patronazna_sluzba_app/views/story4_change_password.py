@@ -5,6 +5,7 @@ from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 from django.template import Context, loader, RequestContext
+from django.contrib.auth import update_session_auth_hash
 #OLD: SPREMEMBA GESLA
 # def change_password(pass1, pass2, id):
 #   if story2_create_pacient.check_passwords(pass1, pass2):
@@ -24,14 +25,14 @@ def change_password(request):
            # print("Uporabnik: ")
             old_password =  form.cleaned_data['old_password']
             #print(currentUser.check_password(oldpassword))
-            if currentUser.check_password(oldpassword):
+            if currentUser.check_password(old_password):
                 password1 = form.cleaned_data['new_password1'];
                 password2 = form.cleaned_data['new_password2'];
                 if password1 == password2 and len(password1)>7:
                     request.user.set_password(password1)
                     update_session_auth_hash(request, request.user)
                     request.user.save()
-                    return render(request, 'base.html', context)
+                    return render(request, 'base_panel.html')
                     #user = User.objects.get(username=currentUser)
                     #user.set_password(password1)
                     #user.save()
@@ -42,4 +43,4 @@ def change_password(request):
     else:
         change_password_form = ChangePasswordForm()
         context={'nbar': 'chng_pass', 'change_password_form': change_password_form}
-    return render(request, 'change_password.html', context)
+        return render(request, 'change_password.html', context)

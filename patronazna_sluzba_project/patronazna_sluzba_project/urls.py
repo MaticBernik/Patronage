@@ -17,6 +17,8 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from patronazna_sluzba_app.views import *
+from django.conf import settings
+from django.contrib.staticfiles import views
 
 #from patronazna_sluzba_app.views import ZdraviloAutocomplete
 
@@ -44,6 +46,7 @@ urlpatterns = [
     url(r'^plan_detail/$',work_task_plan),
     url(r'^illness_list/$',illness_list_view),
     url(r'^health_visitor/$',health_visitor_view),
+	url(r'^static/(?P<path>.*)$', views.serve),
 ]
 
 #ADD 

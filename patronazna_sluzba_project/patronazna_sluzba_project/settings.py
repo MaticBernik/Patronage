@@ -30,9 +30,9 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = '=@yqq%ow_nzt$^qe3p9jc+fav1=!0h7ri7@u)+h)-eoc5k8h)r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #Za produkcijo samo se spremeni na False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

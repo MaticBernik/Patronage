@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block main_content %}
+
+    {% if user.is_authenticated %}
+        <div class="row">
+        	<div >
+            <h3>Seznam delovni nalogov: </h3>
+            {% if work_task_list %}
+                {% for work_task in work_task_list %}
+    	        	<p>Tip obiska: {{ work_task.vrsta_obiska.tip }}</p>
+    	        	<p>Vrsta obiska: {{ work_task.vrsta_obiska.ime }}</p>
+                    <p>Izvajalec ZS: {{ work_task.izvajalec_zs.naziv }}</p>
+                    <p>Datum prvega obiska: {{ work_task.datum_prvega_obiska|date:"d.m.Y H:i:s" }}</p>
+                    <p>Stevilo obiskov: {{ work_task.st_obiskov }}</p>
+                    <hr>
+                {% endfor %}
+                
+            {% else %}
+                <p>Seznam delovnih nalogov je prazen</p>
+            {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

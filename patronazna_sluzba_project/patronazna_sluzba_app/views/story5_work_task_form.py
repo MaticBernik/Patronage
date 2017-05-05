@@ -93,14 +93,17 @@ def illness_list_view(request):
 def health_visitor_view(request):
     if request.method == 'POST':
         patient_id = request.POST['patient_id']
-        print("POST CALL")
+        print("POST CALL "+patient_id)
 
     else:
         patient_id = '072044444444'
     print("The method is: "+request.method)
-    patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
-    sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
-    print('Okolis pacienta: ' + str(patient.okolis_id))
+    try:
+        patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
+        sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
+        print('Okolis pacienta: ' + str(patient.okolis_id))
+    except:
+        sisters = []
     return render_to_response('ajax_health_visitor.html', {'sisters':sisters})
 
 def fix_date(date_of_visit):

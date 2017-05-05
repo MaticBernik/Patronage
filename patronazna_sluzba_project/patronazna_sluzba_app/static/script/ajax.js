@@ -169,15 +169,30 @@ $(document).ready(function(){
     });
 
     $('#searchPatient').on('change', function () {
+        //alert("Pozdrav iz patienta");
         var input_value = String($('#searchPatient').val());
-        input_value=input_value.split(' ');
+        var name_regex ="^[0-9]{12} [A-Z\u010C\u0160\u017d\u0106\u0110\a-z\u010d\u0161\u017e\u0107\u0111]+";
+
+        var nameRE = new RegExp(name_regex);
+        //alert("Pozdrav iz patienta reges");
+        //alert("Pozdrav iz patienta");
+        if(input_value.match(name_regex) == null){
+            alert("Napačen format imena");
+            input_value='';
+
+        }else{
+            input_value=input_value.split(' ');
+            input_value=input_value[0];
+        }
+        //alert("Pozdrav after if");
+
        // alert("from health visitorInput has changed "+input_value[0]);
 
         $.ajax({
             type: "POST",
             url: "/health_visitor/",
             data: {
-                'patient_id': input_value[0],
+                'patient_id': input_value,
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
 

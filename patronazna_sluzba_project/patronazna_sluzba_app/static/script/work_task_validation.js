@@ -98,6 +98,7 @@ function task_validation(){
             return false;
 	}
 	if(time_interval !=''){
+		//document.getElementById('timePeriod').value = (parseInt(time_interval)*parseInt(visit_count));
 		//alert("TIME INTERVAL IS NOT EMPTY");
 	    /*if(visit_count<=time_interval){
 	    alert("Število obiskov mora biti večje od časovnega intervala");
@@ -113,8 +114,10 @@ function task_validation(){
 				alert("Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju "+ visit_count+'  '+time_period);
 				swal("Napaka", "Število obiskov mora biti manjše ali enako števila dni v časovnem obdobju", "error");
 					return false;
+			}/*else{
+				document.getElementById('timeInterval').value = (parseInt(visit_count)/parseInt(time_interval));
 			}
-
+*/
     	}else{
 		alert("Eno izmed polj časovni interval/obdobje mora biti izpolnjeno");
 		return false;

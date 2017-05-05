@@ -45,13 +45,15 @@ $(document).ready(function() {
 
 
         	if(time_interval !=''){
-
+				var temp_period = time_interval * visit_count;
         		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
-					'\nČasovni interval: '+time_interval;
+					'\nČasovni interval: '+time_interval+"\nČasovno obdobje: "+temp_period;
 			}else{
+
 				var time_period = $("#timePeriod").val();
+				var temp_interval = time_period/visit_count;
         		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
-					'\nČasovno obdobje: '+time_period;
+					'\nČasovni interval: '+temp_interval+'\nČasovno obdobje: '+time_period;
 			}
 
 

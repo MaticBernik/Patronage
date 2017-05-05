@@ -284,7 +284,8 @@ def work_task_view(request):
                     zdr = Zdravilo_DN(zdravilo=sickness, delovni_nalog=work_task_f)
                     zdr.save()
                 #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
-                return render(request, 'task_creation_success.html')
+                #return render(request, 'task_creation_success.html')
+                return redirect('link_list_work_task')
 
 
 
@@ -343,13 +344,14 @@ def work_task_view(request):
                     date_current = date_next
                     print("Obisk shranjen (OBDOBJE); datum: ", date_current)
                 else:
-                    return render(request, 'task_creation_success.html')
+                    return redirect('link_list_work_task')
+                    #render(request, 'task_creation_success.html')
                     #return HttpResponse(
                     #   "Uspesno kreiranje delovnega naloga AMPAK NISO DODANI OBISKI KER JE PREKRATKO OBDOBJE" + delovni_nalog);
 
         #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
 
-        return render(request, 'task_creation_success.html')
+        return redirect('link_list_work_task') #render(request, 'task_creation_success.html')
 
 
 

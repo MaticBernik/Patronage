@@ -1,14 +1,42 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+<link rel="stylesheet" type="text/css" href="{% static '/css/work_task_list.css' %}">
 
 {% block main_content %}
 
     {% if user.is_authenticated %}
         <div class="row">
         	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h3>Seznam delovni nalogov: </h3>
+            <h3>Seznam delovnih nalogov: </h3>
+     		<hr>
             {% if work_task_list %}
+
+            <table class="table table-striped" style="text-align: center">
+            	<thead>
+            	<tr>
+            		<th>Izvajalec ZS</th>
+            		<th>Tip obiska</th>
+            		<th>Vrsta obiska</th>
+            		<th>Datum prvega obiska</th>
+            		<th>Stevilo obiskov</th>
+            	</tr>
+            	</thead>
+            	<tbody>
+            	{% for work_task in work_task_list %}
+    	        <tr>
+    	        	<td>{{ work_task.izvajalec_zs.naziv }}</td>
+            		<td>{{ work_task.vrsta_obiska.tip }}</td>
+            		<td>{{ work_task.vrsta_obiska.ime }}</td>
+            		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y H:i:s" }}</td>
+            		<td>{{ work_task.st_obiskov }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+    		</table>
+
+
+<!--
             	<ul class="list-group">
                 {% for work_task in work_task_list %}
     	        	<li class="list-group-item"><p>Tip obiska: {{ work_task.vrsta_obiska.tip }}</p>
@@ -19,6 +47,7 @@
                     </li>
                 {% endfor %}
                 </ul>
+                -->
             {% else %}
                 <p>Seznam delovnih nalogov je prazen</p>
             {% endif %}

@@ -41,7 +41,7 @@ def list_work_task(request):
 
     obiski = Obisk.objects.all()
     delovni_nalogi = Delovni_nalog.objects.all() 
-    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski}
+    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk'}
     return render(request, 'work_task_list.html', context)
     
     

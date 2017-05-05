@@ -219,7 +219,7 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvaja
 			conn.execute("INSERT INTO patronazna_sluzba_app_izvajalec_zs (st_izvajalca, naziv, naslov, posta_id) VALUES (?,?,?,?)", (line[0], line[5], line[7], posta));
 
 #Vrste obiskov
-VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice', 'Obisk novorojencka', 'Preventiva starostnika')
+VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice in novorojencka', 'Preventiva starostnika')
 VRSTA_KURATIVNI = ("Aplikacija injekcij", "Odvzem krvi", "Kontrola zdravstvenega stanja")
 with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
 # with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"

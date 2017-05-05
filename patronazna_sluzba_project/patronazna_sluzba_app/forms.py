@@ -127,7 +127,7 @@ class AddNursingPatientForm(forms.Form):
     first_name = forms.CharField(label='Ime: ', max_length=100, widget=forms.TextInput(attrs={'id': 'first_name', 'class': 'form-control'}))
     address = forms.CharField(label='Naslov: ', max_length=100, widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control'}))
     phone_number = forms.IntegerField(label='Telefon: ', widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control'}))
-    birth_date = forms.DateField(label='Datum rojstva: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birthDate'}), input_formats=['%d.%m.%Y'])
+    birth_date = forms.DateField(label='Datum rojstva: ', widget=forms.TextInput(attrs={'class':'datepicker form-control','id':'birth_date'}), input_formats=['%d.%m.%Y'])
     #post_code =  forms.ChoiceField(label='Pošta: ', choices=POST_CODES, widget=forms.Select(attrs={'class': 'form-control'}))
     sex = forms.ChoiceField(label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     #district = forms.ChoiceField(label='Okrožje', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))

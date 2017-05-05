@@ -219,7 +219,7 @@ def check_passwords(password1, password2):
 
 
 def check_card(card_number):
-    if isinstance(card_number, int):
+    #if isinstance(card_number, int):
         if len(str(card_number)) == dolzina_card_number:
             try:
                 st_kartice = Pacient.objects.get(card_number=card_number)
@@ -229,9 +229,9 @@ def check_card(card_number):
                 return True
         print("Card length not cool (check_card)")
         return False
-    print("Card should be a number (check_card)")
-    print(type(card_number))
-    return False
+    #print("Card should be a number (check_card)")
+        print(type(card_number))
+        return False
 
 
 def check_phone_number(phone_number):
@@ -331,7 +331,7 @@ def register_patient(request):
             print("Form not valid bro", form.errors)
             return HttpResponse("Form not valid")
 
-        return redirect('home')
+        return redirect('link_control_panel')
 
 
     # if a GET (or any other method) we'll create a blank form
@@ -390,7 +390,7 @@ def add_nursing_patient(request):
                                                                           birth_date, sex, relation, phone_number)):
                 return HttpResponse("Napaka pri dodajanju oskrbovanca");
             # return HttpResponse("Dodali ste oskrbovanca")
-            return redirect('control_panel')
+            return redirect('link_control_panel')
         """ DEJANSKA KODA ko bo se front end naret
         if form.is_valid():
             if request.user.is_authenticated():

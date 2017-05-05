@@ -93,14 +93,17 @@ def illness_list_view(request):
 def health_visitor_view(request):
     if request.method == 'POST':
         patient_id = request.POST['patient_id']
-        print("POST CALL")
+        print("POST CALL "+patient_id)
 
     else:
         patient_id = '072044444444'
     print("The method is: "+request.method)
-    patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
-    sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
-    print('Okolis pacienta: ' + str(patient.okolis_id))
+    try:
+        patient = Pacient.objects.get(st_kartice=patient_id)#,flat=True)#Vrsta_obiska.objects.filter(tip=choose_visit)
+        sisters = Patronazna_sestra.objects.filter(okolis_id=patient.okolis_id)
+        print('Okolis pacienta: ' + str(patient.okolis_id))
+    except:
+        sisters = []
     return render_to_response('ajax_health_visitor.html', {'sisters':sisters})
 
 def fix_date(date_of_visit):
@@ -281,7 +284,8 @@ def work_task_view(request):
                     zdr = Zdravilo_DN(zdravilo=sickness, delovni_nalog=work_task_f)
                     zdr.save()
                 #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
-                return render(request, 'task_creation_success.html')
+                #return render(request, 'task_creation_success.html')
+                return redirect('link_list_work_task')
 
 
 
@@ -340,13 +344,14 @@ def work_task_view(request):
                     date_current = date_next
                     print("Obisk shranjen (OBDOBJE); datum: ", date_current)
                 else:
-                    return render(request, 'task_creation_success.html')
+                    return redirect('link_list_work_task')
+                    #render(request, 'task_creation_success.html')
                     #return HttpResponse(
                     #   "Uspesno kreiranje delovnega naloga AMPAK NISO DODANI OBISKI KER JE PREKRATKO OBDOBJE" + delovni_nalog);
 
         #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
 
-        return render(request, 'task_creation_success.html')
+        return redirect('link_list_work_task') #render(request, 'task_creation_success.html')
 
 
 

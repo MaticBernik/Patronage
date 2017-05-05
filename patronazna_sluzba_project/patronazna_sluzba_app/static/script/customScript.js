@@ -111,7 +111,13 @@ $(document).ready(function() {
 	//VALIDACIJA PRI REGISTRACIJI PACIENTA/OSKRBOVANCA
     $(".signupbtn").click(function(){
 		//alert("hello world");
-		var birthResult = birthDate();
+		var birthResult = false;
+		try{
+			birthResult = birthDate();
+		}catch (e){
+			//alert("Error birthResult");
+		}
+
 		//alert("Hello again!!!");
 		//alert("Rezultat birthResult: "+ birthResult);
 		
@@ -132,11 +138,11 @@ $(document).ready(function() {
 		
 		//alert("Rezultat validacije main "+inputResult);
 		//check contact fields
-		var cName = document.getElementById("contact_name");
-		var cSurname = document.getElementById("contact_surname");
+		var cName = document.getElementById("contact_first_name");
+		var cSurname = document.getElementById("contact_last_name");
 		var cAddress = document.getElementById("contact_address");
 		var cPhoneNumber = document.getElementById("contact_phone_number");
-		var bloodRelation = document.getElementById("relation");
+		var bloodRelation = document.getElementById("contact_sorodstvo");
 		//var test = true;
 		//alert("test "+test+" input: "+inputResult);
 		//console.log("test "+test+" input: "+inputResult);
@@ -234,7 +240,7 @@ window.onclick = function(event) {
 function checkPassword(){
 	
 	var pass1= document.getElementById('pass1');
-	var passw = document.getElementById('pass2');
+	var pass2 = document.getElementById('pass2');
 	//store the confirmation message object
 	var message = document.getElementById('confirmMessage');
 	//Set the colors we eill be using
@@ -309,8 +315,12 @@ function birthDate(){
 	var month1 = (today.getMonth()+1);
 	var year1 = today.getFullYear();
 	
-	var datum = document.getElementById('birthDate');
+	var datum = document.getElementById('birth_date');
 	var message = document.getElementById('message');
+	if(datum.value ==''){
+		alert("Napačen datum");
+		return false;
+	}
 	
 	var birth = datum.value.split(".");
 	//alert("datum rojstva primerjava: "+birth[0]+' : '+day1);
@@ -466,10 +476,12 @@ function registrationValidation(){
 	//var nameRE = new RegExp("^("+uC+lC+"+)");
 	//lowerCase
 	var nameRE = new RegExp("^("+allCase+"+)");
-	var name= document.getElementById('name');
-	var surname = document.getElementById('surname');
-	var cardNumber = document.getElementById('cardNumber');
+	var name= document.getElementById('first_name');
+	var surname = document.getElementById('last_name');
+	var cardNumber = document.getElementById('card_number');
 	var phone = document.getElementById('phone');
+
+	//alert("Vneseno ime: "+name.value+" priimek: "+surname.value);
 	//var birthDate = document.getElementById('birthDate');
 	//var address = document.getElementById('address');
 	//console.log(name.value+", reges: "+name.value.match(nameRE));
@@ -480,7 +492,7 @@ function registrationValidation(){
 		alert("Dolzina stevilke Zdravstvene kartice mora biti 12");
 		cardNumber.style.backgroundColor = badColor;
 		return false;
-	}else if(surname.value.match(nameRE)== null){
+	}else if(surname.value.match(nameRE) == null){
 		alert("Napacen vnos priimka");
 		surname.style.backgroundColor = badColor;
 		return false;

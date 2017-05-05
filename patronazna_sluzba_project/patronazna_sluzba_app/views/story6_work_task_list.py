@@ -30,33 +30,17 @@ def is_leader_ps(user):
 
 def list_work_task(request):
     uporabnik = request.user
-    obiski = Obisk.objects
-    if is_doctor(uporabnik):
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=uporabnik)
-    elif is_leader_ps(uporabnik):
-        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=uporabnik)
-    else:
-        print("ERROR!!")
-        return
-    return render(request,{'work_task_list':delovni_nalogi, 'visits_list':obiski} ,'work_task_list.html')
+    # obiski = Obisk.objects
+    # if is_doctor(uporabnik):
+        # delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=uporabnik)
+    # elif is_leader_ps(uporabnik):
+        # delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=uporabnik)
+    # else:
+        # print("ERROR!!")
+        # return
 
+    obiski = Obisk.objects.all()
+    delovni_nalogi = Delovni_nalog.objects.all() 
+    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk'}
+    return render(request, 'work_task_list.html', context)
 
-def search_patients(request):
-    if request.method == 'POST':
-        search_patient = request.POST['search_patient']
-        added_patient = request.POST['added_patient']
-        if added_patient =='':
-            patients = Pacient.objects.filter(ime__contains=search_patient)
-        else:
-           # added_patient = added_patient[1:]
-            print("imam stevilko skrbnika: ")
-            print(int(added_patient))
-            patients = Pacient.objects.filter(skrbnistvo_id=int(added_patient))
-            print("REZULTAT POIZVEDBE: "+str(patients))
-
-    else:
-        search_patient = ''
-        added_patient = ''
-        patients = Pacient.objects.filter(ime__contains=search_patient)
-     #all()  # filter
-    return render_to_response('ajax_patient.html', {'patients': patients})

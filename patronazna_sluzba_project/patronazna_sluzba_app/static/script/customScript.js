@@ -22,7 +22,10 @@ $(document).ready(function() {
 
         		$('#id_addPatient :selected').each(function(i, selected){
 				  patient += $(selected).text()+' , ';
+
 				});
+
+
 			}else{
 				patient= $("#searchPatient").val();
 			}
@@ -42,13 +45,15 @@ $(document).ready(function() {
 
 
         	if(time_interval !=''){
-
+				var temp_period = time_interval * visit_count;
         		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
-					'\nČasovni interval: '+time_interval;
+					'\nČasovni interval: '+time_interval+"\nČasovno obdobje: "+temp_period;
 			}else{
+
 				var time_period = $("#timePeriod").val();
+				var temp_interval = time_period/visit_count;
         		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
-					'\nČasovno obdobje: '+time_period;
+					'\nČasovni interval: '+temp_interval+'\nČasovno obdobje: '+time_period;
 			}
 
 
@@ -278,13 +283,13 @@ function firstVisitDate(){
 		return false;
 	}
 	if(firstVisit[2]==year1 && firstVisit[1]<month1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
-	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] < day1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] <= day1){
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -339,8 +344,7 @@ function addPatientButton(){
 	var s = document.getElementById("visitType").value;
 	//alert(s);
 	if((s == "Obisk otrocnice" )|| (s== "Obisk novorojencka")){
-		//alert("changed to prevention");
-		//hide these fields
+
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
 		/*alert("Before mumbo jumbo");

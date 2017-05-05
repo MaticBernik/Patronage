@@ -5,7 +5,7 @@ from patronazna_sluzba_app.forms import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, redirect
 from django.template.context_processors import csrf
-from datetime import date
+from datetime import date,datetime,timedelta
 
 ########################################################################
 #######TEST THE FUNCTIONALITY
@@ -38,6 +38,7 @@ def plan_list_ajax(request):
     #print('Posta ajax '+post_code)
     visit_list = Obisk.objects.order_by('datum')#filter(datum__gt=date.today())# #Okolis.objects.values_list('id','ime')
     print("todays date is: "+str(date.today()))
+    print("Tomorrow date is: " + str(date.today() + timedelta(days=1)))
     """
     better_list =[x[1] for x in visit_list]
     better_list_id = [x[0] for x in visit_list]
@@ -50,6 +51,12 @@ def plan_list_ajax(request):
 def plan_visit_view(request):
     if request.method == "POST":
         visit_form = plan_visit_form(request.POST)
+        plan_visit_list = request.POST.getlist('plan_list')
+        plan = None
+        for i in plan_visit_list:
+            print('Plan: '+i)
+            plan = Plan(planirani_obisk_id=1)
+            plan.save()
     else:
        visit_form = plan_visit_form()
 

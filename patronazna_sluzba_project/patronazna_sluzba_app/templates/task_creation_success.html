@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block main_content %}
+<script src="{% static 'script/dist/sweetalert.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'script/dist/sweetalert.css' %}">
+
+    <script>
+    swal("Uspešno kreiranje delovnega naloga","", "success");
+    </script>
+
+{% endblock %}

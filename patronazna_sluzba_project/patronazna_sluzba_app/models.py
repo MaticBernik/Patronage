@@ -142,7 +142,7 @@ class Pacient(models.Model):
             self.uporabniski_profil.username= self.email
 
     def __str__(self):
-        return self.st_kartice+' '+self.ime+' '+self.priimek+' '+self.naslov
+        return str(self.st_kartice)+' '+self.ime+' '+self.priimek+' '+self.naslov
 
 
 class Sorodstveno_razmerje(models.Model):

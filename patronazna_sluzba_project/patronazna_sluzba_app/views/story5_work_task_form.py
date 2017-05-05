@@ -23,10 +23,21 @@ def search_titles(request):
 def search_patients(request):
     if request.method == 'POST':
         search_patient = request.POST['search_patient']
+        added_patient = request.POST['added_patient']
+        if added_patient =='':
+            patients = Pacient.objects.filter(ime__contains=search_patient)
+        else:
+           # added_patient = added_patient[1:]
+            print("imam stevilko skrbnika: ")
+            print(int(added_patient))
+            patients = Pacient.objects.filter(skrbnistvo_id=int(added_patient))
+            print("REZULTAT POIZVEDBE: "+str(patients))
+
     else:
         search_patient = ''
-
-    patients = Pacient.objects.all()  # filter(ime__contains=search_patient)
+        added_patient = ''
+        patients = Pacient.objects.filter(ime__contains=search_patient)
+     #all()  # filter
     return render_to_response('ajax_patient.html', {'patients': patients})
 
 def visit_based_on_role(request):
@@ -331,7 +342,9 @@ def work_task_view(request):
                     return HttpResponse(
                         "Uspesno kreiranje delovnega naloga AMPAK NISO DODANI OBISKI KER JE PREKRATKO OBDOBJE" + delovni_nalog);
 
-        return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
+        #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
+
+        return render(request, 'task_creation_success.html')
 
 
 

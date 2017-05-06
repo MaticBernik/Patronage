@@ -238,7 +238,7 @@ class Vrsta_obiska(models.Model):
     TIP_OBISKA = (('P', 'Preventivni obisk'), ('K', 'Kurativni obisk'))
     VRSTA_PREVENTIVNI = (('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice in novorojencka'), ('S', 'Obisk starostnika')) #('R', 'Obisk novorojencka')
     VRSTA_KURATIVNI = (('I', "Aplikacija inekcij"), ('K', "Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"))
-    IME_STORITVE = (('I', "Aplikacija inekcij"), ('K', "Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"), ('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice'), ('R', 'Obisk novorojencka'), ('S', 'Obisk starostnika'))
+    IME_STORITVE = (('I', "Aplikacija inekcij"), ('K', "Odvzem krvi"), ('Z', "Kontrola zdravstvenega stanja"), ('N', 'Obisk nosecnice'), ('O', 'Obisk otrocnice in novorojencka'), ('S', 'Obisk starostnika'))
 
     sifra = models.IntegerField(primary_key=True)
     ime = models.CharField(choices=IME_STORITVE, max_length=10, blank=False, null=False)

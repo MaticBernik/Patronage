@@ -231,6 +231,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 			last_imported=line[0]
 			print(line)
 			ime=line[1].replace('č','c').replace('š','s')
+			if ime=='Obisk otrocnice' or ime=='Obisk nosecnice':
+				ime='Obisk otrocnice in novorojencka'
 			if ime in VRSTA_KURATIVNI:
 				tip = "Kurativni obisk"
 			else:

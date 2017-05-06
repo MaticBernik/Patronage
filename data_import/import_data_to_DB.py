@@ -226,13 +226,19 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 	vrste_obiskov_reader = csv.reader(vrste_obiskov_file, delimiter=';')
 	next(vrste_obiskov_reader, None)  # skip header
 	last_imported = None
+	obisk_otrocnice_novorojencka_dodan = False
 	for line in vrste_obiskov_reader:
 		if len(line) == 5 and (last_imported==None or last_imported!=line[0]):
 			last_imported=line[0]
 			print(line)
 			ime=line[1].replace('č','c').replace('š','s')
-			if ime=='Obisk otrocnice' or ime=='Obisk nosecnice':
-				ime='Obisk otrocnice in novorojencka'
+
+			if ime=='Obisk otrocnice' or ime=='Obisk novorojencka':
+				if obisk_otrocnice_novorojencka_dodan:
+					continue
+				else:
+					ime='Obisk otrocnice in novorojencka'
+					obisk_otrocnice_novorojencka_dodan=True
 			if ime in VRSTA_KURATIVNI:
 				tip = "Kurativni obisk"
 			else:

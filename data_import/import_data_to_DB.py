@@ -188,8 +188,8 @@ for okolis in okolisi:
 		conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)",	(sifra, '031 111 111', line[6], id, okolis[0]));
 
 #Poste
-with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  #encoding="utf8"
-# with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
+#with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  #encoding="utf8"
+with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
 	poste_reader = csv.reader(poste_file, delimiter=';')
 	# skip header
 	next(poste_reader, None)
@@ -206,8 +206,8 @@ with open("vsa_zdravila.csv","r") as drugs_file: #encoding="utf8"
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],line[10], line[11], line[12],line[13], line[14], line[15],line[16], line[17], line[18],line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], line[58],line[59],line[60], line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
 
 #Izvajalci zdravstvenih storitev
-with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvajalci_file:  #encoding="utf8"
-# with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # encoding="utf8"
+#with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvajalci_file:  #encoding="utf8"
+with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # encoding="utf8"
 	izvajalci_reader = csv.reader(izvajalci_file, delimiter=';')
 	next(izvajalci_reader, None)  # skip header
 	last_imported=None
@@ -221,8 +221,8 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvaja
 #Vrste obiskov
 VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice in novorojencka', 'Preventiva starostnika')
 VRSTA_KURATIVNI = ("Aplikacija injekcij", "Odvzem krvi", "Kontrola zdravstvenega stanja")
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
-# with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"
+#with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"
 	vrste_obiskov_reader = csv.reader(vrste_obiskov_file, delimiter=';')
 	next(vrste_obiskov_reader, None)  # skip header
 	last_imported = None
@@ -231,6 +231,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste
 			last_imported=line[0]
 			print(line)
 			ime=line[1].replace('č','c').replace('š','s')
+			if ime=='Obisk otrocnice' or ime=='Obisk nosecnice':
+				ime='Obisk otrocnice in novorojencka'
 			if ime in VRSTA_KURATIVNI:
 				tip = "Kurativni obisk"
 			else:
@@ -238,8 +240,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste
 			conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (int(line[0]), ime, tip));
 
 #Meritve oz. Aktivnosti
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  #encoding="utf8"
-# with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # encoding="utf8"
+#with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  #encoding="utf8"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # encoding="utf8"
 	aktivnosti_reader = csv.reader(aktivnosti_file, delimiter=';')
 	next(aktivnosti_reader, None)  # skip header
 	for line in aktivnosti_reader:
@@ -248,8 +250,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis, porocilo) VALUES (?,?,?,?)", (int(line[0]), int(line[2]), line[3], line[4]));
 
 #Bolezni
-with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"
-# with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
+#with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"
+with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 	bolezni_reader = csv.reader(bolezni_file, delimiter=';')
 	next(bolezni_reader, None)  # skip header
 	for line in bolezni_reader:

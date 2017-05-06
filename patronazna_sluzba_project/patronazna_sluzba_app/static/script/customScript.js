@@ -18,7 +18,7 @@ $(document).ready(function() {
 
         	preview_form +='Vrsta obiska: '+visit_type+'\nPodvrsta obiska: '+visit_type_detail+'\nPacient: ';
         	var patient = '';
-        	if(visit_type_detail =='Obisk otrocnice' || visit_type_detail =='Obisk novorojencka'){
+        	if(visit_type_detail =='Obisk otrocnice in novorojencka' || visit_type_detail =='Obisk novorojencka'){
 
         		$('#id_addPatient :selected').each(function(i, selected){
 				  patient += $(selected).text()+' , ';
@@ -353,7 +353,7 @@ function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
 	//alert(s);
-	if((s == "Obisk otrocnice" )|| (s== "Obisk novorojencka")){
+	if((s == "Obisk otrocnice in novorojencka" )|| (s== "Obisk novorojencka")){
 
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
@@ -421,7 +421,7 @@ $(document).ready(function() {
 	});
 
 	$("#visitType").change(function() {
-		if($("#visitType option:selected").text() == "Obisk otrocnice"||$("#visitType option:selected").text() == "Obisk novorojencka" ){
+		if($("#visitType option:selected").text() == "Obisk otrocnice in novorojencka"||$("#visitType option:selected").text() == "Obisk novorojencka" ){
 			$(".add-baby").show();
 			$(".add-baby").removeAttr('disabled');
 

@@ -11,7 +11,8 @@
 		<div class="form-group">
 			<!--{{ plan_visit_form.errors }}-->
             <!--<input type="number" name="test_id" id="test_id">-->
-			<label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.visit_list.label }}</label>
+			<label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.visit_list.label }}</label></br>
+            <span class="control-label">Obvezen&emsp;&emsp;Datum</span>
 			<!--<input id="pass0" name="pass0" type="password" required/>-->
             {% csrf_token %}
 			{{ plan_visit_form.visit_list }}

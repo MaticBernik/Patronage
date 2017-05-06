@@ -156,7 +156,7 @@ def work_task_view(request):
         except:
             casovno_obdobje = request.POST['timePeriod']
 
-        if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
+        if podvrsta_vrsta_obiska == "Obisk otrocnice in novorojencka" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
             pacient_list = request.POST.getlist('addPatient')
             delovni_nalog += 'Zavarovana oseba:\n'
@@ -238,7 +238,7 @@ def work_task_view(request):
         #   PATIENT====================================================================
 
         #   Add more patients
-        if podvrsta_vrsta_obiska == "Obisk otrocnice" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
+        if podvrsta_vrsta_obiska == "Obisk otrocnice in novorojencka" or podvrsta_vrsta_obiska == 'Obisk novorojencka':
             print("obisk otrocnice")
             pacient_list = request.POST.getlist('addPatient')
 

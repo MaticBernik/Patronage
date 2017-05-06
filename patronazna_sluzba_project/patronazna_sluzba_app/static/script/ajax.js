@@ -157,8 +157,8 @@ $(document).ready(function(){
             type: "POST",
             url: "/plan_detail/",
             data: {
-                'visit_list': selected_data[0],//'3 | Mislejeva',
-                'obisk_id' : selected_data[1],
+                'visit_list': selected_data[1],//'3 | Mislejeva',
+                'obisk_id' : selected_data[0],
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
 
@@ -228,9 +228,9 @@ $(document).ready(function(){
         //parse the value
       $("#visit_list > option").each(function () {
         var plan_data = $(this).val().split(' ');
-        var plan_option =$(this).text().split(' ');
+        var plan_option =$(this).text().split('\\t');
         //alert(/\t/ +"This is data updated: "+plan_data.indexOf(/\t/));
-          alert("TEXT: "+plan_data+"\nVALUES: "+plan_option);
+          alert("values: "+plan_data+"\ntext: "+plan_option[0]);
 
 
 

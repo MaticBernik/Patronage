@@ -57,7 +57,7 @@ function task_validation(){
 	}
 
 	var patient_num =0 ;
-        	if(visit_type_detail =='Obisk otrocnice' || visit_type_detail =='Obisk novorojencka'){
+        	if(visit_type_detail =='Obisk otrocnice in novorojencka' || visit_type_detail =='Obisk novorojencka'){
 
         		$('#id_addPatient :selected').each(function(i, selected){
 				  patient_num +=1;

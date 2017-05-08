@@ -75,7 +75,7 @@ class Zdravnik(models.Model):
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     #sifra_izvajalca_ZS = models.DecimalField(max_digits=5,decimal_places=0)
     def __str__(self):
-        return self.sifra_zdravnika+' '+self.uporabniski_profil.firstName+''+self.uporabniski_profil.lastName
+        return str(self.sifra_zdravnika)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
 
 class Vodja_PS(models.Model):

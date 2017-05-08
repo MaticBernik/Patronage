@@ -2,7 +2,6 @@ $(document).ready(function() {
 
 
     $('#confirm').click(function(e){
-
         e.preventDefault();
 		var work_task_validation = task_validation();
 		//alert("Validacija rezultat "+work_task_validation);
@@ -11,12 +10,80 @@ $(document).ready(function() {
         	swal("Napaka", "Napaka pri validaciji", "error");
 		}else{
         	var form = $(this).parents('form');
+
+        	//zajem vseh podatkov za preview
+			var preview_form ='';
+        	var visit_type = $("#choose-visit").val();
+        	var visit_type_detail = $("#visitType").val();
+
+        	preview_form +='Vrsta obiska: '+visit_type+'\nPodvrsta obiska: '+visit_type_detail+'\nPacient: ';
+        	var patient = '';
+        	if(visit_type_detail =='Obisk otrocnice in novorojencka' || visit_type_detail =='Obisk novorojencka'){
+
+        		$('#id_addPatient :selected').each(function(i, selected){
+				  patient += $(selected).text()+' , ';
+
+				});
+
+
+			}else{
+				patient= $("#searchPatient").val();
+			}
+			preview_form += patient;
+
+        	var illness = $("#search_illness").val();
+        	var visit_date =$("#visitDate").val();
+        	var mandatory = $("#id_mandatory").val();
+        	var visit_count =$("#id_visitCount").val();
+        	var time_interval = $("#timeInterval").val();
+
+        	if(mandatory =='on'){
+				mandatory = 'Obvezen';
+			}else{
+				mandatory = 'Okviren';
+			}
+
+
+        	if(time_interval !=''){
+				var temp_period = time_interval * visit_count;
+        		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
+					'\nČasovni interval: '+time_interval+"\nČasovno obdobje: "+temp_period;
+			}else{
+
+				var time_period = $("#timePeriod").val();
+				var temp_interval = time_period/visit_count;
+        		preview_form +='\nBolezen: '+illness+'\nPrvi obisk: '+visit_date+'\nObvezen: '+mandatory+'\nStevilo obiskov: '+visit_count+
+					'\nČasovni interval: '+temp_interval+'\nČasovno obdobje: '+time_period;
+			}
+
+
+
+
+        	if(visit_type_detail =='Aplikacija injekcij'){
+				var medicine = '\nZdravila: ';
+
+        		$('#id_cureId :selected').each(function(i, selected){
+				  medicine += $(selected).text()+' , ';
+				});
+        		preview_form += medicine;
+			}
+
+
+        	if(visit_type_detail =='Odvzem krvi'){
+				var material = '\nEpruvete: ';
+
+        		$('#id_materialDN :selected').each(function(i, selected){
+				  material += $(selected).text()+' , ';
+				});
+        		preview_form += material;
+			}
+			preview_form +='\n';
 				swal({
 				  title: "Potrditev podatkov",
-				  text: "Ali so vsi podatki pravilni ?",
+				  text: preview_form,
 				  type: "warning",
 				  showCancelButton: true,
-				  confirmButtonColor: "#dd6b55",
+				  confirmButtonColor: "#3add86",
 				  confirmButtonText: "Da, Potrdi",
 				  cancelButtonText: "Ne, Zavrni",
 				  closeOnConfirm: false,
@@ -44,7 +111,13 @@ $(document).ready(function() {
 	//VALIDACIJA PRI REGISTRACIJI PACIENTA/OSKRBOVANCA
     $(".signupbtn").click(function(){
 		//alert("hello world");
-		var birthResult = birthDate();
+		var birthResult = false;
+		try{
+			birthResult = birthDate();
+		}catch (e){
+			//alert("Error birthResult");
+		}
+
 		//alert("Hello again!!!");
 		//alert("Rezultat birthResult: "+ birthResult);
 		
@@ -65,11 +138,11 @@ $(document).ready(function() {
 		
 		//alert("Rezultat validacije main "+inputResult);
 		//check contact fields
-		var cName = document.getElementById("contact_name");
-		var cSurname = document.getElementById("contact_surname");
+		var cName = document.getElementById("contact_first_name");
+		var cSurname = document.getElementById("contact_last_name");
 		var cAddress = document.getElementById("contact_address");
 		var cPhoneNumber = document.getElementById("contact_phone_number");
-		var bloodRelation = document.getElementById("relation");
+		var bloodRelation = document.getElementById("contact_sorodstvo");
 		//var test = true;
 		//alert("test "+test+" input: "+inputResult);
 		//console.log("test "+test+" input: "+inputResult);
@@ -167,7 +240,7 @@ window.onclick = function(event) {
 function checkPassword(){
 	
 	var pass1= document.getElementById('pass1');
-	var passw = document.getElementById('pass2');
+	var pass2 = document.getElementById('pass2');
 	//store the confirmation message object
 	var message = document.getElementById('confirmMessage');
 	//Set the colors we eill be using
@@ -216,13 +289,13 @@ function firstVisitDate(){
 		return false;
 	}
 	if(firstVisit[2]==year1 && firstVisit[1]<month1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
 	
-	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] < day1){
-		alert("Napacen datum! Datum obiska mora biti vecji ali enak trenutnega!");
+	if(firstVisit[2] == year1 && firstVisit[1] == month1 && firstVisit[0] <= day1){
+		alert("Napacen datum! Datum obiska mora biti vecji od trenutnega!");
 		$(".signupbtn").attr('disabled','disabled');
 		return false;
 	}
@@ -242,8 +315,12 @@ function birthDate(){
 	var month1 = (today.getMonth()+1);
 	var year1 = today.getFullYear();
 	
-	var datum = document.getElementById('birthDate');
+	var datum = document.getElementById('birth_date');
 	var message = document.getElementById('message');
+	if(datum.value ==''){
+		alert("Napačen datum");
+		return false;
+	}
 	
 	var birth = datum.value.split(".");
 	//alert("datum rojstva primerjava: "+birth[0]+' : '+day1);
@@ -276,9 +353,8 @@ function addPatientButton(){
 	
 	var s = document.getElementById("visitType").value;
 	//alert(s);
-	if((s == "Obisk otrocnice" )|| (s== "Obisk novorojencka")){
-		//alert("changed to prevention");
-		//hide these fields
+	if((s == "Obisk otrocnice in novorojencka" )|| (s== "Obisk novorojencka")){
+
 		document.getElementById("cureId").style.display = 'none';
 		document.getElementById('materialId').style.display = 'none';
 		/*alert("Before mumbo jumbo");
@@ -345,7 +421,7 @@ $(document).ready(function() {
 	});
 
 	$("#visitType").change(function() {
-		if($("#visitType option:selected").text() == "Obisk otrocnice"||$("#visitType option:selected").text() == "Obisk novorojencka" ){
+		if($("#visitType option:selected").text() == "Obisk otrocnice in novorojencka"||$("#visitType option:selected").text() == "Obisk novorojencka" ){
 			$(".add-baby").show();
 			$(".add-baby").removeAttr('disabled');
 
@@ -400,10 +476,12 @@ function registrationValidation(){
 	//var nameRE = new RegExp("^("+uC+lC+"+)");
 	//lowerCase
 	var nameRE = new RegExp("^("+allCase+"+)");
-	var name= document.getElementById('name');
-	var surname = document.getElementById('surname');
-	var cardNumber = document.getElementById('cardNumber');
+	var name= document.getElementById('first_name');
+	var surname = document.getElementById('last_name');
+	var cardNumber = document.getElementById('card_number');
 	var phone = document.getElementById('phone');
+
+	//alert("Vneseno ime: "+name.value+" priimek: "+surname.value);
 	//var birthDate = document.getElementById('birthDate');
 	//var address = document.getElementById('address');
 	//console.log(name.value+", reges: "+name.value.match(nameRE));
@@ -414,7 +492,7 @@ function registrationValidation(){
 		alert("Dolzina stevilke Zdravstvene kartice mora biti 12");
 		cardNumber.style.backgroundColor = badColor;
 		return false;
-	}else if(surname.value.match(nameRE)== null){
+	}else if(surname.value.match(nameRE) == null){
 		alert("Napacen vnos priimka");
 		surname.style.backgroundColor = badColor;
 		return false;

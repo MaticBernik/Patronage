@@ -4,6 +4,24 @@
 
 {% for t in task %}
     {% if forloop.first  %}
+             <div>
+            <label class="form-control-static">Zdravnik</label>
+            <input type="text" value="{{ t.delovni_nalog.zdravnik.uporabniski_profil.first_name }}  {{ t.delovni_nalog.zdravnik.uporabniski_profil.last_name }}" disabled class="form-control">
+            </div>
+
+    {%  endif %}
+{%  endfor %}
+{%for o in obisk %}
+    {% if forloop.first  %}
+            <div>
+            <label class="form-control-static">Medicinska sestra</label>
+            <input type="text" value="{{o.p_sestra.uporabniski_profil.first_name }}  {{ o.p_sestra.uporabniski_profil.uporabniski_profil.last_name }}" disabled class="form-control">
+            </div>
+
+    {%  endif %}
+{%  endfor %}
+{% for t in task %}
+    {% if forloop.first  %}
             <div>
             <label class="form-control-static">Vrsta obiska</label>
             <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.tip }}" disabled class="form-control">
@@ -12,18 +30,24 @@
             <label class="form-control-static">Podvrsta obiska</label>
             <input type="text" value="{{ t.delovni_nalog.vrsta_obiska.ime }}" disabled class="form-control">
             </div>
+            <div>
+            <label class="form-control-static">Bolezen</label>
+            <input type="text" value="{{ t.delovni_nalog.bolezen.ime }}" disabled class="form-control">
+            </div>
            <!-- <div>
             <label class="form-control-static" >Obveznost obiska</label>
             <input type="text" value="{{ t.delovni_nalog.obveznost_obiska }}" disabled class="form-control">
-            </div>-->
-            <div>
-            <label class="form-control-static">Časovni tip</label>
-            <input type="text" value="{{ t.delovni_nalog.cas_obiskov_tip }}" disabled class="form-control">
             </div>
             <div>
+            <label class="form-control-static">Datum</label>
+            <input type="text" value="{{ t.delovni_nalog.cas_obiskov_tip }}" disabled class="form-control">
+            </div>
+            -->
+
     {%  endif %}
 {%  endfor %}
 
+        <div>
         <label class="form-control-static">Pacient</label>
         {% for t in task %}
             <input type="text" value="{{ t.pacient.ime }} {{ t.pacient.priimek }}" disabled class="form-control">
@@ -36,7 +60,7 @@
                 <div>
                     <label class="form-control-static">Epruvete</label>
                     {% for m in material %}
-                        <input type="text" value="{{ m.material.ime }}" disabled class="form-control">
+                        <input type="text" value="{{ m.material.ime }} {{ m.kolicina }}" disabled class="form-control">
                     {%  endfor %}
                 </div>
 

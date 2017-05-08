@@ -331,3 +331,13 @@ class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
     kolicina = models.IntegerField(null=False, default=1)
+
+class Nadomescanje(models.Model):
+    class Meta:
+        unique_together = (('sestra', 'datum_zacetek','datum_konec'),)
+
+    #vodja = models.ForeignKey(Vodja_PS,null=False) #vodja PS, ki je dodal nadomescanje
+    sestra = models.ForeignKey(Patronazna_sestra,related_name='%(class)s_requests_created', null=False)
+    datum_zacetek = models.DateTimeField(null=False,default=datetime.now())
+    datum_konec = models.DateTimeField(null=False,default=datetime.now()+timedelta(days=1))
+    nadomestna_sestra = models.ForeignKey(Patronazna_sestra, null=False)

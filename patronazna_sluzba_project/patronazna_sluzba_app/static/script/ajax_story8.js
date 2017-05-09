@@ -16,6 +16,16 @@ $(document).ready(function(){
         });
 
 
+        $('#confirm_plan').click(function(e){
+        e.preventDefault();
+        alert("Confirm Plan");
+        $("#id_plan_list").each(function(){
+            $(this).prop('selected',true);
+        });
+        	var form = $(this).parents('form');
+        	form.submit();
+
+
 
 });
 
@@ -74,7 +84,7 @@ $(document).ready(function(){
     //filter plan glede na dan
     $("#filter_plan").on('click',function(){
 
-        alert("Prebran datum: "+$("#date_picker").val());
+        //alert("Prebran datum: "+$("#date_picker").val());
 
         $.ajax({
 

@@ -210,8 +210,15 @@ def plan_visit_view(request):
         #print("CONTAINED: "+str(contained))
         #for i in old_plan:
          #   print("old plan: "+str(i))
-        if len(plan_visit_list) >= len(old_plan):
-
+        if len(plan_visit_list) >0:
+            #izbrisi obiske ki odstranjene
+            pk_plan = [i[0] for i in plan_visit_list]
+            results = list(map(int, pk_plan))
+            for i in old_plan:
+                if i not in results:
+                    print("Ta obisk ni v planu")
+                    plan = Plan.objects.get(planirani_obisk_id=str(i)).delete()
+            #shrani nove obiske
             for i in plan_visit_list:
                 obisk_id = i.split(' ', 1)[0]
                 print('Plan: '+obisk_id)
@@ -219,15 +226,6 @@ def plan_visit_view(request):
                     print("Ta obisk ni v bazi")
                     plan = Plan(planirani_obisk_id=obisk_id)
                     plan.save()
-        else:
-            pk_plan = [i[0] for i in plan_visit_list]
-            results = list(map(int, pk_plan))
-            for i in old_plan:
-                if i not in results:
-                    print("Ta obisk ni v planu")
-                    plan = Plan.objects.get(planirani_obisk_id=str(i)).delete()
-                    #plan.save()
-        #old_plan = plan_visit_list
     else:
        visit_form = plan_visit_form()
     """

@@ -1,0 +1,20 @@
+{% if planned|length > 0 %}
+<select>
+{% for visit in planned %}
+
+    <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+        {{ visit.planirani_obisk.delovni_nalog_id }}&emsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}&emsp;
+        {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
+        {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+
+    {%  endfor %}
+</select>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}
+
+ <!--<option value="{{ visit.id }} {{ visit.delovni_nalog_id }} {{ visit.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+        {{ visit.delovni_nalog_id }}&emsp;{{ visit.delovni_nalog.zdravnik}}&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.obvezen_obisk }}&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.delovni_nalog.vrsta_obiska.ime }}</option>
+-->

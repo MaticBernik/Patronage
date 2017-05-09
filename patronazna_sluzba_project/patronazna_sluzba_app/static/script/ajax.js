@@ -70,19 +70,6 @@ $(document).ready(function(){
             dataType: 'html'
         });
 
-     //second AJAX
-    //alert("Second AJAX MS");
-      $.ajax({
-
-            type: "GET",
-            url: "/visit_list/",
-            data: {
-                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
-            },
-
-            success: planVisitSuccess,
-            dataType: 'html'
-        });
 });
 /*
 
@@ -137,36 +124,6 @@ $(document).ready(function(){
         });
     });
 
-    //master detail delovni nalog MS
-    $('#plan_detail').on('click', function (e) {
-        //alert("THIS WOKRS");
-        var selected_data;
-        if($('#visit_list').val()!=''){
-            selected_data = $('#visit_list').val();
-        }else if($('#id_plan_list').val() != ''){
-            selected_data = $('#id_plan_list').val();
-        }else{
-            alert("Ni izbran noben obisk");
-            e.preventDefault();
-        }
-        selected_data = String(selected_data);
-        selected_data=selected_data.split(' ');
-        //selected_data=selected_data[0];
-        alert("Klick registered  "+ selected_data);
-        $.ajax({
-            type: "POST",
-            url: "/plan_detail/",
-            data: {
-                'visit_list': selected_data[1],//'3 | Mislejeva',
-                'obisk_id' : selected_data[0],
-                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
-            },
-
-            success: planDetailSuccess,
-            dataType: 'html'
-        });
-
-    });
 
     $('#searchPatient').on('change', function () {
         //alert("Pozdrav iz patienta");
@@ -230,7 +187,7 @@ $(document).ready(function(){
         var plan_data = $(this).val().split(' ');
         var plan_option =$(this).text().split('\\t');
         //alert(/\t/ +"This is data updated: "+plan_data.indexOf(/\t/));
-          alert("values: "+plan_data+"\ntext: "+plan_option[0]);
+          //alert("values: "+plan_data+"\ntext: "+plan_option[0]);
 
 
 
@@ -275,16 +232,6 @@ function searchDistrictSuccess(data, textStatus, jqXHR) {
 
 function chooseRoleSuccess(data, textStatus, jqXHR) {
     $('#choose-visit').html(data);
-}
-
-
-function planVisitSuccess(data, textStatus, jqXHR) {
-    $('#visit_list').html(data);
-}
-
-
-function planDetailSuccess(data, textStatus, jqXHR) {
-    $('.modal-body').html(data);
 }
 
 function searchIllnessSuccess(data, textStatus, jqXHR) {

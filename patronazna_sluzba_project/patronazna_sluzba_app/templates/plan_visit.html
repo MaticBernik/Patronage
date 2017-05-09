@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block head_extend %}
+
+        <script src="{% static 'script/ajax_story8.js' %}"></script>
+        <script src="{% static 'script/listbox_control.js' %}"></script>
+        <!--DATEPICKER-->
+    <script src="{% static 'script/addPatient.js' %}"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            $( function() {
+
+                $( ".datepicker" ).datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
+
+            } );
+        </script>
+
+{% endblock %}
+
+
 {% block main_content %}
 
 <h3 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">Planiranje obiskov</h3>
@@ -11,8 +32,12 @@
 		<div class="form-group">
 			<!--{{ plan_visit_form.errors }}-->
             <!--<input type="number" name="test_id" id="test_id">-->
-			<label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.visit_list.label }}</label></br>
-            <span class="control-label">Obvezen&emsp;&emsp;Datum</span>
+            <label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.date_picker.label }}</label>
+            {% csrf_token %}
+			{{ plan_visit_form.date_picker }}
+            <button id="filter_plan"type="button" class="btn btn-primary" >Filtriraj</button><br />
+			<label  class="control-label" for="{{ plan_visit_form.visit_list.id_for_label }}">{{ plan_visit_form.visit_list.label }}</label><br />
+            <span class="control-label">Id_dn&emsp;Zdravnik&emsp;&emsp;&emsp;Patronažna sestra&emsp;&emsp;Datum&emsp;&emsp;Tip datuma&emsp;&emsp;Vrsta obiska</span>
 			<!--<input id="pass0" name="pass0" type="password" required/>-->
             {% csrf_token %}
 			{{ plan_visit_form.visit_list }}
@@ -26,6 +51,8 @@
 		<div class="form-group">
 			<!--{{ plan_visit_form.plan_list.errors }}-->
 			<label  class="control-label" for="{{ plan_visit_form.plan_list.id_for_label }}">{{ plan_visit_form.plan_list.label }}</label>
+            <br />
+            <span class="control-label">Id_dn&emsp;Zdravnik&emsp;&emsp;&emsp;Patronažna sestra&emsp;&emsp;Datum&emsp;&emsp;Tip datuma&emsp;&emsp;Vrsta obiska</span>
 			<!--<input id="pass1" name="pass1" type="password" required/>-->
 			{{ plan_visit_form.plan_list }}
 		</div>
@@ -79,3 +106,5 @@
 
 
 {% endblock %}
+
+

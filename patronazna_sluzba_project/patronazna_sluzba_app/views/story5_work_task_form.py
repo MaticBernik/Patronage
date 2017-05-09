@@ -41,6 +41,8 @@ def search_patients(request):
     return render_to_response('ajax_patient.html', {'patients': patients})
 
 def visit_based_on_role(request):
+
+
     current_doc = None
     current_vodja_PS = None
     current_user = request.user
@@ -50,21 +52,25 @@ def visit_based_on_role(request):
         print("DOC DELOVNI NALOG "+str(current_doc.sifra_zdravnika))
         user_role_type = 'Zdravnik'
     except:
-        current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
-        ZS = current_vodja_PS.sifra_izvajalca_ZS
-        print("VODJA PS DELOVNI NALOG ")
-        user_role_type = 'Vodja'
+        try:
+            current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
+            ZS = current_vodja_PS.sifra_izvajalca_ZS
+            print("VODJA PS DELOVNI NALOG ")
+            user_role_type = 'Vodja'
+        except:
+            print("Logiran nekdo ki ni zdravnik/vodja PS")
 
 
     print('get request to visit role')
     if user_role_type == 'Vodja':
         visit_role = ['','Preventivni obisk']
-    else:
+    elif user_role_type == 'Zdravnik':
         visit_role = ['', 'Preventivni obisk','Kurativni obisk']
-    #for i in visit_role:
-    #    print('Visit : '+i[0])
-    #test='Preventivni obisk', 'Kurativni obisk';
+    else:
+        #tole je treba popraviti ajax on document ready exclude from other files
+        visit_role = ['','Preventivni obisk']
     return render_to_response('ajax_visit_role.html',{'visit_role': visit_role})
+
 
 
 def choose_visit_type(request):

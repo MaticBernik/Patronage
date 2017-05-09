@@ -9,9 +9,17 @@ $(function () {
         });
     });
 
-    $("#remove_plan").click(function () {
+    $("#remove_plan").click(function (e) {
         $("#id_plan_list > option:selected").each(function () {
-            $(this).remove().appendTo("#visit_list");
+           // alert("Odstrani izbrano opcijo");
+            //alert("Opcija: "+$(this).text().indexOf('Obvezen'));
+            if(($(this).text().indexOf('Obvezen'))>-1){
+                alert("Datum obiska je obvezen");
+                e.preventDefault();
+            }else{
+                $(this).remove().appendTo("#visit_list");
+            }
+
             //rearrangeList("#list1");
         });
     });

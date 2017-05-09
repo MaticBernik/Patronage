@@ -1,0 +1,26 @@
+#simpleForm {
+    /*background-color: #e4f1df;*/
+    background-color: 	#99e699;
+}
+
+fieldset {
+	padding-top:10px;
+    padding-botton: 10px;
+	border-radius:8px;
+    margin: 10px;
+    
+    text-align: left;
+}
+
+legend {
+	float:left;
+	margin-top:-20px;
+}
+
+legend + * {
+	clear:both;
+}
+
+label{
+    font-size: 17px;
+}

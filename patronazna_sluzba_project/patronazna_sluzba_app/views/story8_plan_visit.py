@@ -7,9 +7,12 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template.context_processors import csrf
 from datetime import date,datetime,timedelta
 from django.db.models import Q
+from math import floor
 ########################################################################
 #######TEST THE FUNCTIONALITY
 global_plan=[]
+global_nurse_id = 0
+old_plan = []
 def work_task_plan(request):
     if request.method == 'POST':
 
@@ -27,12 +30,24 @@ def work_task_plan(request):
         visit_list ='7'
 
     task_fk = Pacient_DN.objects.select_related().filter(delovni_nalog_id=visit_list) #Delovni_nalog.objects.select_related().get(id=visit_list) #filter(id__iexact=visit_list)    #Okolis.objects.filter(id__iexact=visit_list)
+
+    cas_obiskov_tip = task_fk[0].delovni_nalog.cas_obiskov_tip
+
+    if cas_obiskov_tip == 'Interval':
+        interval = int(task_fk[0].delovni_nalog.cas_obiskov_dolzina)
+        visit_count = int(task_fk[0].delovni_nalog.st_obiskov)
+        period =  interval * visit_count
+    else:
+        period = int(task_fk[0].delovni_nalog.cas_obiskov_dolzina)
+        visit_count = int(task_fk[0].delovni_nalog.st_obiskov)
+        interval = floor(period / visit_count)
+
     obisk = Obisk.objects.select_related().filter(delovni_nalog_id=visit_list)
     material = Material_DN.objects.select_related().filter(delovni_nalog_id=visit_list)#get(delovni_nalog_id=visit_list)
     medicine = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=visit_list)
     print('QUERY RESULT: '+str(task_fk)+'    '+str(material)+'  '+str(medicine))
    # task = Posta.objects.all()[1:10]
-    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk})
+    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period})
 
 def is_nurse(user):
     if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
@@ -56,7 +71,8 @@ def plan_list_ajax(request):
 
         # OBISKI KI SO V PLANU
         plan_list = Plan.objects.values_list('planirani_obisk_id',flat=True)
-
+        global old_plan
+        old_plan = plan_list
 
         """
          for field in Plan._meta.fields:
@@ -71,8 +87,13 @@ def plan_list_ajax(request):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil_id =nurse_profile_id)
 
         #HARDCODE ABSENT NURSE ID
-        absent_id = 18
-        fill_in = True
+        try:
+            absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
+            fill_in = True
+        except:
+            fill_in = False
+
+        #fill_in = True
         print('Medicinska sestra '+str(nurse.id))
         if len(plan_list) > 0:
             print("PLAN LIST ID "+str(plan_list[0]))
@@ -87,8 +108,8 @@ def plan_list_ajax(request):
             else:
                 #vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE")
-                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent_id))
-                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent_id)).filter(~Q(id__in=plan_list))
+                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id))
+                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list))
 
 
             print("Query result")
@@ -122,14 +143,15 @@ def plan_list_ajax(request):
             else:
                 # vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE, PLAN JE PRAZEN")
-                visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id=absent_id)).order_by('datum')
+                print("ABSENT NURSE: "+str(absent.sestra_id))
+                visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id=absent.sestra_id)).order_by('datum')
 
 
 
         print("Visit list "+str(len(visit_list)))
         visit_list = replace_datum_type(visit_list,0)
 
-        print('Datum tip: '+str(visit_list[0].obvezen_obisk))
+        #print('Datum tip: '+str(visit_list[0].obvezen_obisk))
         #print("todays date is: " + str(date.today()))
         #print("Tomorrow date is: " + str(date.today() + timedelta(days=1)))
 
@@ -149,7 +171,11 @@ def plan_list_ajax(request):
     else:
         visit_list = []
 
-    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list})
+    main_nurse_id = nurse.id
+    global global_nurse_id
+    global_nurse_id = nurse.id
+
+    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':main_nurse_id})
 
 def replace_datum_type(list,n):
     if n != 1:
@@ -170,18 +196,38 @@ def replace_datum_type(list,n):
 
 def ajax_added_to_plan(request):
 
-    return render_to_response('ajax_already_planned.html',{'planned':global_plan})
+    return render_to_response('ajax_already_planned.html',{'planned':global_plan,'nurse':global_nurse_id})
 
 def plan_visit_view(request):
     if request.method == "POST":
         visit_form = plan_visit_form(request.POST)
         plan_visit_list = request.POST.getlist('plan_list')
         plan = None
-        for i in plan_visit_list:
-            obisk_id = i.split(' ', 1)[0]
-            print('Plan: '+obisk_id)
-            plan = Plan(planirani_obisk_id=obisk_id)
-            plan.save()
+
+        global old_plan
+       # print("OLDPLAN BEFORE: " + str(old_plan))
+        #contained = [x for x in plan_visit_list if x in old_plan]
+        #print("CONTAINED: "+str(contained))
+        #for i in old_plan:
+         #   print("old plan: "+str(i))
+        if len(plan_visit_list) >= len(old_plan):
+
+            for i in plan_visit_list:
+                obisk_id = i.split(' ', 1)[0]
+                print('Plan: '+obisk_id)
+                if int(obisk_id) not in old_plan:
+                    print("Ta obisk ni v bazi")
+                    plan = Plan(planirani_obisk_id=obisk_id)
+                    plan.save()
+        else:
+            pk_plan = [i[0] for i in plan_visit_list]
+            results = list(map(int, pk_plan))
+            for i in old_plan:
+                if i not in results:
+                    print("Ta obisk ni v planu")
+                    plan = Plan.objects.get(planirani_obisk_id=str(i)).delete()
+                    #plan.save()
+        #old_plan = plan_visit_list
     else:
        visit_form = plan_visit_form()
     """

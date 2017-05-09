@@ -34,15 +34,49 @@
             <label class="form-control-static">Bolezen</label>
             <input type="text" value="{{ t.delovni_nalog.bolezen.ime }}" disabled class="form-control">
             </div>
-           <!-- <div>
-            <label class="form-control-static" >Obveznost obiska</label>
-            <input type="text" value="{{ t.delovni_nalog.obveznost_obiska }}" disabled class="form-control">
+             <div>
+            <label class="form-control-static">Datumi obiskov</label>
+                 {%for o in obisk %}
+                     {%  if o.obvezen_obisk == 1 %}
+                            <input type="text" value="{{o.datum|date:'d.m.Y' }}  Obvezen" disabled class="form-control">
+                     {%  else %}
+                         <input type="text" value="{{o.datum|date:'d.m.Y' }}  Okviren" disabled class="form-control">
+                     {%  endif %}
+                {%  endfor %}
+            <!--<input type="text" value="{{ t.delovni_nalog.datum_prvega_obiska|date:'d.m.Y' }}" disabled class="form-control">-->
+            <!-- <input type="text" value="{{ t.delovni_nalog.obveznost_obiska }}" disabled class="form-control">-->
             </div>
             <div>
-            <label class="form-control-static">Datum</label>
-            <input type="text" value="{{ t.delovni_nalog.cas_obiskov_tip }}" disabled class="form-control">
-            </div>
-            -->
+               <label class="form-control-static" >Število obiskov</label>
+                <input type="text" value="{{ t.delovni_nalog.st_obiskov }}" disabled class="form-control">
+
+                </div>
+           {%  if t.delovni_nalog.cas_obiskov_tip == "Interval" %}
+                <div>
+                <label class="form-control-static" >Časovni interval</label>
+                <input type="text" value="{{ interval }}" disabled class="form-control">
+                </div>
+                <div>
+               <label class="form-control-static" >Časovno obdobje</label>
+                <input type="text" value="{{ period }}" disabled class="form-control">
+
+                </div>
+           {%  else %}
+               <div>
+                <label class="form-control-static" >Časovni interval</label>
+                <input type="text" value="{{ interval }}" disabled class="form-control">
+                </div>
+                <div>
+               <label class="form-control-static" >Časovno obdobje</label>
+                <input type="text" value="{{ period }}" disabled class="form-control">
+
+                </div>
+           {%  endif %}
+
+
+
+
+
 
     {%  endif %}
 {%  endfor %}

@@ -116,7 +116,15 @@ def plan_list_ajax(request):
         else:
             global global_plan
             global_plan = []
-            visit_list = Obisk.objects.select_related().filter(p_sestra_id=nurse.id).order_by('datum')
+            if not fill_in:
+                print("BREZ NADOMESCANJA PLAN JE PRAZEN")
+                visit_list = Obisk.objects.select_related().filter(p_sestra_id=nurse.id).order_by('datum')
+            else:
+                # vključi obiske sestre, ki jo nadomesca
+                print("NADOMESCANJE, PLAN JE PRAZEN")
+                visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id=absent_id)).order_by('datum')
+
+
 
         print("Visit list "+str(len(visit_list)))
         visit_list = replace_datum_type(visit_list,0)

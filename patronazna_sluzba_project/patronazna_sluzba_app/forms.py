@@ -192,4 +192,4 @@ class ChangePasswordForm(forms.Form):
 class plan_visit_form(forms.Form):
     visit_list = forms.MultipleChoiceField(required=False, label='Neopravljeni obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control','id':'visit_list'}))
     plan_list = forms.MultipleChoiceField(required=False, label='Izbrani obiski',choices=[],widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
-    date_picker = forms.DateField(label='Izberi datum',widget=forms.TextInput(attrs={'class': 'datepicker form-control', 'id': 'date_picker'}),input_formats=['%d.%m.%Y'])
+    date_picker = forms.DateField(required=False,label='Izberi datum',widget=forms.TextInput(attrs={'class': 'datepicker form-control', 'id': 'date_picker'}),input_formats=['%d.%m.%Y'])

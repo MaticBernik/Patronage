@@ -24,7 +24,7 @@ $(document).ready(function(){
         //alert("Neopravljeni "+$('#visit_list option:selected').val()+' Opravljeni '+$('#id_plan_list option:selected').val());
         var selected_data;
         if($('#visit_list option:selected').val()!=undefined){
-            alert("NOT nULL");
+            //alert("NOT nULL");
             selected_data = $('#visit_list option:selected').val();
         }else if($('#id_plan_list option:selected').val() != undefined){
             selected_data = $('#id_plan_list option:selected').val();

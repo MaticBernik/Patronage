@@ -17,14 +17,13 @@ $(document).ready(function(){
 
 
         $('#confirm_plan').click(function(e){
-        e.preventDefault();
         alert("Confirm Plan");
-        $("#id_plan_list").each(function(){
-            $(this).prop('selected',true);
+        $("#id_plan_list option").each(function(){
+            $(this).prop("selected",true);
         });
         	var form = $(this).parents('form');
         	form.submit();
-
+        });
 
 
 });

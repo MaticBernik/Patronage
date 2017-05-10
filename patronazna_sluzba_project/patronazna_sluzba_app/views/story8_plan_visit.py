@@ -61,12 +61,15 @@ def plan_list_ajax(request):
     if request.method == 'POST':
         #print("INSIDE POST BEFORE DATUM: ")
         datum = request.POST['datum']
-        datum_format = datum.split('.')
-        print("INSIDE POST: " + str(datum_format))
-        datum = datum_format[2]+'-'+datum_format[1]+'-'+datum_format[0]
-        print("INSIDE POST: " + datum)
+        if datum != '':
+            datum_format = datum.split('.')
+            print("INSIDE POST: " + str(datum_format))
+            datum = datum_format[2]+'-'+datum_format[1]+'-'+datum_format[0]
+            print("INSIDE POST: " + datum)
+        else:
+            datum = datetime.now().date()
     else:
-        datum = ''
+        datum = datetime.now().date()
        #sestra za okoliš 18 vsi pacienti razen tone
     if is_nurse(request.user):
         nurse_profile_id = User.objects.get(username=request.user)
@@ -138,8 +141,8 @@ def plan_list_ajax(request):
                 print(str(i.planirani_obisk))
 
 
-            for i in planned_visits:
-                print(i.p_sestra_id)
+            #for i in planned_visits:
+             #   print(i.p_sestra_id)
                 #print(i.planirani_obisk_id)
         else:
             global global_plan
@@ -221,6 +224,8 @@ def plan_visit_view(request):
             #izbrisi obiske ki odstranjene
             pk_plan = [i[0] for i in plan_visit_list]
             results = list(map(int, pk_plan))
+            print("RESULTS: ")
+            print(pk_plan)
             for i in old_plan:
                 if i not in results:
                     print("Ta obisk ni v planu")
@@ -231,7 +236,17 @@ def plan_visit_view(request):
                 print('Plan: '+obisk_id)
                 if int(obisk_id) not in old_plan:
                     print("Ta obisk ni v bazi")
-                    plan = Plan(planirani_obisk_id=obisk_id)
+                    #preveri za vikend 0-monday 4 friday
+                    day = datetime.today().weekday()
+                    #friday
+                    if day == 4:
+                        plan = Plan(planirani_obisk_id=obisk_id,datum = datetime.now()+timedelta(days=3))
+                    elif day == 5:
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=2))
+                    elif day == 6:
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=1))
+                    else:
+                        plan = Plan(planirani_obisk_id=obisk_id)
                     plan.save()
     else:
        visit_form = plan_visit_form()

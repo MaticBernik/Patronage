@@ -106,7 +106,7 @@ $(document).ready(function(){
         //parse the value
       $("#visit_list > option").each(function () {
         var plan_data = plan_data = $(this).val().split(' ');
-        var plan_option =$(this).text().split('\\t');
+        //var plan_option =$(this).text().split('\\t');
         //alert(/\t/ +"This is data updated: "+plan_data.indexOf(/\t/));
           //alert("values: "+plan_data+"\ntext: "+plan_option[0]);
 
@@ -159,7 +159,7 @@ function mandatoryDate(datum) {
    // alert("inside datum ");
 
 	if(datum ==''){
-	    alert("Datum je prazenk");
+	    alert("Datum je prazen");
 		return false;
 	}
     //alert("inside datum  2");

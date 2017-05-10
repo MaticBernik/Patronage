@@ -13,7 +13,7 @@ from math import floor
 global_plan=[]
 global_nurse_id = 0
 old_plan = []
-main_nurse_id = -1
+main_nurse = None
 def work_task_plan(request):
     if request.method == 'POST':
 
@@ -48,8 +48,8 @@ def work_task_plan(request):
     medicine = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=visit_list)
     print('QUERY RESULT: '+str(task_fk)+'    '+str(material)+'  '+str(medicine))
    # task = Posta.objects.all()[1:10]
-    global main_nurse_id
-    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse_id':main_nurse_id})
+    global main_nurse
+    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse':main_nurse})
 
 def is_nurse(user):
     if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
@@ -76,8 +76,7 @@ def plan_list_ajax(request):
         global old_plan
         old_plan = plan_list
 
-        global  main_nurse_id
-        main_nurse_id = nurse.id
+
 
         """
          for field in Plan._meta.fields:
@@ -90,6 +89,9 @@ def plan_list_ajax(request):
         #SE NEOPRAVLJENI OBISKI
         print("Sestra profil "+str(is_nurse(request.user))+' nurse profile id: '+str(nurse_profile_id.id))
         nurse=Patronazna_sestra.objects.get(uporabniski_profil_id =nurse_profile_id)
+        #trenutna sestra rabimo pri izpisu nadomestne sestre
+        global main_nurse
+        main_nurse = nurse
 
         #HARDCODE ABSENT NURSE ID
         try:
@@ -176,11 +178,11 @@ def plan_list_ajax(request):
     else:
         visit_list = []
 
-    main_nurse_id = nurse.id
+   # main_nurse_id = nurse.id
     global global_nurse_id
     global_nurse_id = nurse.id
 
-    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':main_nurse_id})
+    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id})
 
 def replace_datum_type(list,n):
     if n != 1:

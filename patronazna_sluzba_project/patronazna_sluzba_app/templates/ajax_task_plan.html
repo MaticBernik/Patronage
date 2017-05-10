@@ -13,7 +13,7 @@
 {%  endfor %}
 {%for o in obisk %}
     {% if forloop.first  %}
-        {% if o.p_sestra_id == main_nurse_id  %}
+        {% if o.p_sestra_id == main_nurse.id  %}
             <div>
             <label class="form-control-static">Medicinska sestra</label>
             <input type="text" value="{{o.p_sestra.uporabniski_profil.first_name }}  {{ o.p_sestra.uporabniski_profil.last_name }}" disabled class="form-control">
@@ -22,9 +22,9 @@
         {%  else %}
             <div>
             <label class="form-control-static">Nadomestna sestra</label>
-            <input type="text" value="{{o.p_sestra.uporabniski_profil.first_name }}  {{ o.p_sestra.uporabniski_profil.last_name }}" disabled class="form-control">
+            <input type="text" value="{{main_nurse.uporabniski_profil.first_name }}  {{ main_nurse.uporabniski_profil.last_name }}" disabled class="form-control">
             </div>
-
+         {%  endif %}
     {%  endif %}
 {%  endfor %}
 {% for t in task %}
@@ -42,7 +42,7 @@
             <input type="text" value="{{ t.delovni_nalog.bolezen.ime }}" disabled class="form-control">
             </div>
              <div>
-            <label class="form-control-static">Datumi obiskov</label>
+            <label class="form-control-static">Predvidevani datumi obiskov</label>
                  {%for o in obisk %}
                      {%  if o.obvezen_obisk == 1 %}
                             <input type="text" value="{{o.datum|date:'d.m.Y' }}  Obvezen" disabled class="form-control">

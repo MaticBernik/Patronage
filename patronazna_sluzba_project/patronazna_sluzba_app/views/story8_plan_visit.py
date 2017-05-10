@@ -57,7 +57,7 @@ def is_nurse(user):
     return False
 
 def plan_list_ajax(request):
-
+    global global_plan
     if request.method == 'POST':
         #print("INSIDE POST BEFORE DATUM: ")
         datum = request.POST['datum']
@@ -124,7 +124,7 @@ def plan_list_ajax(request):
 
             print("Query result")
             #add to global plan
-            global global_plan
+
 
 
 
@@ -145,7 +145,7 @@ def plan_list_ajax(request):
              #   print(i.p_sestra_id)
                 #print(i.planirani_obisk_id)
         else:
-            global global_plan
+
             global_plan = []
             if not fill_in:
                 print("BREZ NADOMESCANJA PLAN JE PRAZEN")

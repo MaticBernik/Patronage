@@ -13,6 +13,7 @@ from math import floor
 global_plan=[]
 global_nurse_id = 0
 old_plan = []
+main_nurse_id = -1
 def work_task_plan(request):
     if request.method == 'POST':
 
@@ -47,7 +48,8 @@ def work_task_plan(request):
     medicine = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=visit_list)
     print('QUERY RESULT: '+str(task_fk)+'    '+str(material)+'  '+str(medicine))
    # task = Posta.objects.all()[1:10]
-    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period})
+    global main_nurse_id
+    return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse_id':main_nurse_id})
 
 def is_nurse(user):
     if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
@@ -73,6 +75,9 @@ def plan_list_ajax(request):
         plan_list = Plan.objects.values_list('planirani_obisk_id',flat=True)
         global old_plan
         old_plan = plan_list
+
+        global  main_nurse_id
+        main_nurse_id = nurse.id
 
         """
          for field in Plan._meta.fields:

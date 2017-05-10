@@ -13,8 +13,15 @@
 {%  endfor %}
 {%for o in obisk %}
     {% if forloop.first  %}
+        {% if o.p_sestra_id == main_nurse_id  %}
             <div>
             <label class="form-control-static">Medicinska sestra</label>
+            <input type="text" value="{{o.p_sestra.uporabniski_profil.first_name }}  {{ o.p_sestra.uporabniski_profil.last_name }}" disabled class="form-control">
+            </div>
+
+        {%  else %}
+            <div>
+            <label class="form-control-static">Nadomestna sestra</label>
             <input type="text" value="{{o.p_sestra.uporabniski_profil.first_name }}  {{ o.p_sestra.uporabniski_profil.last_name }}" disabled class="form-control">
             </div>
 

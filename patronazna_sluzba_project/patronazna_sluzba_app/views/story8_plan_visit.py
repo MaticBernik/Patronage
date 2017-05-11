@@ -77,7 +77,7 @@ def plan_list_ajax(request):
         # OBISKI KI SO V PLANU
         plan_list = Plan.objects.values_list('planirani_obisk_id',flat=True)
         global old_plan
-        old_plan = Plan.objects.filter(datum__icontains=(datetime.now().date() + timedelta(days=1))).values_list('planirani_obisk_id',flat=True)
+        old_plan = Plan.objects.filter(datum__icontains=datum).values_list('planirani_obisk_id',flat=True) #(datetime.now().date() + timedelta(days=1))
         print("=========================================")
         print("=========OLD PLAN============")
         print(old_plan)
@@ -215,12 +215,23 @@ def ajax_added_to_plan(request):
 
 def plan_visit_view(request):
     if request.method == "POST":
-        print('============================================================')
-        print('============AFTER FORM POST METHOD=====================')
-        print('============================================================')
         visit_form = plan_visit_form(request.POST)
         plan_visit_list = request.POST.getlist('plan_list')
-        plan = None
+        my_date = request.POST['date_picker']
+        print('============================================================')
+        print('============AFTER FORM POST METHOD=====================')
+        print(my_date)
+        print('============================================================')
+
+       # plan = None
+        if my_date != '':
+            datum_format = my_date.split('.')
+            print("INSIDE POST: " + str(datum_format))
+            datum = datum_format[2]+'-'+datum_format[1]+'-'+datum_format[0]
+            print("INSIDE POST: " + datum)
+            datum = datetime.strptime(datum, "%Y-%m-%d") + timedelta(hours=2)
+        else:
+            datum = datetime.now().date() + timedelta(days=1)
 
         global old_plan
        # print("OLDPLAN BEFORE: " + str(old_plan))
@@ -240,7 +251,7 @@ def plan_visit_view(request):
 
                 if i not in results:
                     print("Ta obisk ni v planu")
-                    plan = Plan.objects.get(planirani_obisk_id=str(i)).delete()
+                    Plan.objects.get(planirani_obisk_id=str(i)).delete()
             #shrani nove obiske
             for i in plan_visit_list:
                 obisk_id = i.split(' ', 1)[0]
@@ -251,14 +262,22 @@ def plan_visit_view(request):
                     day = datetime.today().weekday()
                     #friday
                     if day == 4:
-                        plan = Plan(planirani_obisk_id=obisk_id,datum = datetime.now()+timedelta(days=3))
+                        plan = Plan(planirani_obisk_id=obisk_id,datum = datetime.now()+timedelta(days=3, hours=2))
                     elif day == 5:
-                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=2))
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=2,hours=2))
                     elif day == 6:
-                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=1))
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=1 ,hours=2))
                     else:
-                        plan = Plan(planirani_obisk_id=obisk_id)
+                        plan = Plan(planirani_obisk_id=obisk_id,datum = datum)
                     plan.save()
+        else:
+            print("======================================")
+            print("=======BRISEMO PLAN======")
+            print("======================================")
+            for i in old_plan:     #empty plan visit list =6 pk=6
+                 Plan.objects.get(planirani_obisk_id=str(i)).delete()
+
+
     else:
        visit_form = plan_visit_form()
     """

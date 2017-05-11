@@ -266,9 +266,43 @@ with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 		else:
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
 
+#Delovni nalogi
+#with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
+with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
+	dn_reader = csv.reader(dn_file, delimiter=';')
+	next(dn_reader, None)  # skip header
+	for line in dn_reader:
+			datum=datetime.strptime(line[1],"%d.%m.%Y")
+			cursor = conn.execute("select id from patronazna_sluzba_app_vodja_PS where sifra_vodje_PS=" + str(line[8]) + ";")
+			vodjePS = cursor.fetchall()
+			if len(vodjePS) == 0:
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, zdravnik_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]), line[3], int(line[4]), int(line[5]), line[6], int(line[7]), int(line[8])));
+			else:
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]),int(line[8])));
 
+#Pacienti na delovnih nalogih
+# with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
+with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
+	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
+	next(pacientiDN_reader, None)  # skip header
+	for line in pacientiDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
 
+#Material na delovnih nalogih
+#with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
+with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
+	materialDN_reader = csv.reader(materialDN_file, delimiter=';')
+	next(materialDN_reader, None)  # skip header
+	for line in materialDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_material_DN (delovni_nalog_id, material_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 
+#Zdravila na delovnih nalogih
+#with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #encoding="utf8"
+with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
+	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
+	next(zdravilaDN_reader, None)  # skip header
+	for line in zdravilaDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_zdravila_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 
 conn.commit()
 conn.close()

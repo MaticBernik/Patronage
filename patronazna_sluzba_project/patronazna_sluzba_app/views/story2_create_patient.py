@@ -80,7 +80,7 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
                         patient.save()
 
 
-                        sorodstvo = Sorodstveno_razmerje(kontaktna_oseba=contact, pacient=patient, tip_razmerja=sorodstveno_razmerje)
+                        sorodstvo = Sorodstveno_razmerje(kontakt=contact, pacient_id=patient, tip_razmerja=sorodstveno_razmerje)
                         sorodstvo.save()
 
                         print("user created")

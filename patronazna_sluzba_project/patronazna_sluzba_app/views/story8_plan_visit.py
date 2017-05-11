@@ -66,10 +66,26 @@ def plan_list_ajax(request):
             print("INSIDE POST: " + str(datum_format))
             datum = datum_format[2]+'-'+datum_format[1]+'-'+datum_format[0]
             print("INSIDE POST: " + datum)
+            #datum_plan = datum
         else:
             datum = datetime.now().date()
+            #datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
     else:
-        datum = datetime.now().date()
+        datum = request.GET['datum']
+        if datum != '':
+            datum_format = datum.split('.')
+            print("INSIDE POST: " + str(datum_format))
+            datum = datum_format[2] + '-' + datum_format[1] + '-' + datum_format[0]
+            print("INSIDE POST: " + datum)
+            # datum_plan = datum
+        else:
+            datum = datetime.now().date()
+            # datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
+
+        print("----------------GET DATUM-------------")
+        print(datum)
+       # datum = datetime.now().date()
+        #datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
        #sestra za okoliš 18 vsi pacienti razen tone
     if is_nurse(request.user):
         nurse_profile_id = User.objects.get(username=request.user)
@@ -231,7 +247,9 @@ def plan_visit_view(request):
             print("INSIDE POST: " + datum)
             datum = datetime.strptime(datum, "%Y-%m-%d") + timedelta(hours=2)
         else:
-            datum = datetime.now().date() + timedelta(days=1)
+            datum = datetime.now() + timedelta(hours=2)
+            print("=================DATUM NOW============")
+            print(datum)
 
         global old_plan
        # print("OLDPLAN BEFORE: " + str(old_plan))
@@ -268,11 +286,13 @@ def plan_visit_view(request):
                     elif day == 6:
                         plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=1 ,hours=2))
                     else:
+                        print("==================INSIDE ELSE==============")
+                        print(datum)
                         plan = Plan(planirani_obisk_id=obisk_id,datum = datum)
                     plan.save()
         else:
             print("======================================")
-            print("=======BRISEMO PLAN======")
+            print("=======BRISEMO PLANA======")
             print("======================================")
             for i in old_plan:     #empty plan visit list =6 pk=6
                  Plan.objects.get(planirani_obisk_id=str(i)).delete()

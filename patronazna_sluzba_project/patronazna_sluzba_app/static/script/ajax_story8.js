@@ -3,11 +3,12 @@ $(function () {
     // ajax za obisk glede na role
 $(document).ready(function(){
 
-    $.ajax({
+   $.ajax({
 
             type: "GET",
             url: "/visit_list/",
             data: {
+                'datum' : String($("#date_picker").val()),
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
 
@@ -17,12 +18,21 @@ $(document).ready(function(){
 
 
         $('#confirm_plan').click(function(e){
-        alert("Confirm Plan");
+        //alert("Confirm Plan");
+            e.preventDefault();
         $("#id_plan_list option").each(function(){
             $(this).prop("selected",true);
         });
-        	var form = $(this).parents('form');
-        	form.submit();
+        //alert("BEFORE IF");
+        if(editPossible(String($("#date_picker").val()))){
+            	var form = $(this).parents('form');
+        	    form.submit();
+        }/*else{
+            e.preventDefault();
+            sweetAlert("Napaka","Forma ni poslana","error");
+        }*/
+        //alert("AFTER IF");
+
         });
 
 
@@ -103,6 +113,10 @@ $(document).ready(function(){
     //Obvezne obiske dodaj v plan
     $( document ).ajaxStop(function() {
      // alert("Document is ready ajax");
+
+        if(String($("#date_picker").val()) == ''){
+             $("#date_picker").datepicker('setDate', new Date());
+        }
         //parse the value
       $("#visit_list > option").each(function () {
         var plan_data = plan_data = $(this).val().split(' ');
@@ -112,7 +126,9 @@ $(document).ready(function(){
 
 
         //alert("Datum: "+plan_data[3] +' mandadatory date: '+ mandatoryDate(plan_data[3]));
-        if(plan_data[2] == "Obvezen" && mandatoryDate(plan_data[3])) {
+
+
+        if(plan_data[2] == "Obvezen" && mandatoryDate(plan_data[3]) && plan_data[3] == String($("#date_picker").val()) ) {
           //alert("This is data: "+plan_data[1]);
            $(this).remove().appendTo("#id_plan_list");
          }
@@ -120,6 +136,14 @@ $(document).ready(function(){
             //rearrangeList("#list2");
         });
     });
+
+        //show plan based on datum change
+        /*$('#date_picker').on('change', function () {
+            alert("CHANGE DETECTED");
+            sweetAlert("Sprememba","Izbran datum","warning");
+            //myAjaxCall();
+        });*/
+
 
 });
 
@@ -151,11 +175,11 @@ function plannedListSuccess(data, textStatus, jqXHR) {
 
 function mandatoryDate(datum) {
     //alert("inside datum "+datum);
-    var tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate()+1);
-	var day1 = tomorrow.getDate();
-	var month1 = (tomorrow.getMonth()+1);
-	var year1 = tomorrow.getFullYear();
+    var today = new Date();
+    //today.setDate(today.getDate());
+	var day1 = today.getDate();
+	var month1 = (today.getMonth()+1);
+	var year1 = today.getFullYear();
    // alert("inside datum ");
 
 	if(datum ==''){
@@ -164,7 +188,7 @@ function mandatoryDate(datum) {
 	}
     //alert("inside datum  2");
 	var mandatory = datum.split(".");
-	//alert("tomorrow:"+firstVisit[2]);
+	//alert("today:"+firstVisit[2]);
 	/*if(mandatory[2]<year1){
 		return false;
 	}
@@ -174,7 +198,7 @@ function mandatoryDate(datum) {
     */
 	//alert("inside datum "+mandatory);
 	if(mandatory[2] == year1 && mandatory[1] == month1 && mandatory[0] == day1){
-		//alert("datum matches with tomorrow!");
+		//alert("datum matches with today!");
 
 		return true;
 	}

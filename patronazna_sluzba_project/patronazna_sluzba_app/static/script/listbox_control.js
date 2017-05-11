@@ -3,18 +3,27 @@ $(function () {
 
 
     $("#add_plan").click(function () {
-       // alert("BEFORE");
-        var plan_date = String($("#id_plan_list").find("option:first-child").val());
+        if($("#id_plan_list").find("option:first-child").val() != undefined){
+            var plan_date = String($("#id_plan_list").find("option:first-child").val());
+
         plan_date = plan_date.split(' ');
         plan_date = plan_date [3];
         //
         // alert("AFTER "+plan_date );
-        if(editPossible(plan_date)){
+            if(editPossible(plan_date)){
+                 $("#visit_list > option:selected").each(function () {
+                    $(this).remove().appendTo("#id_plan_list");
+                    //rearrangeList("#list2");
+                });
+            }
+        }else{
              $("#visit_list > option:selected").each(function () {
-                $(this).remove().appendTo("#id_plan_list");
-                //rearrangeList("#list2");
-            });
+                    $(this).remove().appendTo("#id_plan_list");
+                    //rearrangeList("#list2");
+                });
         }
+
+
 
     });
 

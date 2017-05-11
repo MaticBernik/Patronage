@@ -77,7 +77,12 @@ def plan_list_ajax(request):
         # OBISKI KI SO V PLANU
         plan_list = Plan.objects.values_list('planirani_obisk_id',flat=True)
         global old_plan
-        old_plan = plan_list
+        old_plan = Plan.objects.filter(datum__icontains=(datetime.now().date() + timedelta(days=1))).values_list('planirani_obisk_id',flat=True)
+        print("=========================================")
+        print("=========OLD PLAN============")
+        print(old_plan)
+        print((datetime.now().date() + timedelta(days=1)))
+        print("=========================================")
 
 
 
@@ -210,6 +215,9 @@ def ajax_added_to_plan(request):
 
 def plan_visit_view(request):
     if request.method == "POST":
+        print('============================================================')
+        print('============AFTER FORM POST METHOD=====================')
+        print('============================================================')
         visit_form = plan_visit_form(request.POST)
         plan_visit_list = request.POST.getlist('plan_list')
         plan = None
@@ -226,7 +234,10 @@ def plan_visit_view(request):
             results = list(map(int, pk_plan))
             print("RESULTS: ")
             print(pk_plan)
-            for i in old_plan:
+            print("OLD PLAN VAL: ")
+            print(old_plan)
+            for i in old_plan:     #empty plan visit list =6 pk=6
+
                 if i not in results:
                     print("Ta obisk ni v planu")
                     plan = Plan.objects.get(planirani_obisk_id=str(i)).delete()

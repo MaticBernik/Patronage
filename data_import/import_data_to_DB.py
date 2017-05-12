@@ -386,7 +386,7 @@ with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #enco
 	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
 	next(zdravilaDN_reader, None)  # skip header
 	for line in zdravilaDN_reader:
-		conn.execute("INSERT INTO patronazna_sluzba_app_zdravila_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 
 
 

@@ -251,6 +251,12 @@ class Vrsta_obiska(models.Model):
         else:
             self.tip=self.TIP_OBISKA[1]
 
+    def __unicode__(self):
+        return str(self.sifra)+" "+self.ime
+
+    def __str__(self):
+        return str(self.sifra) + " " + self.ime
+
 
 class Meritev(models.Model): #Oz. bolje receno aktivnost?
     class Meta:

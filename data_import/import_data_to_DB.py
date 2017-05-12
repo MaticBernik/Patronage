@@ -3,7 +3,7 @@
 
 import sqlite3
 import csv
-from datetime import datetime
+from datetime import datetime,timedelta
 import os
 import hashlib
 import uuid
@@ -266,6 +266,97 @@ with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 		else:
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
 
+
+# Metoda, ki delovnim nalogom v bazi kreira pripadajoce obiske
+def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, date_current):
+	# if we have interval type of visitation
+	if type == 'Interval':
+		for i in range(int(number_of_visits)):
+			obveznost = random.choice(['Obvezen', 'Okviren'])
+
+			date_next = date_current + timedelta(days=int(interval_period))
+			weekno = date_next.weekday()
+			if weekno == 6 or weekno == 0:
+				date_next = date_next + timedelta(days=2)
+				weekno = date_next.weekday()
+			cursor = conn.execute("select pacient_id from patronazna_sluzba_app_pacient_DN where delovni_nalog_id=" + str(delovni_nalog_id) + ";");
+			pacient = cursor.fetchall()[0][0]
+			print(pacient)
+			cursor = conn.execute("select okolis_id from patronazna_sluzba_app_pacient where st_kartice='" + pacient + "';");
+			okolis = cursor.fetchall()
+			print(okolis)
+			okolis=okolis[0][0]
+			cursor = conn.execute(
+				"select id from patronazna_sluzba_app_patronazna_sestra where okolis_id=" + str(okolis) + ";")
+			p_sestra = cursor.fetchall()[0][0]
+			# p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+			obv = 0
+			if obveznost == "Obvezen":
+				obv = 1
+				obveznost = "Okviren"
+
+			# visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
+			# visit.save()
+			conn.execute(
+				"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id) VALUES (?,?,?,?)",
+				(delovni_nalog_id, date_current, obv, p_sestra));
+
+			date_current = date_next
+			print("Obisk shranjen (INTERVAL); datum: ", date_current)
+	else:
+		# space = number of days so that visits are the most balanced throughout the period
+		space = int(interval_period / number_of_visits)
+		for i in range(int(number_of_visits)):
+			obveznost = random.choice(['Obvezen', 'Okviren'])
+
+			#   If there are 1 or more days between visits
+			if int(interval_period) >= int(number_of_visits):
+				date_next = date_current + timedelta(days=int(space))
+				#   check if its weekend
+				weekno = date_next.weekday()
+
+				if weekno == 6 or weekno == 0:
+					date_next = date_next + timedelta(days=2)
+					weekno = date_next.weekday()
+
+				# find the appropriate nurse for the county
+				# p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+				cursor = conn.execute(
+					"select pacient_id from patronazna_sluzba_app_pacient_DN where delovni_nalog_id=" + str(
+						delovni_nalog_id) + ";");
+				pacient = cursor.fetchall()[0][0]
+				cursor = conn.execute(
+					"select okolis_id from patronazna_sluzba_app_pacient where st_kartice=" + str(
+						pacient) + ";");
+				okolis = cursor.fetchall()[0][0]
+				cursor = conn.execute(
+					"select id from patronazna_sluzba_app_patronazna_sestra where okolis_id=" + str(
+						okolis) + ";")
+				p_sestra = cursor.fetchall()[0][0]
+
+				print("p_sestra", p_sestra)
+				#   check if the first visit is mandatory on that day
+				obv = 0
+				if obveznost == "Obvezen":
+					obv = 1
+					obveznost = "Okviren"
+
+				# visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
+				# visit.save()
+				conn.execute(
+					"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id) VALUES (?,?,?,?)",
+					(delovni_nalog_id, date_current, obv, p_sestra));
+				date_current = date_next
+				print("Obisk shranjen (OBDOBJE); datum: ", date_current)
+
+# Pacienti na delovnih nalogih
+# with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
+with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
+	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
+	next(pacientiDN_reader, None)  # skip header
+	for line in pacientiDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
+
 #Delovni nalogi
 #with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
 with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
@@ -279,14 +370,7 @@ with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
 				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, zdravnik_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]), line[3], int(line[4]), int(line[5]), line[6], int(line[7]), int(line[8])));
 			else:
 				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]),int(line[8])));
-
-#Pacienti na delovnih nalogih
-# with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
-with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
-	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
-	next(pacientiDN_reader, None)  # skip header
-	for line in pacientiDN_reader:
-		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
+			kreiraj_obiske(int(line[0]), int(line[4]), line[3], int(line[2]), datum)
 
 #Material na delovnih nalogih
 #with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
@@ -303,6 +387,11 @@ with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
 	next(zdravilaDN_reader, None)  # skip header
 	for line in zdravilaDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravila_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+
+
+
+
+
 
 conn.commit()
 conn.close()

@@ -11,7 +11,7 @@ from django.template import Context, loader, RequestContext
 from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
-from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm
+from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterWorkTasksForm
 from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN
 import csv
 import django.contrib.auth
@@ -28,6 +28,11 @@ def is_leader_ps(user):
         return True
     return False
 
+def is_nurse(user):
+    if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
+        return True
+    return False
+
 def list_work_task(request):
     uporabnik = request.user
     obiski = Obisk.objects
@@ -37,6 +42,9 @@ def list_work_task(request):
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.filter(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj)
+    elif is_nurse(uporabnik):
+        nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
+        #DODAJ FILTER
     else:
         print("ERROR!!")
         return
@@ -53,7 +61,11 @@ def list_work_task(request):
         delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
     #if request.filter_patronazna_sestra
 
+    filter_form = FilterWorkTasksForm()
     obiski = Obisk.objects.all()
-    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk'}
+    #  FORM QUERY SET
+    # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
+
+    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
     return render(request, 'work_task_list.html', context)
 

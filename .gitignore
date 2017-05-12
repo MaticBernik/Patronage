@@ -109,3 +109,4 @@ ENV/
 # mkdocs documentation
 /site
 *.sqlite3
+patronazna_sluzba_project/db.sqlite3

@@ -153,12 +153,26 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Podrobnosti delovnega naloga</h4>
+		  <hr>
         </div>
 			{% if work_task_list %}
 				{% for work_task in work_task_list %}
 				<div class="task_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{work_task.id}}">
 
+					<div class ="row">
+						<label style="float: left;">PACIENT:</label>
+							{% for pac in pacient %}
 
+								{% if pac.delovni_nalog.id == work_task.id %}
+									<!--	WE HAVE JUST FOUND OUR VISIT -->
+									<div class="row">
+										<p style="float: right; text-align: center;">{{pac.pacient.priimek}}</p>
+										<p style="float: left; text-align: center;">{{pac.pacient.ime }}</p>
+									</div>
+								{% endif %}
+							{% endfor %}
+							<hr>
+					</div>
 					<div class ="row" style="background-color: PowderBlue;">
 						<label style="float: left;">Izvajalec ZS:</label>
 						<p  style="float: right;">{{work_task.izvajalec_zs.naziv}}</p>
@@ -170,6 +184,7 @@
 					<div class ="row" style="background-color: PowderBlue;">
 						<label style="float: left;">Sifra zdravnika / vodje PS:</label>
 						<p style="float: right;">
+						<!--<p>{{work_task.zdravnik}} {{work_task.vodja_PS}}</p>-->
 						{% if work_task.zdravnik %}
 							{{work_task.zdravnik.sifra_zdravnika }}
 						{% endif %}
@@ -197,18 +212,50 @@
 						<label style="float: left;">Stevilo obiskov:</label>
 						<p style="float: right;">{{work_task.st_obiskov}}</p>
 					</div>
-
+					<hr>
+					<div class ="row">
+						<label style="float: left;">Seznam obiskov:</label>
+					</div>
 					{% for v in visits_list %}
-						<div class ="row">
-							<label style="float: left;">Seznam obiskov:</label>
-						</div>
+
 						{% if v.delovni_nalog.id == work_task.id %}
-							<p>Obisk d.id: {{v.delovni_nalog.id}}, work_task: {{work_task.id}}</p>
 							<!--	WE HAVE JUST FOUND OUR VISIT -->
-							<p style="float: center; text-align: center;">{{v.datum}}</p>
-							<p style="float: center; text-align: center;">{{v.p_sestra}}</p>
+							<div class="row">
+							<p style="float: right; text-align: center;">{{v.datum|date:"d.m.Y"}}</p>
+							<p style="float: left; text-align: center;">Patronazna sestra: {{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}</p>
+							</div>
 						{% endif %}
 					{% endfor %}
+					<hr>
+										<div class ="row">
+						<label style="float: left;">Seznam zdravil:</label>
+					</div>
+					{% for med in medications %}
+
+						{% if med.delovni_nalog.id == work_task.id %}
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<div class="row">
+								<p style="float: right; text-align: center;">{{med.kolicina}}</p>
+								<p style="float: left; text-align: center;">{{med.zdravilo.ime }}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+					<hr>
+										<div class ="row">
+						<label style="float: left;">Seznam materiala:</label>
+					</div>
+						
+						{% for mat in material %}
+
+						{% if mat.delovni_nalog.id == work_task.id %}
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<div class="row">
+								<p style="float: right; text-align: center;">{{mat.kolicina}}</p>
+								<p style="float: left; text-align: center;">{{mat.material.ime }}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+					<hr>
 
 				</div>
 				{% endfor %}

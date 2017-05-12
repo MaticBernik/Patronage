@@ -36,7 +36,8 @@ def is_nurse(user):
 def list_work_task(request):
     uporabnik = request.user
     obiski = Obisk.objects
-    if is_doctor(uporabnik):
+    
+    """if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj)
     elif is_leader_ps(uporabnik):
@@ -60,9 +61,10 @@ def list_work_task(request):
         nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
         delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
     #if request.filter_patronazna_sestra
-
+	"""
     filter_form = FilterWorkTasksForm()
     obiski = Obisk.objects.all()
+    delovni_nalogi = Delovni_nalog.objects.all()
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
 

@@ -24,29 +24,32 @@ def navbar_list_processor(request):
         add_nursing_patient_arr = ["link_add_nursing", "Dodajte oskrbovano osebo", "add_nursing", "glyphicon-plus" ]
         change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass", "glyphicon-erase" ]
         create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk", "glyphicon-file" ]
+        
         view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs", "glyphicon-th-list" ]
         view_visitations_arr = ["link_empty", "Pregled obiskov", "v_visits", "glyphicon-th-list" ]
         view_work_tasks_arr = ["link_list_work_task", "Pregled delovnih nalogov", "v_wrk_tsk", "glyphicon-th-list" ]
-
+        
+        visitation_planning_arr = ["link_plan_visit", "Planiranje obiskov", "v_plan_visits", "  glyphicon glyphicon-calendar" ]
+        
         # adapt the list based on user role and task privleges
         if is_admin(user):
             role="Admin"
             link_list = [control_panel_arr, arr_add_medical_staff, change_password_arr]
         elif is_doctor(user):
             role="Zdravnik"
-            link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, view_visitations_arr, change_password_arr]
+            link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, change_password_arr]
         elif is_leader_ps(user):
             role="Vodja PS"
-            link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, view_visitations_arr, change_password_arr]
+            link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, change_password_arr]
         elif is_nurse(user):
             role="medicinska sestra"
-            link_list = [control_panel_arr, create_work_task_arr, view_visitations_arr, view_substitutes_arr, change_password_arr]
+            link_list = [control_panel_arr, view_work_tasks_arr, visitation_planning_arr, change_password_arr]
         elif is_coworker(user):
             role="Sodelavec"
-            link_list = [control_panel_arr, view_visitations_arr, view_substitutes_arr, change_password_arr ]
+            link_list = [control_panel_arr, change_password_arr ]
         else:
             role="Pacient"
-            link_list = [control_panel_arr, view_visitations_arr, add_nursing_patient_arr, change_password_arr ]
+            link_list = [control_panel_arr, add_nursing_patient_arr, change_password_arr ]
         
         oskrbovanci = None
 

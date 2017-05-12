@@ -11,7 +11,7 @@ from django.template import Context, loader, RequestContext
 from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
-from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm
+from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterWorkTasksForm
 from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog
 import csv
 import django.contrib.auth
@@ -30,6 +30,7 @@ def is_leader_ps(user):
 
 def list_work_task(request):
     uporabnik = request.user
+
     # obiski = Obisk.objects
     # if is_doctor(uporabnik):
         # delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=uporabnik)
@@ -39,8 +40,15 @@ def list_work_task(request):
         # print("ERROR!!")
         # return
 
+
+    filter_form = FilterWorkTasksForm()
+
     obiski = Obisk.objects.all()
     delovni_nalogi = Delovni_nalog.objects.all() 
-    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk'}
+
+    #  FORM QUERY SET
+    # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
+
+    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
     return render(request, 'work_task_list.html', context)
 

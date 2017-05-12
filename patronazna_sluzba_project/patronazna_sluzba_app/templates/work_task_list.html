@@ -8,7 +8,15 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+
+
+
+
 	<script type="text/javascript">
+
+
+
 
 	$(document).ready(function() {
 		$('.datepicker').datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
@@ -86,6 +94,7 @@
             		<th>Vrsta obiska</th>
             		<th>Datum prvega obiska</th>
             		<th>Stevilo obiskov</th>
+            		<th></th>
             	</tr>
             	</thead>
             	<tbody>
@@ -97,7 +106,9 @@
             		<td>{{ work_task.vrsta_obiska.ime }}</td>
             		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y" }}</td>
             		<td>{{ work_task.st_obiskov }}</td>
-                </tr>
+            		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
+            		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
+            		<td><button type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" id={{work_task.id}}>Podrobnosti</button></td>
                 {% endfor %}
                 </tbody>
     		</table>
@@ -121,5 +132,29 @@
             </div>
         </div>
     {% endif %}
+
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Podrobnosti delovnega naloga</h4>
+        </div>
+			{% if work_task_list %}
+				{% for work_task in work_task_list %}
+				<p>{{work_task.id}}</p>
+				{% endfor %}
+			{% endif %}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 {% endblock %}

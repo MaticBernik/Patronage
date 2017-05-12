@@ -198,6 +198,18 @@
 						<p style="float: right;">{{work_task.st_obiskov}}</p>
 					</div>
 
+					{% for v in visits_list %}
+						<div class ="row">
+							<label style="float: left;">Seznam obiskov:</label>
+						</div>
+						{% if v.delovni_nalog.id == work_task.id %}
+							<p>Obisk d.id: {{v.delovni_nalog.id}}, work_task: {{work_task.id}}</p>
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<p style="float: center; text-align: center;">{{v.datum}}</p>
+							<p style="float: center; text-align: center;">{{v.p_sestra}}</p>
+						{% endif %}
+					{% endfor %}
+
 				</div>
 				{% endfor %}
 			{% endif %}

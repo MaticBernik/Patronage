@@ -90,7 +90,7 @@ def list_work_task(request):
             delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial = str(nurse.sifra_patronazne_sestre) + " " + nurse.uporabniski_profil.first_name + " " + nurse.uporabniski_profil.last_name
 
-    obiski = Obisk.objects.all()
+    visitations = Obisk.objects.all()
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
     #filter_creator_id
@@ -98,6 +98,6 @@ def list_work_task(request):
     #filter_patient_id
     #filter_visit_type
 
-    context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
+    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
     return render(request, 'work_task_list.html', context)
 

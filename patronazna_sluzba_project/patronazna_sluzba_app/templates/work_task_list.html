@@ -15,14 +15,24 @@
 
 	<script type="text/javascript">
 
-
-
-
 	$(document).ready(function() {
 		$('.datepicker').datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
+		$('.task_expansion').hide();
 	});
 
+	</script>
 
+	<script>
+		function show_work_task(objButton) {
+			$('.task_expansion').hide();
+		    //alert(objButton.value);
+			console.log(objButton.value);
+			button_id = objButton.value;
+			console.log('#button_id')
+			$('#button_id').show();
+			document.getElementById(button_id).style.display="block";
+
+		}
 	</script>
 
 	<h3>Prilagodite seznam</h3>
@@ -108,7 +118,7 @@
             		<td>{{ work_task.st_obiskov }}</td>
             		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
             		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
-            		<td><button type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" id={{work_task.id}}>Podrobnosti</button></td>
+            		<td><button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
                 {% endfor %}
                 </tbody>
     		</table>
@@ -139,14 +149,68 @@
     <div class="modal-dialog">
     
       <!-- Modal content-->
-      <div class="modal-content">
+      <div class="modal-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Podrobnosti delovnega naloga</h4>
         </div>
 			{% if work_task_list %}
 				{% for work_task in work_task_list %}
-				<p>{{work_task.id}}</p>
+				<div class="task_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{work_task.id}}">
+
+
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Izvajalec ZS:</label>
+						<p  style="float: right;">{{work_task.izvajalec_zs.naziv}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Sifra delovnega naloga:</label>
+						<p style="float: right;">{{work_task.id}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Sifra zdravnika / vodje PS:</label>
+						<p style="float: right;">
+						{% if work_task.zdravnik %}
+							{{work_task.zdravnik.sifra_zdravnika }}
+						{% endif %}
+						{% if work_task.vodja_PS %}
+							{{work_task.vodja_PS.sifra_vodje_PS }}
+						{% endif %}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Tip obiska:</label>
+						<p style="float: right;">{{work_task.vrsta_obiska.tip}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Vrsta obiska:</label>
+						<p style="float: right;">{{work_task.vrsta_obiska.ime}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Bolezen:</label>
+						<p style="float: right;">{{work_task.bolezen.ime}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Datum prvega obiska:</label>
+						<p style="float: right;">{{work_task.datum_prvega_obiska|date:"d.m.Y"}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Stevilo obiskov:</label>
+						<p style="float: right;">{{work_task.st_obiskov}}</p>
+					</div>
+
+					{% for v in visits_list %}
+						<div class ="row">
+							<label style="float: left;">Seznam obiskov:</label>
+						</div>
+						{% if v.delovni_nalog.id == work_task.id %}
+							<p>Obisk d.id: {{v.delovni_nalog.id}}, work_task: {{work_task.id}}</p>
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<p style="float: center; text-align: center;">{{v.datum}}</p>
+							<p style="float: center; text-align: center;">{{v.p_sestra}}</p>
+						{% endif %}
+					{% endfor %}
+
+				</div>
 				{% endfor %}
 			{% endif %}
         <div class="modal-footer">

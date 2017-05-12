@@ -36,12 +36,14 @@ def is_nurse(user):
 def list_work_task(request):
     filter_form = FilterWorkTasksForm()
     uporabnik = request.user
+    vklopi_filtre=True
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
+        vklopi_filtre=False
         delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj.sifra_vodje_PS)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_nurse(uporabnik):
@@ -90,6 +92,8 @@ def list_work_task(request):
             delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial = str(nurse.sifra_patronazne_sestre) + " " + nurse.uporabniski_profil.first_name + " " + nurse.uporabniski_profil.last_name
 
+    if not vklopi_filtre:
+        delovni_nalogi=Delovni_nalog.objects.all();
     visitations = Obisk.objects.all()
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)

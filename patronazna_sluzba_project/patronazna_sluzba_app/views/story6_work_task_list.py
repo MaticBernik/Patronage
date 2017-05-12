@@ -61,7 +61,12 @@ def list_work_task(request):
         nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
         delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
     #if request.filter_patronazna_sestra
-	"""
+    """
+    if(request.POST.get("value") == "expand"):
+        print("expand please")
+    print('name' in request.POST)
+
+
     filter_form = FilterWorkTasksForm()
     obiski = Obisk.objects.all()
     delovni_nalogi = Delovni_nalog.objects.all()

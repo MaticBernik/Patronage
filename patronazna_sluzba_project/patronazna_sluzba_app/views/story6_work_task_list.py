@@ -12,7 +12,7 @@ from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
 from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterWorkTasksForm
-from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN
+from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN
 import csv
 import django.contrib.auth
 import logging
@@ -97,7 +97,11 @@ def list_work_task(request):
     #filter_nurse_id
     #filter_patient_id
     #filter_visit_type
-
-    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
+    material = Material_DN.objects.all()
+    zdravila = Zdravilo_DN.objects.all()
+    pacienti = Pacient_DN.objects.all()
+    
+    
+    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'material': material, 'medications': zdravila, 'pacient': pacienti  }
     return render(request, 'work_task_list.html', context)
 

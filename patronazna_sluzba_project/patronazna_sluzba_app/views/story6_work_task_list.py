@@ -42,7 +42,7 @@ def list_work_task(request):
         filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj.sifra_zdravnika)
+        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj.sifra_vodje_PS)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)

@@ -12,7 +12,7 @@ from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
 from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm
-from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog
+from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN
 import csv
 import django.contrib.auth
 import logging
@@ -30,17 +30,30 @@ def is_leader_ps(user):
 
 def list_work_task(request):
     uporabnik = request.user
-    # obiski = Obisk.objects
-    # if is_doctor(uporabnik):
-        # delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=uporabnik)
-    # elif is_leader_ps(uporabnik):
-        # delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=uporabnik)
-    # else:
-        # print("ERROR!!")
-        # return
+    obiski = Obisk.objects
+    if is_doctor(uporabnik):
+        izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj)
+    elif is_leader_ps(uporabnik):
+        izdajatelj=Vodja_PS.objects.filter(uporabniski_profil=uporabnik)
+        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj)
+    else:
+        print("ERROR!!")
+        return
+
+    if request.filter_datum_zacetni:
+        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
+    if request.filter_datum_koncni:
+        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
+    if request.filter_vrsta_obiska:
+        delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.filter_vrsta_obiska)
+    if request.filter_pacient:
+        pacientDN=Pacient_DN.objects.filter(pacient_id=request.filter_pacient)
+        nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
+        delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
+    #if request.filter_patronazna_sestra
 
     obiski = Obisk.objects.all()
-    delovni_nalogi = Delovni_nalog.objects.all() 
     context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk'}
     return render(request, 'work_task_list.html', context)
 

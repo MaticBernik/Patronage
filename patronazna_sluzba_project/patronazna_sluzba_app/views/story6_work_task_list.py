@@ -34,15 +34,19 @@ def is_nurse(user):
     return False
 
 def list_work_task(request):
+    filter_form = FilterWorkTasksForm()
     uporabnik = request.user
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj)
+        filter_form.fields['filter_creator_id'] = izdajatelj
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.filter(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj)
+        filter_form.fields['filter_creator_id'] = izdajatelj
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
+        filter_form.fields['filter_nurse_id']=nurse
         #DODAJ FILTER
     else:
         print("ERROR!!")
@@ -67,9 +71,7 @@ def list_work_task(request):
             delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
         #if request.filter_patronazna_sestra
 
-    filter_form = FilterWorkTasksForm()
     obiski = Obisk.objects.all()
-    delovni_nalogi = Delovni_nalog.objects.all()
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
     #filter_creator_id

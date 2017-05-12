@@ -38,15 +38,20 @@ def list_work_task(request):
     uporabnik = request.user
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj)
-        filter_form.fields['filter_creator_id'] = izdajatelj
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
+        filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.filter(uporabniski_profil=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj)
-        filter_form.fields['filter_creator_id'] = izdajatelj
+        delovni_nalogi = Delovni_nalog.objects.filter(vodja_PS=izdajatelj.sifra_zdravnika)
+        filter_form.fields['filter_creator_id'].initial = izdajatelj
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
-        filter_form.fields['filter_nurse_id']=nurse
+        pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
+        nalogi_vezani_na_pacienta=Pacient_DN.objects.filter(pacient_id__in=pacienti)
+        delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
+        #filter_form.fields['filter_nurse_id']=nurse
+        filter_form.fields['filter_nurse_id'].initial=str(nurse.sifra_patronazne_sestre)+" "+nurse.uporabniski_profil.first_name+" "+nurse.uporabniski_profil.last_name
+
         #DODAJ FILTER
     else:
         print("ERROR!!")
@@ -57,19 +62,33 @@ def list_work_task(request):
         print("ERROR: FORM NOT VALID")
 
     if request.POST:
-        if request.POST['filter_date_from']:
+        if request.POST.get('filter_date_from',0):
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max
-        if request.POST['filter_date_to']:
+            #filter_form.fields['filter_date_from'] = request.POST['filter_date_from']
+            filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
+        if request.POST.get('filter_date_to',0):
             datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__lte=datum) #datetime.min
-        if request.POST['filter_visit_type']:
-            delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST.get('filter_visit_type',''))
-        if request.POST['filter_patient_id']:
-            pacientDN=Pacient_DN.objects.filter(pacient_id=request.POST.get('filter_patient_id',''))
+            #filter_form.fields['filter_date_to'] = request.POST['filter_date_to']
+            filter_form.fields['filter_date_to'].initial = request.POST['filter_date_to']
+        if request.POST.get('filter_visit_type',0):
+            delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST['filter_visit_type'])
+            #filter_form.fields['filter_visit_type'] = request.POST['filter_visit_type']
+            filter_form.fields['filter_visit_type'].initial=request.POST['filter_visit_type']
+        if request.POST.get('filter_patient_id',0):
+            print(type(request.POST['filter_patient_id']))
+            pacientDN=Pacient_DN.objects.filter(pacient_id=request.POST['filter_patient_id'])
             nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
             delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
-        #if request.filter_patronazna_sestra
+            #filter_form.fields['filter_patient_id'] = request.POST['filter_patient_id']
+            filter_form.fields['filter_patient_id'].initial=request.POST['filter_patient_id']
+        if request.POST.get('filter_nurse_id',0):
+            nurse = Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
+            pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
+            nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
+            delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
+            filter_form.fields['filter_nurse_id'].initial = str(nurse.sifra_patronazne_sestre) + " " + nurse.uporabniski_profil.first_name + " " + nurse.uporabniski_profil.last_name
 
     obiski = Obisk.objects.all()
     #  FORM QUERY SET

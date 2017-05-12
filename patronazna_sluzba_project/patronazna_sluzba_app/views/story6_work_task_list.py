@@ -98,10 +98,10 @@ def list_work_task(request):
     #filter_patient_id
     #filter_visit_type
     material = Material_DN.objects.all()
-    zdravila = Zdravilo_DN.objects.all()
+    #zdravila = Zdravilo_DN.objects.all()
     pacienti = Pacient_DN.objects.all()
     
     
-    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'material': material, 'medications': zdravila, 'pacient': pacienti  }
+    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'material': material, 'pacient': pacienti  }
     return render(request, 'work_task_list.html', context)
 

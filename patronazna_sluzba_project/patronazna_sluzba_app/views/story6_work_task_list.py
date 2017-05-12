@@ -48,24 +48,6 @@ def list_work_task(request):
         print("ERROR!!")
         return
 
-
-    if request.filter_datum_zacetni:
-        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
-    if request.filter_datum_koncni:
-        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
-    if request.filter_vrsta_obiska:
-        delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.filter_vrsta_obiska)
-    if request.filter_pacient:
-        pacientDN=Pacient_DN.objects.filter(pacient_id=request.filter_pacient)
-        nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
-        delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
-    #if request.filter_patronazna_sestra
-
-    if(request.POST.get("value") == "expand"):
-        print("expand please")
-    print('name' in request.POST)
-
-
     form=FilterWorkTasksForm(request.POST)
     if not form.is_valid():
         print("ERROR: FORM NOT VALID")

@@ -144,13 +144,11 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Podrobnosti delovnega naloga</h4>
         </div>
-        <!--
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-        </div>
-        -->
-
-
+			{% if work_task_list %}
+				{% for work_task in work_task_list %}
+				<p>{{work_task.id}}</p>
+				{% endfor %}
+			{% endif %}
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
         </div>

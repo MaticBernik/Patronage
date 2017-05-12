@@ -35,9 +35,7 @@ def is_nurse(user):
 
 def list_work_task(request):
     uporabnik = request.user
-    obiski = Obisk.objects
-    
-    """if is_doctor(uporabnik):
+    if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj)
     elif is_leader_ps(uporabnik):
@@ -50,23 +48,34 @@ def list_work_task(request):
         print("ERROR!!")
         return
 
-    if request.filter_datum_zacetni:
-        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
-    if request.filter_datum_koncni:
-        delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__range=(request.filter_datum_zacetni, request.filter_datum_koncni))
-    if request.filter_vrsta_obiska:
-        delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.filter_vrsta_obiska)
-    if request.filter_pacient:
-        pacientDN=Pacient_DN.objects.filter(pacient_id=request.filter_pacient)
-        nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
-        delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
-    #if request.filter_patronazna_sestra
-	"""
+    form=FilterWorkTasksForm(request.POST)
+    if not form.is_valid():
+        print("ERROR: FORM NOT VALID")
+
+    if request.POST:
+        if request.POST['filter_date_from']:
+            datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
+            delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max
+        if request.POST['filter_date_to']:
+            datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
+            delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__lte=datum) #datetime.min
+        if request.POST['filter_visit_type']:
+            delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST.get('filter_visit_type',''))
+        if request.POST['filter_patient_id']:
+            pacientDN=Pacient_DN.objects.filter(pacient_id=request.POST.get('filter_patient_id',''))
+            nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
+            delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
+        #if request.filter_patronazna_sestra
+
     filter_form = FilterWorkTasksForm()
     obiski = Obisk.objects.all()
     delovni_nalogi = Delovni_nalog.objects.all()
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
+    #filter_creator_id
+    #filter_nurse_id
+    #filter_patient_id
+    #filter_visit_type
 
     context = {'work_task_list':delovni_nalogi, 'visits_list':obiski, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form }
     return render(request, 'work_task_list.html', context)

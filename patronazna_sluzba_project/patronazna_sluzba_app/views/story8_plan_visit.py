@@ -46,7 +46,7 @@ def work_task_plan(request):
     obisk = Obisk.objects.select_related().filter(delovni_nalog_id=visit_list)
     material = Material_DN.objects.select_related().filter(delovni_nalog_id=visit_list)#get(delovni_nalog_id=visit_list)
     medicine = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=visit_list)
-    print('QUERY RESULT: '+str(task_fk)+'    '+str(material)+'  '+str(medicine))
+    print('QUERY RESULT: '+str(task_fk[0].delovni_nalog.zdravnik)+'    '+str(material)+'  '+str(medicine))
    # task = Posta.objects.all()[1:10]
     global main_nurse
     return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse':main_nurse})
@@ -71,7 +71,10 @@ def plan_list_ajax(request):
             datum = datetime.now().date()
             #datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
     else:
-        datum = request.GET['datum']
+        try:
+            datum = request.GET['datum']
+        except:
+            datum=''
         if datum != '':
             datum_format = datum.split('.')
             print("INSIDE POST: " + str(datum_format))
@@ -135,12 +138,12 @@ def plan_list_ajax(request):
                 print("BREZ NADOMESCANJA")
                 planned_visits = Obisk.objects.filter(id__in=plan_list).filter(p_sestra_id=nurse.id)#.filter(id__in=plan_list).order_by('datum')#filter(datum__gt=date.today())# #Okolis.objects.values_list('id','ime')
                # planned_visits=Plan.objects.select_related().filter(planirani_obisk.id__in=plan_list).filter(planirani_obisk.p_sestra_id=nurse_id)
-                visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list))
+                visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).order_by('datum')
             else:
                 #vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE")
                 planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id))
-                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list))
+                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list)).order_by('datum')
 
 
             print("Query result")
@@ -181,7 +184,10 @@ def plan_list_ajax(request):
 
         print("Visit list "+str(len(visit_list)))
         visit_list = replace_datum_type(visit_list,0)
-
+        print("===========================================")
+        for i in visit_list:
+            print("DATUM: "+str(i.datum))
+        print("===========================================")
         #print('Datum tip: '+str(visit_list[0].obvezen_obisk))
         #print("todays date is: " + str(date.today()))
         #print("Tomorrow date is: " + str(date.today() + timedelta(days=1)))
@@ -205,6 +211,20 @@ def plan_list_ajax(request):
    # main_nurse_id = nurse.id
     global global_nurse_id
     global_nurse_id = nurse.id
+
+    print("==================================")
+    print("==========VISIT LIST LENGTHS===========")
+    """
+    for i in visit_list:
+        stevilka_length = len(str(i.id))
+        print("Stevilka: "+str(stevilka_length))  #max length 5
+        stevilka_length = 5-stevilka_length
+        print("Zdravnik ime: " + str(len(str(i.delovni_nalog.zdravnik.uporabniski_profil.first_name))))
+        print("Zdravnik priimek: " + str(len(str(i.delovni_nalog.zdravnik.uporabniski_profil.last_name))))
+        print("Sestra ime: " + str(len(str(i.p_sestra.uporabniski_profil.first_name))))
+        print("Sestra priimek: " + str(len(str(i.p_sestra.uporabniski_profil.last_name)))+": "+i.p_sestra.uporabniski_profil.last_name)
+    """
+    print("==================================")
 
     return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id})
 
@@ -259,7 +279,7 @@ def plan_visit_view(request):
          #   print("old plan: "+str(i))
         if len(plan_visit_list) >0:
             #izbrisi obiske ki odstranjene
-            pk_plan = [i[0] for i in plan_visit_list]
+            pk_plan = [i.split(' ',1)[0] for i in plan_visit_list]
             results = list(map(int, pk_plan))
             print("RESULTS: ")
             print(pk_plan)

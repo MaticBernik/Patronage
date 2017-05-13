@@ -5,9 +5,15 @@
 {% for t in task %}
     {% if forloop.first  %}
              <div>
+             {% if t.delovni_nalog.zdravnik != None  %}
             <label class="form-control-static">Zdravnik</label>
             <input type="text" value="{{ t.delovni_nalog.zdravnik.uporabniski_profil.first_name }}  {{ t.delovni_nalog.zdravnik.uporabniski_profil.last_name }}" disabled class="form-control">
-            </div>
+            {% else  %}
+                 <label class="form-control-static">Vodja PS</label>
+            <input type="text" value="{{ t.delovni_nalog.vodja_PS.uporabniski_profil.first_name }}  {{ t.delovni_nalog.vodja_PS.uporabniski_profil.last_name }}" disabled class="form-control">
+
+             {%  endif %}
+             </div>
 
     {%  endif %}
 {%  endfor %}

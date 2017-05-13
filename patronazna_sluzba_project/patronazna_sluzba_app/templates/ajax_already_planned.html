@@ -1,17 +1,176 @@
+{% load mathfilters %}
+{% load app_filters %}
+
 {% if planned|length > 0 %}
 <select>
 {% for visit in planned %}
 
     {% if visit.planirani_obisk.p_sestra_id == nurse  %}
+        {% if visit.planirani_obisk.delovni_nalog.zdravnik != None  %}
+
         <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
-            {{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}&emsp;
+
+            {{ visit.planirani_obisk.id }}
+                    {% with visit.planirani_obisk.id|int_length as dolzina %}
+                        {% for i in 5|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            &emsp;&nbsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name|name_initial}}. {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}
+                    {% with visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}
+                    {% with visit.planirani_obisk.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+                   NE&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.planirani_obisk.obvezen_obisk }}
+                   {% if visit.planirani_obisk.obvezen_obisk == "Obvezen" %}
+                          {% for i in 4|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% else %}
+                          {% for i in 5|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% endif %}
+
+
+                    {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+
+
+
+            <!--{{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}&emsp;
             {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
-            {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+            {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>-->
+            {% else  %}
+            <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+
+            {{ visit.planirani_obisk.id }}
+                    {% with visit.planirani_obisk.id|int_length as dolzina %}
+                        {% for i in 5|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            &emsp;&nbsp;{{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.first_name|name_initial}}. {{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name}}
+                    {% with visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}
+                    {% with visit.planirani_obisk.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+                   NE&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.planirani_obisk.obvezen_obisk }}
+                   {% if visit.planirani_obisk.obvezen_obisk == "Obvezen" %}
+                          {% for i in 4|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% else %}
+                          {% for i in 5|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% endif %}
+
+
+                    {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+
+
+
+
+            <!--{{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name}}&emsp;
+            {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
+            {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>-->
+
+
+        {% endif  %}
     {% else %}
-        <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
-            {{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}&emsp;
-            {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }} (Nadomešča)&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
-            {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+        {% if visit.planirani_obisk.delovni_nalog.zdravnik != None  %}
+            <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+
+               {{ visit.planirani_obisk.id }}
+                   {% with visit.planirani_obisk.id|int_length as dolzina %}
+                        {% for i in 5|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            &emsp;&nbsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name|name_initial}}. {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}
+                   {% with visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+            {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}
+                   {% with visit.planirani_obisk.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+
+                   DA&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.planirani_obisk.obvezen_obisk }}
+                   {% if visit.planirani_obisk.obvezen_obisk == "Obvezen" %}
+                          {% for i in 4|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% else %}
+                          {% for i in 5|times %}
+                            &nbsp;
+                          {% endfor %}
+                   {% endif %}
+                   {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+
+
+
+
+                <!--{{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.zdravnik.uporabniski_profil.last_name}}&emsp;
+                {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }} (Nadomešča)&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
+                {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>-->
+            {% else  %}
+            <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+
+                {{ visit.planirani_obisk.id }}
+                       {% with visit.planirani_obisk.id|int_length as dolzina %}
+                            {% for i in 5|sub:dolzina|times %}
+                                &nbsp;
+                            {% endfor %}
+                         {% endwith %}
+                &emsp;&nbsp;{{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.first_name|name_initial}}. {{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name}}
+                       {% with visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name|text_length as dolzina %}
+                            {% for i in 12|sub:dolzina|times %}
+                                &nbsp;
+                            {% endfor %}
+                         {% endwith %}
+                {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }}
+                       {% with visit.planirani_obisk.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                            {% for i in 12|sub:dolzina|times %}
+                                &nbsp;
+                            {% endfor %}
+                         {% endwith %}
+
+                       DA&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.planirani_obisk.obvezen_obisk }}
+                       {% if visit.planirani_obisk.obvezen_obisk == "Obvezen" %}
+                              {% for i in 4|times %}
+                                &nbsp;
+                              {% endfor %}
+                       {% else %}
+                              {% for i in 5|times %}
+                                &nbsp;
+                              {% endfor %}
+                       {% endif %}
+                       {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>
+
+
+               <!-- {{ visit.planirani_obisk.id }}&emsp;&emsp;&emsp;{{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.first_name}} {{ visit.planirani_obisk.delovni_nalog.vodja_PS.uporabniski_profil.last_name}}&emsp;
+                {{ visit.planirani_obisk.p_sestra.uporabniski_profil.first_name }} {{ visit.planirani_obisk.p_sestra.uporabniski_profil.last_name }} (Nadomešča)&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;{{ visit.planirani_obisk.obvezen_obisk }}&emsp;&emsp;&emsp;
+                {{ visit.planirani_obisk.delovni_nalog.vrsta_obiska.ime }}</option>-->
+            {% endif  %}
     {%  endif %}
 {%  endfor %}
 </select>

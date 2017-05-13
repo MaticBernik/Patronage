@@ -195,8 +195,8 @@ class plan_visit_form(forms.Form):
     date_picker = forms.DateField(required=False,label='Izberi datum',widget=forms.TextInput(attrs={'class': 'datepicker form-control', 'id': 'date_picker'}),input_formats=['%d.%m.%Y'])
 
 class FilterWorkTasksForm(forms.Form):
-    # filter_creator_id = forms.CharField(label='Šifra izvajalca: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
-    filter_creator_id = forms.ModelChoiceField(label='Šifra izvajalca: ', required = False, queryset=Zdravnik.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
+    # filter_creator_id = forms.CharField(label='Šifra izdajatelja naloga: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
+    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja naloga: ', required = False, queryset=Zdravnik.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_nurse_id = forms.CharField(label='Šifra med. sestre: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     filter_nurse_id = forms.ModelChoiceField(label='Šifra med. sestre: ', required = False, queryset=Patronazna_sestra.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_patient_id = forms.CharField(label='Šifra zdravnika: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))

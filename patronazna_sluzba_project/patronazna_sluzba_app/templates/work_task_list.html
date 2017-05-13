@@ -8,11 +8,8 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	
 
-
-
-
+	<!-- CUSTOM SCRIPT ~ SHOULD EVENTUALY BE MOVED TO OWN FILE -->
 	<script type="text/javascript">
 
 	$(document).ready(function() {
@@ -99,8 +96,9 @@
             	<thead>
             	<tr>
             		<th>Šifra naloga</th>
-            		<th>Izvajalec ZS</th>
-            		<th>Tip obiska</th>
+            		<th>Izdajatelj naloga</th>
+            		<th>Medicinska sestra</th>
+            		<th>Pacient</th>
             		<th>Vrsta obiska</th>
             		<th>Datum prvega obiska</th>
             		<th>Stevilo obiskov</th>
@@ -111,8 +109,15 @@
             	{% for work_task in work_task_list %}
     	        <tr>
     	        	<td>{{ work_task.id }}</td>
-    	        	<td>{{ work_task.izvajalec_zs.naziv }}</td>
-            		<td>{{ work_task.vrsta_obiska.tip }}</td>
+    	        	<td>
+    	        	{% if work_task.zdravnik %}
+    	        		{{ work_task.zdravnik }}
+    	        	{% elif work_task.vodja_PS % }
+    	        		{{ work_task.vodja_PS }}
+    	        	{% endif %}
+    	        	</td>
+            		<td>{{ NADJI SESTRO }}</td>
+            		<td>{{ NAJDI PACIENTA }}</td>
             		<td>{{ work_task.vrsta_obiska.ime }}</td>
             		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y" }}</td>
             		<td>{{ work_task.st_obiskov }}</td>
@@ -123,19 +128,6 @@
                 </tbody>
     		</table>
 
-
-<!--
-            	<ul class="list-group">
-                {% for work_task in work_task_list %}
-    	        	<li class="list-group-item"><p>Tip obiska: {{ work_task.vrsta_obiska.tip }}</p>
-    	        	<p>Vrsta obiska: {{ work_task.vrsta_obiska.ime }}</p>
-                    <p>Izvajalec ZS: {{ work_task.izvajalec_zs.naziv }}</p>
-                    <p>Datum prvega obiska: {{ work_task.datum_prvega_obiska|date:"d.m.Y H:i:s" }}</p>
-                    <p>Stevilo obiskov: {{ work_task.st_obiskov }}</p>
-                    </li>
-                {% endfor %}
-                </ul>
-                -->
             {% else %}
                 <p>Seznam delovnih nalogov je prazen</p>
             {% endif %}

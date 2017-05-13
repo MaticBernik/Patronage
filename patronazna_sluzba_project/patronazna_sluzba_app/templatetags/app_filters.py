@@ -12,7 +12,10 @@ def int_length(number):
 
 @register.filter(name='name_initial')
 def name_initial(name):
-    return name[0]
+    try:
+        return name[0]
+    except:
+        return "EMPTY"
 
 @register.filter(name='text_length')
 def text_lenght(text):

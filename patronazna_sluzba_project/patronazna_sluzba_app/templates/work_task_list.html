@@ -1,36 +1,124 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-<link rel="stylesheet" type="text/css" href="{% static '/css/work_task_list.css' %}">
 
 {% block main_content %}
+	
+	<link rel="stylesheet" type="text/css" href="{% static '/css/work_task_list.css' %}">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+
+
+
+
+	<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('.datepicker').datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
+		$('.task_expansion').hide();
+	});
+
+	</script>
+
+	<script>
+		function show_work_task(objButton) {
+			$('.task_expansion').hide();
+		    //alert(objButton.value);
+			console.log(objButton.value);
+			button_id = objButton.value;
+			console.log('#button_id')
+			$('#button_id').show();
+			document.getElementById(button_id).style.display="block";
+
+		}
+	</script>
+
+	<h3>Prilagodite seznam</h3>
+	<hr>
+	{{ filter_form.non_field_errors }}
+	<!-- class="form-horizontal col-lg-offset-4 col-lg-4 col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-12" -->
+	<form method="post" id="filter_form" class="form-horizontal col-lg-10 col-lg-offset-1  col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" style="text-align: left">
+		{% csrf_token %}
+		<div class="row form-group">
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+		  		{{ filter_form.filter_creator_id.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_creator_id.id_for_label }}">{{ filter_form.filter_creator_id.label }}</label>
+		    	{{ filter_form.filter_creator_id }}
+		  	</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+		  		{{ filter_form.filter_nurse_id.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_nurse_id.id_for_label }}">{{ filter_form.filter_nurse_id.label }}</label>
+		    	{{ filter_form.filter_nurse_id }}
+		    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+		  	</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+	  			{{ filter_form.filter_patient_id.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_patient_id.id_for_label }}">{{ filter_form.filter_patient_id.label }}</label>
+		    	{{ filter_form.filter_patient_id }}
+		    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+		  	</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+		  		{{ filter_form.filter_visit_type.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_visit_type.id_for_label }}">{{ filter_form.filter_visit_type.label }}</label>
+		    	{{ filter_form.filter_visit_type }}
+		    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+		  	</div>
+		</div>
+		<div class="row form-group">
+
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+		  		{{ filter_form.filter_date_from.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_date_from.id_for_label }}">{{ filter_form.filter_date_from.label }}</label>
+		    	{{ filter_form.filter_date_from }}
+		    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+		  	</div>
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding: 3px;">
+		  		{{ filter_form.filter_date_to.errors }}
+		    	<label class="control-label" for="{{ filter_form.filter_date_to.id_for_label }}">{{ filter_form.filter_date_to.label }}</label>
+		    	{{ filter_form.filter_date_to }}
+		    	<!--<inpKoda zdravstvenega osebja" class="form-control" id="email">-->
+		  	</div>
+			<div class="col-lg-3 col-lg-offset-3 col-md-3 col-md-offset-3 col-sm-3 col-sm-offset-3 col-xs-3 col-xs-offset-3" style="padding: 3px;">
+				<label class="control-label"></label>
+	  			<button type="submit" class="btn btn-primary form-control">Filter</button>
+	  		</div>  	  	
+	  	</div>	
+	</form>
+	<hr>
 
     {% if user.is_authenticated %}
         <div class="row">
         	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h3>Seznam delovnih nalogov: </h3>
+            <h3>Seznam delovnih nalogov </h3>
      		<hr>
             {% if work_task_list %}
 
             <table class="table table-striped" style="text-align: center">
             	<thead>
             	<tr>
+            		<th>Šifra naloga</th>
             		<th>Izvajalec ZS</th>
             		<th>Tip obiska</th>
             		<th>Vrsta obiska</th>
             		<th>Datum prvega obiska</th>
             		<th>Stevilo obiskov</th>
+            		<th></th>
             	</tr>
             	</thead>
             	<tbody>
             	{% for work_task in work_task_list %}
     	        <tr>
+    	        	<td>{{ work_task.id }}</td>
     	        	<td>{{ work_task.izvajalec_zs.naziv }}</td>
             		<td>{{ work_task.vrsta_obiska.tip }}</td>
             		<td>{{ work_task.vrsta_obiska.ime }}</td>
-            		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y H:i:s" }}</td>
+            		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y" }}</td>
             		<td>{{ work_task.st_obiskov }}</td>
-                </tr>
+            		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
+            		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
+            		<td><button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
                 {% endfor %}
                 </tbody>
     		</table>
@@ -54,5 +142,130 @@
             </div>
         </div>
     {% endif %}
+
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Podrobnosti delovnega naloga</h4>
+		  <hr>
+        </div>
+			{% if work_task_list %}
+				{% for work_task in work_task_list %}
+				<div class="task_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{work_task.id}}">
+
+					<div class ="row">
+						<label style="float: left;">PACIENT:</label>
+							{% for pac in pacient %}
+
+								{% if pac.delovni_nalog.id == work_task.id %}
+									<!--	WE HAVE JUST FOUND OUR VISIT -->
+									<div class="row">
+										<p style="float: right; text-align: center;">{{pac.pacient.priimek}}</p>
+										<p style="float: left; text-align: center;">{{pac.pacient.ime }}</p>
+									</div>
+								{% endif %}
+							{% endfor %}
+							<hr>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Izvajalec ZS:</label>
+						<p  style="float: right;">{{work_task.izvajalec_zs.naziv}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Sifra delovnega naloga:</label>
+						<p style="float: right;">{{work_task.id}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Sifra zdravnika / vodje PS:</label>
+						<p style="float: right;">
+						<!--<p>{{work_task.zdravnik}} {{work_task.vodja_PS}}</p>-->
+						{% if work_task.zdravnik %}
+							{{work_task.zdravnik.sifra_zdravnika }}
+						{% endif %}
+						{% if work_task.vodja_PS %}
+							{{work_task.vodja_PS.sifra_vodje_PS }}
+						{% endif %}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Tip obiska:</label>
+						<p style="float: right;">{{work_task.vrsta_obiska.tip}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Vrsta obiska:</label>
+						<p style="float: right;">{{work_task.vrsta_obiska.ime}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Bolezen:</label>
+						<p style="float: right;">{{work_task.bolezen.ime}}</p>
+					</div>
+					<div class ="row" style="background-color: PowderBlue;">
+						<label style="float: left;">Datum prvega obiska:</label>
+						<p style="float: right;">{{work_task.datum_prvega_obiska|date:"d.m.Y"}}</p>
+					</div>
+					<div class ="row">
+						<label style="float: left;">Stevilo obiskov:</label>
+						<p style="float: right;">{{work_task.st_obiskov}}</p>
+					</div>
+					<hr>
+					<div class ="row">
+						<label style="float: left;">Seznam obiskov:</label>
+					</div>
+					{% for v in visits_list %}
+
+						{% if v.delovni_nalog.id == work_task.id %}
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<div class="row">
+							<p style="float: right; text-align: center;">{{v.datum|date:"d.m.Y"}}</p>
+							<p style="float: left; text-align: center;">Patronazna sestra: {{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+					<hr>
+										<div class ="row">
+						<label style="float: left;">Seznam zdravil:</label>
+					</div>
+					{% for med in medications %}
+
+						{% if med.delovni_nalog.id == work_task.id %}
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<div class="row">
+								<p style="float: right; text-align: center;">{{med.kolicina}}</p>
+								<p style="float: left; text-align: center;">{{med.zdravilo.ime }}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+					<hr>
+										<div class ="row">
+						<label style="float: left;">Seznam materiala:</label>
+					</div>
+						
+						{% for mat in material %}
+
+						{% if mat.delovni_nalog.id == work_task.id %}
+							<!--	WE HAVE JUST FOUND OUR VISIT -->
+							<div class="row">
+								<p style="float: right; text-align: center;">{{mat.kolicina}}</p>
+								<p style="float: left; text-align: center;">{{mat.material.ime }}</p>
+							</div>
+						{% endif %}
+					{% endfor %}
+					<hr>
+
+				</div>
+				{% endfor %}
+			{% endif %}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
 {% endblock %}

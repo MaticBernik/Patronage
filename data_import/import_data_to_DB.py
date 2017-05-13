@@ -3,7 +3,7 @@
 
 import sqlite3
 import csv
-from datetime import datetime
+from datetime import datetime,timedelta
 import os
 import hashlib
 import uuid
@@ -203,7 +203,7 @@ with open("vsa_zdravila.csv","r") as drugs_file: #encoding="utf8"
 	next(drugs_reader, None)  # skip header
 	for line in drugs_reader:
 		print(line)
-		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],line[10], line[11], line[12],line[13], line[14], line[15],line[16], line[17], line[18],line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], line[58],line[59],line[60], line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
+		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],"", "", "",line[13], line[14], line[15],"", "", "",line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], "","","", line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
 
 #Izvajalci zdravstvenih storitev
 #with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvajalci_file:  #encoding="utf8"
@@ -265,6 +265,129 @@ with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime, opis) VALUES (?,?,?)", (line[0], line[1], line[2]));
 		else:
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
+
+
+# Metoda, ki delovnim nalogom v bazi kreira pripadajoce obiske
+def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, date_current):
+	# if we have interval type of visitation
+	if type == 'Interval':
+		for i in range(int(number_of_visits)):
+			obveznost = random.choice(['Obvezen', 'Okviren'])
+
+			date_next = date_current + timedelta(days=int(interval_period))
+			weekno = date_next.weekday()
+			if weekno == 6 or weekno == 0:
+				date_next = date_next + timedelta(days=2)
+				weekno = date_next.weekday()
+			cursor = conn.execute("select pacient_id from patronazna_sluzba_app_pacient_DN where delovni_nalog_id=" + str(delovni_nalog_id) + ";");
+			pacient = cursor.fetchall()[0][0]
+			print(pacient)
+			cursor = conn.execute("select okolis_id from patronazna_sluzba_app_pacient where st_kartice='" + pacient + "';");
+			okolis = cursor.fetchall()
+			print(okolis)
+			okolis=okolis[0][0]
+			cursor = conn.execute(
+				"select id from patronazna_sluzba_app_patronazna_sestra where okolis_id=" + str(okolis) + ";")
+			p_sestra = cursor.fetchall()[0][0]
+			# p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+			obv = 0
+			if obveznost == "Obvezen":
+				obv = 1
+				obveznost = "Okviren"
+
+			# visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
+			# visit.save()
+			conn.execute(
+				"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id) VALUES (?,?,?,?)",
+				(delovni_nalog_id, date_current, obv, p_sestra));
+
+			date_current = date_next
+			print("Obisk shranjen (INTERVAL); datum: ", date_current)
+	else:
+		# space = number of days so that visits are the most balanced throughout the period
+		space = int(interval_period / number_of_visits)
+		for i in range(int(number_of_visits)):
+			obveznost = random.choice(['Obvezen', 'Okviren'])
+
+			#   If there are 1 or more days between visits
+			if int(interval_period) >= int(number_of_visits):
+				date_next = date_current + timedelta(days=int(space))
+				#   check if its weekend
+				weekno = date_next.weekday()
+
+				if weekno == 6 or weekno == 0:
+					date_next = date_next + timedelta(days=2)
+					weekno = date_next.weekday()
+
+				# find the appropriate nurse for the county
+				# p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+				cursor = conn.execute(
+					"select pacient_id from patronazna_sluzba_app_pacient_DN where delovni_nalog_id=" + str(
+						delovni_nalog_id) + ";");
+				pacient = cursor.fetchall()[0][0]
+				cursor = conn.execute(
+					"select okolis_id from patronazna_sluzba_app_pacient where st_kartice=" + str(
+						pacient) + ";");
+				okolis = cursor.fetchall()[0][0]
+				cursor = conn.execute(
+					"select id from patronazna_sluzba_app_patronazna_sestra where okolis_id=" + str(
+						okolis) + ";")
+				p_sestra = cursor.fetchall()[0][0]
+
+				print("p_sestra", p_sestra)
+				#   check if the first visit is mandatory on that day
+				obv = 0
+				if obveznost == "Obvezen":
+					obv = 1
+					obveznost = "Okviren"
+
+				# visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
+				# visit.save()
+				conn.execute(
+					"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id) VALUES (?,?,?,?)",
+					(delovni_nalog_id, date_current, obv, p_sestra));
+				date_current = date_next
+				print("Obisk shranjen (OBDOBJE); datum: ", date_current)
+
+# Pacienti na delovnih nalogih
+#with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
+with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
+	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
+	next(pacientiDN_reader, None)  # skip header
+	for line in pacientiDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
+
+#Delovni nalogi
+#with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
+with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
+	dn_reader = csv.reader(dn_file, delimiter=';')
+	next(dn_reader, None)  # skip header
+	for line in dn_reader:
+			datum=datetime.strptime(line[1],"%d.%m.%Y")
+			cursor = conn.execute("select id from patronazna_sluzba_app_vodja_PS where sifra_vodje_PS=" + str(line[8]) + ";")
+			vodjePS = cursor.fetchall()
+			if len(vodjePS) == 0:
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, zdravnik_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]), line[3], int(line[4]), int(line[5]), line[6], int(line[7]), int(line[8])));
+			else:
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]),int(line[8])));
+			kreiraj_obiske(int(line[0]), int(line[4]), line[3], int(line[2]), datum)
+
+#Material na delovnih nalogih
+#with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
+with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
+	materialDN_reader = csv.reader(materialDN_file, delimiter=';')
+	next(materialDN_reader, None)  # skip header
+	for line in materialDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_material_DN (delovni_nalog_id, material_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+
+#Zdravila na delovnih nalogih
+#with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #encoding="utf8"
+with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
+	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
+	next(zdravilaDN_reader, None)  # skip header
+	for line in zdravilaDN_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+
 
 
 

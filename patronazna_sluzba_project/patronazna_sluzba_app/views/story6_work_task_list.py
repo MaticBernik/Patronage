@@ -37,8 +37,6 @@ def list_work_task(request):
     filter_form = FilterWorkTasksForm()
     uporabnik = request.user
     
-    vklopi_filtre=True
-
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
@@ -100,8 +98,9 @@ def list_work_task(request):
     material = Material_DN.objects.all()
     zdravila = Zdravilo_DN.objects.all()
     pacienti = Pacient_DN.objects.all()
+    zdravniki = Zdravnik.objects.all()
+    vodje_ps = Vodja_PS.objects.all()
     
-    
-    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient': pacienti  }
+    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
     return render(request, 'work_task_list.html', context)
 

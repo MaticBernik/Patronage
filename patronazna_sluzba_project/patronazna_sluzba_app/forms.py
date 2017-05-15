@@ -196,7 +196,7 @@ class plan_visit_form(forms.Form):
 
 class FilterWorkTasksForm(forms.Form):
     # filter_creator_id = forms.CharField(label='Šifra izdajatelja naloga: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
-    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja naloga: ', required = False, queryset=Zdravnik.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
+    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja naloga: ', required = False, queryset=User.objects.filter(is_staff=1), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_nurse_id = forms.CharField(label='Šifra med. sestre: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     filter_nurse_id = forms.ModelChoiceField(label='Šifra med. sestre: ', required = False, queryset=Patronazna_sestra.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_patient_id = forms.CharField(label='Šifra zdravnika: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))

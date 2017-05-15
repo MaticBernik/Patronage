@@ -117,16 +117,29 @@
     	        <tr>
     	        	<td>{{ work_task.id }}</td>
     	        	<td>
-	    	        	{% if work_task.zdravnik %}
-	    	        		{{ work_task.zdravnik.uporabniski_profil.first_name }}
-	    	        	{% elif work_task.vodja_PS.uporabniski_profil %}
-	   	        			{{ work_task.vodja_PS.uporabniski_profil.first_name }}
-	   	        		{% else %}
-	   	        			Ne najdem ne eno ne drugo
-	    	        	{% endif %}
-
+    	        		{% if work_task.zdravnik_id %}
+    	        			{% for doc in doctors %}
+    	        				{% if doc.sifra_zdravnika == work_task.zdravnik_id %}
+    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% elif work_task.vodja_PS_id %}
+    	        			{% for head in head_nurses %}
+    	        				{% if head.sifra_vodje_PS == work_task.vodja_PS_id %}
+    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% else %}
+    	        			Podatki o izdajatelju vam niso na voljo.
+    	        		{% endif %}
     	        	</td>
-            		<td>NADJI SESTRO</td>
+            		<td>
+            			{% for v in visits_list%}
+							{% if v.delovni_nalog.id == work_task.id and v.datum == work_task.datum_prvega_obiska %}
+								{{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}
+							{% endif %}
+						{% endfor %}
+            		</td>
             		<td>
 	            		{% if pacient_list %}
 	            			{% for p in pacient_list %}
@@ -229,8 +242,8 @@
 						{% if v.delovni_nalog.id == work_task.id %}
 							<!--	WE HAVE JUST FOUND OUR VISIT -->
 							<div class="row">
-							<p style="float: right; text-align: center;">{{v.datum|date:"d.m.Y"}}</p>
-							<p style="float: left; text-align: center;">Patronazna sestra: {{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}</p>
+								<p style="float: right; text-align: center;">{{v.datum|date:"d.m.Y"}}</p>
+								<p style="float: left; text-align: center;">Patronazna sestra: {{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}</p>
 							</div>
 						{% endif %}
 					{% endfor %}

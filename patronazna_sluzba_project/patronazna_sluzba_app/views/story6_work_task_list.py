@@ -76,14 +76,17 @@ def list_work_task(request):
     if request.POST:
         if request.POST.get('filter_creator_id',0):
             profil=request.POST['filter_creator_id']
+            print("PROFIL: ",profil)
             #ta filter mora biti na prvem mestu!!
-            delovni_nalogi = delovni_nalogi.objects.all()
+            delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):
-                creator = Zdravnik.objects.get(uporabniski_profil=profil)
+                creator = Zdravnik.objects.get(uporabniski_profil_id=profil)
                 delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator)
             elif is_leader_ps(request.POST['filter_creator_id']):
-                creator = Vodja_PS.objects.get(uporabniski_profil=profil)
+                creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
                 delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator)
+            print("CREATOR: ", creator)
+            print("DN: ",delovni_nalogi)
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")

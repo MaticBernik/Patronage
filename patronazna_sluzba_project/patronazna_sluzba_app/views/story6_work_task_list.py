@@ -37,20 +37,21 @@ def list_work_task(request):
     filter_form = FilterWorkTasksForm()
     uporabnik = request.user
 
-    # full_staff = User.objects.filer(is_staff=1)
-    # doctors_leaders = [ x.id for x in full_staff where x]
+    #full_staff = User.objects.filer(is_staff=1)
+    doctors_profiles = [ x.uporabniski_profil_id for x in Zdravnik.objects.all()]
+    leaders_profiles = [ x.uporabniski_profil_id for x in Vodja_PS.objects.all()]
+    doctors_leaders = doctors_profiles + leaders_profiles
 
-
-    filter_form.fiels['filter_creator_id'] = queryset
+    filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
     
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
-        filter_form.fields['filter_creator_id'].initial = izdajatelj
+        filter_form.fields['filter_creator_id'].initial = izdajatelj.uporabniski_profil_id
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
-        filter_form.fields['filter_creator_id'].initial = izdajatelj
+        filter_form.fields['filter_creator_id'].initial = izdajatelj.uporabniski_profil_id
         nurse=Patronazna_sestra.objects.all()
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
@@ -70,6 +71,15 @@ def list_work_task(request):
         print("ERROR: FORM NOT VALID")
 
     if request.POST:
+        if request.POST.get('filter_creator_id',0):
+            profil=request.POST['filter_creator_id']
+            if is_doctor(profil):
+                creator = Zdravnik.objects.get(uporabniski_profil=profil)
+                delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator)
+            elif is_leader_ps(request.POST['filter_creator_id']):
+                creator = Vodja_PS.objects.get(uporabniski_profil=profil)
+                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator)
+            filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max

@@ -41,12 +41,13 @@ def list_work_task(request):
     # doctors_leaders = [ x.id for x in full_staff where x]
 
 
-    filter_form.fiels['filter_creator_id'] = queryset
+    # filter_form.fiels['filter_creator_id'] = queryset
     
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
+        filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
     elif is_leader_ps(uporabnik):
         izdajatelj=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
@@ -59,7 +60,8 @@ def list_work_task(request):
         delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
         #filter_form.fields['filter_nurse_id']=nurse
         filter_form.fields['filter_nurse_id'].initial=str(nurse.sifra_patronazne_sestre)+" "+nurse.uporabniski_profil.first_name+" "+nurse.uporabniski_profil.last_name
-
+        filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
+        filter_form.fields['filter_nurse_id'].widget.attrs['disabled'] = 'disabled'
         #DODAJ FILTER
     else:
         print("ERROR!!")

@@ -76,6 +76,8 @@ def list_work_task(request):
     if request.POST:
         if request.POST.get('filter_creator_id',0):
             profil=request.POST['filter_creator_id']
+            #ta filter mora biti na prvem mestu!!
+            delovni_nalogi = delovni_nalogi.objects.all()
             if is_doctor(profil):
                 creator = Zdravnik.objects.get(uporabniski_profil=profil)
                 delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator)

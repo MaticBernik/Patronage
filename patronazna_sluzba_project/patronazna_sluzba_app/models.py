@@ -85,6 +85,8 @@ class Vodja_PS(models.Model):
     #sifra_vodje_PS = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
+    def __str__(self):
+        return str(self.sifra_vodje_PS)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
 
 class Patronazna_sestra(models.Model):
@@ -95,6 +97,8 @@ class Patronazna_sestra(models.Model):
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     okolis = models.OneToOneField(Okolis,default=1)
+    def __str__(self):
+        return str(self.sifra_patronazne_sestre)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
 
 class Sodelavec_ZD(models.Model):
@@ -104,6 +108,8 @@ class Sodelavec_ZD(models.Model):
     #sifra_sodelavca = models.DecimalField(max_digits=5,decimal_places=0)
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
+    def __str__(self):
+        return str(self.sifra_sodelavca)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
 
 class Kontaktna_oseba(models.Model):

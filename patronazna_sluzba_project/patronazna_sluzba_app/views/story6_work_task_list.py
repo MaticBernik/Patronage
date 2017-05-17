@@ -76,17 +76,14 @@ def list_work_task(request):
     if request.POST:
         if request.POST.get('filter_creator_id',0):
             profil=request.POST['filter_creator_id']
-            print("PROFIL: ",profil)
             #ta filter mora biti na prvem mestu!!
             delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):
                 creator = Zdravnik.objects.get(uporabniski_profil_id=profil)
-                delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator)
+                delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator.sifra_zdravnika)
             elif is_leader_ps(request.POST['filter_creator_id']):
                 creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
-                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator)
-            print("CREATOR: ", creator)
-            print("DN: ",delovni_nalogi)
+                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
@@ -103,18 +100,17 @@ def list_work_task(request):
             #filter_form.fields['filter_visit_type'] = request.POST['filter_visit_type']
             filter_form.fields['filter_visit_type'].initial=request.POST['filter_visit_type']
         if request.POST.get('filter_patient_id',0):
-            print(type(request.POST['filter_patient_id']))
             pacientDN=Pacient_DN.objects.filter(pacient_id=request.POST['filter_patient_id'])
             nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
             delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
             #filter_form.fields['filter_patient_id'] = request.POST['filter_patient_id']
             filter_form.fields['filter_patient_id'].initial=request.POST['filter_patient_id']
         if request.POST.get('filter_nurse_id',0):
-            nurse = Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
+            nurse = Patronazna_sestra.objects.get(id=request.POST['filter_nurse_id'])
             pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
             nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
-            delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
-            filter_form.fields['filter_nurse_id'].initial = str(nurse.sifra_patronazne_sestre) + " " + nurse.uporabniski_profil.first_name + " " + nurse.uporabniski_profil.last_name
+            delovni_nalogi = delovni_nalogi.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
+            filter_form.fields['filter_nurse_id'].initial =  request.POST['filter_nurse_id']
 
 
     #  FORM QUERY SET

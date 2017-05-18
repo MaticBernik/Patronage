@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @login_required(login_url='/')
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.contrib.auth import authenticate, login, logout, password_validation, update_session_auth_hash
 from django.contrib.auth.decorators import login_required,  user_passes_test
 from django.contrib.auth.forms import PasswordChangeForm
@@ -98,6 +98,9 @@ def list_work_task(request):
             filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
         if request.POST.get('filter_date_to',0):
             datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
+            #POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
+            datum+=timedelta(days=1)
+
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__lte=datum) #datetime.min
             #filter_form.fields['filter_date_to'] = request.POST['filter_date_to']
             filter_form.fields['filter_date_to'].initial = request.POST['filter_date_to']

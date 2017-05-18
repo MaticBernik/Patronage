@@ -58,8 +58,9 @@ class Okolis(models.Model):
     izvajalec_samo1X = models.BooleanField(null=False, default=False)
     stevilo_vrstic_VZDjev = models.IntegerField(null=False)'''
 
+
 class Uporabnik(models.Model):
-    profil = models.OneToOneField(User)
+    profil = models.OneToOneField(User, primary_key=True)
     def __str__(self):
         if Patronazna_sestra.objects.get(uporabniski_profil=self.profil).exists():
             sifra=Patronazna_sestra.objects.get(uporabniski_profil=self.profil).sifra_patronazne_sestre

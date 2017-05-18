@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
-from annoying.fields import AutoOneToOneField,signals
+from annoying.fields import AutoOneToOneField #,signals  ;;   pip install django-annoying
 from django.db.models import signals
 
 
@@ -62,26 +62,14 @@ class Okolis(models.Model):
     stevilo_vrstic_VZDjev = models.IntegerField(null=False)'''
 
 
-class Uporabnik(models.Model):
-    #profil = models.OneToOneField(User, primary_key=True)
-    profil= AutoOneToOneField(User, primary_key=True)
-    def __str__(self):
-        if Patronazna_sestra.objects.get(uporabniski_profil=self.profil).exists():
-            sifra=Patronazna_sestra.objects.get(uporabniski_profil=self.profil).sifra_patronazne_sestre
-        if Vodja_PS.objects.get(uporabniski_profil=self.profil).exists():
-            sifra=Vodja_PS.objects.get(uporabniski_profil=self.profil).sifra_vodje_PS
-        if Zdravnik.objects.get(uporabniski_profil=self.profil).exists():
-            sifra=Zdravnik.objects.get(uporabniski_profil=self.profil).sifra_zdravnika
-        if Sodelavec_ZD.objects.get(uporabniski_profil=self.profil).exists():
-            sifra=Sodelavec_ZD.objects.get(uporabniski_profil=self.profil).sifra_sodelavca
-        return str(sifra)+' '+self.profil.first_name+' '+self.profil.last_name
 
-def create_Uporabnik(sender, instance, created, **kwargs):
+
+'''def create_Uporabnik(sender, instance, created, **kwargs):
     """Create ModelB for every new ModelA."""
     if created:
         Uporabnik.objects.create(thing=instance)
 
-signals.post_save.connect(create_Uporabnik, sender=User, weak=False, dispatch_uid='models.create_Uporabnik')
+signals.post_save.connect(create_Uporabnik, sender=User, weak=False, dispatch_uid='models.create_Uporabnik')'''
 
 class Izvajalec_ZS(models.Model):
     st_izvajalca = models.IntegerField(primary_key=True)
@@ -135,6 +123,31 @@ class Sodelavec_ZD(models.Model):
     def __str__(self):
         return str(self.sifra_sodelavca)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
+
+class Uporabnik(models.Model):
+    #profil = models.OneToOneField(User, primary_key=True)
+    profil= AutoOneToOneField(User, primary_key=True)
+
+    def __str__(self):
+        if Patronazna_sestra.objects.filter(uporabniski_profil_id=self.profil_id).exists():
+            sifra=Patronazna_sestra.objects.get(uporabniski_profil_id=self.profil).sifra_patronazne_sestre
+        if Vodja_PS.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Vodja_PS.objects.get(uporabniski_profil_id=self.profil).sifra_vodje_PS
+        if Zdravnik.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Zdravnik.objects.get(uporabniski_profil_id=self.profil).sifra_zdravnika
+        if Sodelavec_ZD.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Sodelavec_ZD.objects.get(uporabniski_profil_id=self.profil).sifra_sodelavca
+        return str(sifra)+' '+self.profil.first_name+' '+self.profil.last_name
+    def __unicode__(self):
+        if Patronazna_sestra.objects.filter(uporabniski_profil_id=self.profil_id).exists():
+            sifra=Patronazna_sestra.objects.get(uporabniski_profil_id=self.profil).sifra_patronazne_sestre
+        if Vodja_PS.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Vodja_PS.objects.get(uporabniski_profil_id=self.profil).sifra_vodje_PS
+        if Zdravnik.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Zdravnik.objects.get(uporabniski_profil_id=self.profil).sifra_zdravnika
+        if Sodelavec_ZD.objects.filter(uporabniski_profil_id=self.profil).exists():
+            sifra=Sodelavec_ZD.objects.get(uporabniski_profil_id=self.profil).sifra_sodelavca
+        return str(sifra)+' '+self.profil.first_name+' '+self.profil.last_name
 
 class Kontaktna_oseba(models.Model):
     ime = models.CharField(max_length=100, null=False)

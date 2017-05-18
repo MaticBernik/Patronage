@@ -42,21 +42,26 @@ def list_work_task(request):
     leaders_profiles = [ x.uporabniski_profil_id for x in Vodja_PS.objects.all()]
     doctors_leaders = doctors_profiles + leaders_profiles
 
-    filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
+    #filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
+    filter_form.fields['filter_creator_id'].queryset=Uporabnik.objects.filter(profil_id__in=doctors_leaders)
+    print(filter_form.fields['filter_creator_id'].queryset)
 
-    izdajatelj = Uporabnik.objects.get(profil_id=uporabnik)
+
+    izdajatelj = Uporabnik.objects.get(profil_id=uporabnik.id)
     if is_doctor(uporabnik):
-        zdravnik=Zdravnik.objects.get(uporabniski_profil=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=zdravnik)
+        zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
+        print("zdravnik",zdravnik)
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.sifra_zdravnika)
+        print("Nalogi: ",delovni_nalogi)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
     elif is_leader_ps(uporabnik):
-        vodja=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
+        vodja=Vodja_PS.objects.get(uporabniski_profil_id=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         nurse=Patronazna_sestra.objects.all()
     elif is_nurse(uporabnik):
-        nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
+        nurse=Patronazna_sestra.objects.get(uporabniski_profil_id=uporabnik)
         pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
         nalogi_vezani_na_pacienta=Pacient_DN.objects.filter(pacient_id__in=pacienti)
         delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
@@ -75,8 +80,8 @@ def list_work_task(request):
 
     if request.POST:
         if request.POST.get('filter_creator_id',0):
-            uporabnik=request.POST['filter_creator_id']
-            profil=uporabnik.profil_id
+            uporabnik1=request.POST['filter_creator_id']
+            profil=int(uporabnik1)#.profil_id
             #ta filter mora biti na prvem mestu!!
             delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):

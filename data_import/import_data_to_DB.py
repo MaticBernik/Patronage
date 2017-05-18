@@ -155,6 +155,7 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 			conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)", (line[3], line[5], line[6], id, id_okrozje));
 		elif line[0]=="sodelavec":
 			conn.execute("INSERT INTO patronazna_sluzba_app_sodelavec_zd (sifra_sodelavca,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id) VALUES (?,?,?,?)", (line[3], line[5], line[6], id));
+		conn.execute("INSERT INTO patronazna_sluzba_app_uporabnik (profil_id) VALUES (?)",	(id,));
 
 #Make sure, that every area has its nurse
 first_names=['Jana','Ana','Anja','Andreja','Zala','Lisa','Sara','Eva','Spela','Lara','Larisa','Marko','Luka','Martina','Franja','Ursa']

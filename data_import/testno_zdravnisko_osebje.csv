@@ -2,5 +2,6 @@
 zdravnik;Joze;Dolenc;99999;zdravnik@mail.si;051 111 111;00100;geslo
 sestra;Anita;Gorenc;99998;sestra@mail.si;040 111 111;00100;geslo;1000
 vodja;Matej;Smrekar;99997;vodja@mail.si;031 111 111;00100;geslo
-sodelavec;Zdravko;Dren;99996;sodelavec@mail.si;041 111 111;00100;geslo
+sodelavec;Zdravko;Dren;99995;sodelavec@mail.si;041 111 111;00100;geslo
 administrator;Alen;Grozdnik;;admin@mail.com;031 311 311;;geslo123
+zdravnik;Mirko;Dedic;99996;mirko.dedic@mail.si;041 412 111;00100;geslo

@@ -44,7 +44,7 @@ def list_work_task(request):
 
     filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
 
-    
+
     if is_doctor(uporabnik):
         izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)

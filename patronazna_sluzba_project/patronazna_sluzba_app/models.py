@@ -58,6 +58,18 @@ class Okolis(models.Model):
     izvajalec_samo1X = models.BooleanField(null=False, default=False)
     stevilo_vrstic_VZDjev = models.IntegerField(null=False)'''
 
+class Uporabnik(models.Model):
+    profil = models.OneToOneField(User)
+    def __str__(self):
+        if Patronazna_sestra.objects.get(uporabniski_profil=self.profil).exists():
+            sifra=Patronazna_sestra.objects.get(uporabniski_profil=self.profil).sifra_patronazne_sestre
+        if Vodja_PS.objects.get(uporabniski_profil=self.profil).exists():
+            sifra=Vodja_PS.objects.get(uporabniski_profil=self.profil).sifra_vodje_PS
+        if Zdravnik.objects.get(uporabniski_profil=self.profil).exists():
+            sifra=Zdravnik.objects.get(uporabniski_profil=self.profil).sifra_zdravnika
+        if Sodelavec_ZD.objects.get(uporabniski_profil=self.profil).exists():
+            sifra=Sodelavec_ZD.objects.get(uporabniski_profil=self.profil).sifra_sodelavca
+        return str(sifra)+' '+self.profil.first_name+' '+self.profil.last_name
 
 class Izvajalec_ZS(models.Model):
     st_izvajalca = models.IntegerField(primary_key=True)

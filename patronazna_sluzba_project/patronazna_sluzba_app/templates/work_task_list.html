@@ -99,10 +99,11 @@
      		<hr>
             {% if work_task_list %}
 
-            <table class="table table-striped tablesorter" id ="table_of_work_tasks" style="text-align: center">
+            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
             	<thead>
             	<tr>
-            		<th>ID - Šifra naloga</th>
+            		<th></th>
+            		<th>Šifra naloga</th>
             		<th>Izdajatelj naloga</th>
             		<th>Medicinska sestra</th>
             		<th>Pacient</th>
@@ -115,6 +116,7 @@
             	<tbody>
             	{% for work_task in work_task_list %}
     	        <tr>
+    	        	<td></td>
     	        	<td>{{ work_task.id }}</td>
     	        	<td>
     	        		{% if work_task.zdravnik_id %}

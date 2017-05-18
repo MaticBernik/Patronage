@@ -12,7 +12,7 @@ from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
 from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterWorkTasksForm
-from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN
+from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN, Uporabnik
 import csv
 import django.contrib.auth
 import logging
@@ -44,16 +44,16 @@ def list_work_task(request):
 
     filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
 
-
+    izdajatelj = Uporabnik.objects.get(profil_id=uporabnik)
     if is_doctor(uporabnik):
-        izdajatelj=Zdravnik.objects.get(uporabniski_profil=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=izdajatelj.sifra_zdravnika)
+        zdravnik=Zdravnik.objects.get(uporabniski_profil=uporabnik)
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik=zdravnik)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
     elif is_leader_ps(uporabnik):
-        izdajatelj=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
+        vodja=Vodja_PS.objects.get(uporabniski_profil=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
-        filter_form.fields['filter_creator_id'].initial = izdajatelj.uporabniski_profil_id
+        filter_form.fields['filter_creator_id'].initial = izdajatelj
         nurse=Patronazna_sestra.objects.all()
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil=uporabnik)
@@ -75,7 +75,8 @@ def list_work_task(request):
 
     if request.POST:
         if request.POST.get('filter_creator_id',0):
-            profil=request.POST['filter_creator_id']
+            uporabnik=request.POST['filter_creator_id']
+            profil=uporabnik.profil_id
             #ta filter mora biti na prvem mestu!!
             delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):

@@ -342,7 +342,7 @@ class Obisk(models.Model):
     datum = models.DateTimeField(null=True)
     p_sestra = models.ForeignKey(Patronazna_sestra, null=True) #lahko jih je vec, ocitno -.-"
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
-
+    opravljen = models.BooleanField(null=False, default=0)
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)

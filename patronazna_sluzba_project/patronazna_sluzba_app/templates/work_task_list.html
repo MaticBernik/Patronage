@@ -117,7 +117,7 @@
             	{% for work_task in work_task_list %}
     	        <tr>
     	        	<td></td>
-    	        	<td>{{ work_task.id }}</td>
+    	        	<td># {{ work_task.id }}</td>
     	        	<td>
     	        		{% if work_task.zdravnik_id %}
     	        			{% for doc in doctors %}
@@ -136,7 +136,7 @@
     	        		{% endif %}
     	        	</td>
             		<td>
-            			{% for v in visits_list%}
+            			{% for v in visitations_list%}
 							{% if v.delovni_nalog.id == work_task.id and v.datum == work_task.datum_prvega_obiska %}
 								{{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}
 							{% endif %}
@@ -239,7 +239,7 @@
 					<div class ="row">
 						<label style="float: left;">Seznam obiskov:</label>
 					</div>
-					{% for v in visits_list %}
+					{% for v in visitations_list %}
 
 						{% if v.delovni_nalog.id == work_task.id %}
 							<!--	WE HAVE JUST FOUND OUR VISIT -->

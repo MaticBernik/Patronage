@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^health_visitor/$',health_visitor_view),
 	url(r'^static/(?P<path>.*)$', views.serve),
     url(r'^planned_list/$',ajax_added_to_plan),
+    url(r'^listVisitations/', list_visitations, name="link_list_visitations"),
 ]
 
 #ADD 

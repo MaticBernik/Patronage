@@ -58,6 +58,7 @@
             <button id="remove_plan" type="button" class="btn btn-danger" >Odstrani</button>
              <!-- Trigger the modal with a button -->
             <button id="plan_detail" type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal">Podrobnosti</button>
+            <button id="material_list"type="button" class="btn btn-info" data-toggle="modal" data-target="#material_modal">Seznam materiala</button>
 	  	</div>
 		<div class="form-group">
 			<!--{{ plan_visit_form.plan_list.errors }}-->
@@ -93,7 +94,36 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
               <h4 class="modal-title">Podrobnosti obiska</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="modal_body_details">
+                {% csrf_token %}
+              <!--<div>
+                <label>Id pošte</label>
+                <input type="text" disabled>
+              </div>
+                <div>
+                <label>Ime pošte</label>
+                <input type="text" disabled>
+              </div>-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    <!--MATERIAL MODAL-->
+    <div class="modal fade" id="material_modal" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Seznam Materiala</h4>
+            </div>
+            <div class="modal-body" id="modal_material_list">
                 {% csrf_token %}
               <!--<div>
                 <label>Id pošte</label>

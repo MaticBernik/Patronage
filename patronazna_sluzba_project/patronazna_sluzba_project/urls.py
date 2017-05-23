@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^substitution/$',substitutionView,name="substitution"),
     url(r'^nurseList/$',ajax_nurse_autocomplete),
     url(r'^subNurseList/$',ajax_sub_nurse),
+    url(r'^materialList/$',material_list),
 ]
 
 #ADD 

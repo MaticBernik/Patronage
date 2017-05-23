@@ -126,9 +126,14 @@ def list_visitations(request):
 
     visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
     if request.POST.get('filter_visit_complete', 0):
-        print('CISST : ',filter_form.fields['filter_visit_complete'].choices)
-        if not filter_form.fields['filter_visit_complete']==-1:
-            visitations=visitations.filter(opravljen=request.POST['filter_visit_complete'])
+        print('CEEE: ',filter_form.fields['filter_visit_complete'])
+        print('CISST: ',filter_form.fields['filter_visit_complete'].choices)
+        print('IIOI: ', request.POST.get('filter_visit_complete'))
+        print('IZZZZ: ', int(request.POST.get('filter_visit_complete')))
+        if not int(request.POST.get('filter_visit_complete'))==-1:
+            #visitations=visitations.filter(opravljen=request.POST['filter_visit_complete'])
+            #filter_form.fields['filter_visit_complete'].initial = request.POST['filter_visit_complete']
+            visitations = visitations.filter(opravljen=int(request.POST.get('filter_visit_complete')))
             filter_form.fields['filter_visit_complete'].initial = request.POST['filter_visit_complete']
     if request.POST.get('filter_date_from', 0):
         print("filter date from")

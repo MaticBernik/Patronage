@@ -67,7 +67,7 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 }
 
 table.tablesorter thead tr .header {
-	background-image: url(../img/bg.gif);
+	background-image: url(../img/tablesorter_icon/bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
@@ -85,11 +85,11 @@ table.tablesorter tbody tr.odd td {
 }
 
 table.tablesorter thead tr .headerSortUp {
-	background-image: url(../img/asc.gif);
+	background-image: url(../img/tablesorter_icon/asc.gif);
 }
 
 table.tablesorter thead tr .headerSortDown {
-	background-image: url(../img/desc.gif);
+	background-image: url(../img/tablesorter_icon/desc.gif);
 }
 
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {

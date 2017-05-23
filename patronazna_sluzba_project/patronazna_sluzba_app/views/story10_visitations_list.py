@@ -79,6 +79,7 @@ def list_visitations(request):
         print("ERROR: FORM NOT VALID")
 
     if request.POST:
+        print(request.POST.get('filter_creator_id',0))
         if request.POST.get('filter_creator_id',0):
             uporabnik1=request.POST['filter_creator_id']
             profil=int(uporabnik1)#.profil_id

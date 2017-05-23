@@ -201,7 +201,7 @@ class FilterWorkTasksForm(forms.Form):
 
     # filter_creator_id = forms.CharField(label='Šifra izdajatelja naloga: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja naloga: ', required = False, queryset=User.objects.filter(is_staff=1), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
-    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja naloga: ', required = False, queryset=Uporabnik.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
+    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja DN: ', required = False, queryset=Uporabnik.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
     # filter_nurse_id = forms.CharField(label='Šifra med. sestre: ', required = False, widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     # filter_nurse_id = forms.ModelChoiceField(label='Šifra med. sestre: ', required = False, queryset=Patronazna_sestra.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled', 'class': 'input-sm form-control'}))
     filter_nurse_id = forms.ModelChoiceField(label='Šifra med. sestre: ', required = False, queryset=Patronazna_sestra.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
@@ -209,6 +209,28 @@ class FilterWorkTasksForm(forms.Form):
     filter_patient_id = forms.ModelChoiceField(label='Pacient', required = False, queryset=Pacient.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'select_patient_filter'}))
     # filter_visit_type = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'id': 'task_visit_type'}))
     filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
+
+    filter_date_from = forms.DateField(label='Datum od:', required = False,
+        widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control', 'id': 'task_date_from'}),
+        input_formats=['%d.%m.%Y'])
+    filter_date_to = forms.DateField(label='Datum do:', required = False,
+        widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm  form-control', 'id': 'task_date_to'}),
+        input_formats=['%d.%m.%Y'])
+
+
+class FilterVisitationsForm(forms.Form):
+
+    filter_creator_id = forms.ModelChoiceField(label='Šifra izdajatelja DN: ', required = False, queryset=Uporabnik.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
+    
+    filter_nurse_id = forms.ModelChoiceField(label='Šifra med. sestre: ', required = False, queryset=Patronazna_sestra.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
+
+    filter_substitute_nurse_id = forms.ModelChoiceField(label='Šifra nad. med. sestre: ', required = False, queryset=Patronazna_sestra.objects.none(), widget=forms.Select(attrs={'class': 'input-sm form-control'}))
+    
+    filter_patient_id = forms.ModelChoiceField(label='Pacient', required = False, queryset=Pacient.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'select_patient_filter'}))
+    
+    filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
+   
+    filter_visit_complete = forms.ModelChoiceField(label='Opravljenost obiska', required = False, queryset=Obisk.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'visitation_mandatory_filter'}))
 
     filter_date_from = forms.DateField(label='Datum od:', required = False,
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control', 'id': 'task_date_from'}),

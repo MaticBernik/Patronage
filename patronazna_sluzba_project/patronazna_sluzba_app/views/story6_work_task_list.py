@@ -131,6 +131,6 @@ def list_work_task(request):
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
     
-    context = {'work_task_list':delovni_nalogi, 'visits_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
     return render(request, 'work_task_list.html', context)
 

@@ -49,7 +49,9 @@ def visit_based_on_role(request):
     try:
         current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
         ZS = current_doc.sifra_izvajalca_ZS
-        print("DOC DELOVNI NALOG "+str(current_doc.sifra_zdravnika))
+        print("===============================")
+        print("DOC DELOVNI NALOG "+str(current_doc))
+        print("===============================")
         user_role_type = 'Zdravnik'
     except:
         try:
@@ -204,14 +206,21 @@ def work_task_view(request):
         current_vodja_PS = None
         current_user = request.user
         creator_id = None
+        doctor_id = None
+        vodja_id = None
         try:
             current_doc = Zdravnik.objects.get(uporabniski_profil=current_user)
             ZS = current_doc.sifra_izvajalca_ZS
-            print("DOC DELOVNI NALOG")
+            doctor_id = current_doc.sifra_zdravnika
+            print("###############################")
+            print("DOC DELOVNI NALOG " + str(current_doc.sifra_zdravnika))
+            print("===============================")
+
 
         except:
             current_vodja_PS = Vodja_PS.objects.get(uporabniski_profil=current_user)
             ZS = current_vodja_PS.sifra_izvajalca_ZS
+            vodja_id = current_vodja_PS.sifra_vodje_PS
             print("VODJA PS DELOVNI NALOG")
 
 
@@ -285,13 +294,13 @@ def work_task_view(request):
                     print("Shranjen material", quantity, ",", material_name)
             elif podvrsta_vrsta_obiska == 'Aplikacija injekcij':
                 for i in izbranaZdravila:
-                    sickness = Zdravilo.objects.get(kratko_poimenovanje=i)
-
+                    #sickness = Zdravilo.objects.get(kratko_poimenovanje=i)
+                    sickness = Zdravilo.objects.filter(kratko_poimenovanje=i)[0]
                     zdr = Zdravilo_DN(zdravilo=sickness, delovni_nalog=work_task_f)
                     zdr.save()
                 #return HttpResponse("Uspesno kreiranje delovnega naloga "+delovni_nalog);
                 #return render(request, 'task_creation_success.html')
-                return redirect('link_list_work_task')
+                #return redirect('link_list_work_task')
 
 
 
@@ -311,6 +320,8 @@ def work_task_view(request):
                     weekno = date_next.weekday()
 
                 p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
+                print("===================PATRONAZNA SESTRA INTERVAL=============")
+                print(p_sestra)
                 obv = 0
                 if obveznost == "Obvezen":
                     obv = 1

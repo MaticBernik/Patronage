@@ -128,6 +128,8 @@ def list_visitations(request):
             nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
             delovni_nalogi = delovni_nalogi.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial =  request.POST['filter_nurse_id']
+        if request.POST.get('filter_visit_complete',0):
+            pass
         print("POST-POST")
 
     #  FORM QUERY SET

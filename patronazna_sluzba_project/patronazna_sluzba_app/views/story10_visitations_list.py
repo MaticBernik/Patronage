@@ -78,6 +78,7 @@ def list_visitations(request):
 
     print("PRE-POST")
     if request.POST:
+        print(request.POST.get('filter_creator_id',0))
         if request.POST.get('filter_creator_id',0):
             print("filter_creator_id")
             uporabnik1=request.POST['filter_creator_id']
@@ -141,6 +142,6 @@ def list_visitations(request):
 
     visitations=Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
 
-    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
     return render(request, 'visitations_list.html', context)
 

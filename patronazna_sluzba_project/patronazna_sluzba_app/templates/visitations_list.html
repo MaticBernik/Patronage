@@ -129,7 +129,7 @@
             		<th>Dejanski datum obiska</th>
             		<th>Obvezen obisk</th>
             		<th>Opravljen obisk</th>
-            		<!--<th></th>-->
+            		<th></th>
             	</tr>
             	</thead>
             	<tbody>
@@ -192,6 +192,10 @@
             			<button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button>
             		</td>
             		-->
+            		<td>
+            			<button type="submit" class="btn btn-primary btn-sm form-control" value={{visit.id}}>Podrobnosti</button>
+            		</td>
+
             	</tr>
                 {% endfor %}
                 </tbody>

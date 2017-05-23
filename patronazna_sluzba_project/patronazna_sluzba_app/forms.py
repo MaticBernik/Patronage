@@ -230,7 +230,7 @@ class FilterVisitationsForm(forms.Form):
     
     filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
    
-    filter_visit_complete = forms.ModelChoiceField(label='Opravljenost obiska', required = False, queryset=Obisk.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'visitation_mandatory_filter'}))
+    filter_visit_complete = forms.ModelChoiceField(label='Opravljenost obiska', required = False, queryset=["Opravljen","Ni opravljen"], widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'visitation_mandatory_filter'}))
 
     filter_date_from = forms.DateField(label='Datum od:', required = False,
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control', 'id': 'task_date_from'}),
@@ -238,3 +238,10 @@ class FilterVisitationsForm(forms.Form):
     filter_date_to = forms.DateField(label='Datum do:', required = False,
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm  form-control', 'id': 'task_date_to'}),
         input_formats=['%d.%m.%Y'])
+
+class SubstituteSisterForm(forms.Form):
+    start_date = forms.DateField(label='Začetek', widget=forms.TextInput(
+        attrs={'class': 'datepicker form-control', 'id': 'start_date'}), input_formats=['%d.%m.%Y'])
+
+    end_date = forms.DateField(label='Konec', widget=forms.TextInput(
+        attrs={'class': 'datepicker form-control', 'id': 'end_date'}), input_formats=['%d.%m.%Y'])

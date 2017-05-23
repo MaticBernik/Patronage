@@ -6,4 +6,5 @@ from .story5_work_task_form import *
 from .story6_work_task_list import *
 from .story8_plan_visit import *
 from .story10_visitations_list import *
+from .story12_substitute import *
 # import logging

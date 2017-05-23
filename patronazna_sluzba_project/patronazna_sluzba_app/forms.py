@@ -75,8 +75,9 @@ EPRUVETE_NUMBER = (
 )
 
 OPRAVLJENOST_OBISKA = (
-    ('1', 'Opravljen'),
-    ('2', 'Neopravljen'),
+    (-1,'---------'),
+    (1, 'Opravljen'),
+    (0, 'Neopravljen'),
 )
 
 

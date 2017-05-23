@@ -97,21 +97,6 @@ def list_visitations(request):
                 delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
                 print("Nalogi po giltriranju: ",delovni_nalogi)
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
-        if request.POST.get('filter_date_from',0):
-            print("filter date from")
-            datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
-            delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max
-            #filter_form.fields['filter_date_from'] = request.POST['filter_date_from']
-            filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
-        if request.POST.get('filter_date_to',0):
-            print("filter date to")
-            datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
-            #POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
-            datum+=timedelta(days=1)
-
-            delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__lte=datum) #datetime.min
-            #filter_form.fields['filter_date_to'] = request.POST['filter_date_to']
-            filter_form.fields['filter_date_to'].initial = request.POST['filter_date_to']
         if request.POST.get('filter_visit_type',0):
             delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST['filter_visit_type'])
             #filter_form.fields['filter_visit_type'] = request.POST['filter_visit_type']
@@ -128,9 +113,7 @@ def list_visitations(request):
             nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
             delovni_nalogi = delovni_nalogi.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial =  request.POST['filter_nurse_id']
-        if request.POST.get('filter_visit_complete',0):
-            pass
-        print("POST-POST")
+
 
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
@@ -140,9 +123,31 @@ def list_visitations(request):
     pacienti = Pacient_DN.objects.all()
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
-    #delovni_nalogi = Delovni_nalog.objects.all()
 
-    visitations=Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
+    visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
+    if request.POST.get('filter_visit_complete', 0):
+        print('CISST : ',filter_form.fields['filter_visit_complete'].choices)
+        if not filter_form.fields['filter_visit_complete']==-1:
+            visitations=visitations.filter(opravljen=request.POST['filter_visit_complete'])
+            filter_form.fields['filter_visit_complete'].initial = request.POST['filter_visit_complete']
+    if request.POST.get('filter_date_from', 0):
+        print("filter date from")
+        datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
+        visitations = visitations.filter(datum__gte=datum)  # datetime.max
+        # filter_form.fields['filter_date_from'] = request.POST['filter_date_from']
+        filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
+    if request.POST.get('filter_date_to', 0):
+        print("filter date to")
+        datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
+        # POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
+        datum += timedelta(days=1)
+        visitations = visitations.filter(datum__lte=datum)  # datetime.min
+        # filter_form.fields['filter_date_to'] = request.POST['filter_date_to']
+        filter_form.fields['filter_date_to'].initial = request.POST['filter_date_to']
+
+    delovni_nalogi = Delovni_nalog.objects.all()
+
+
 
     context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
     return render(request, 'visitations_list.html', context)

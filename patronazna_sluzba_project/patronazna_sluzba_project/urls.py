@@ -49,6 +49,9 @@ urlpatterns = [
     url(r'^health_visitor/$',health_visitor_view),
 	url(r'^static/(?P<path>.*)$', views.serve),
     url(r'^planned_list/$',ajax_added_to_plan),
+    url(r'^substitution/$',substitutionView,name="substitution"),
+    url(r'^nurseList/$',ajax_nurse_autocomplete),
+    url(r'^subNurseList/$',ajax_sub_nurse),
 ]
 
 #ADD 

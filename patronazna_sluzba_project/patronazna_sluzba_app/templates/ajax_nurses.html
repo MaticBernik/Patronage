@@ -1,0 +1,14 @@
+<p>nurse list</p>
+{% if nurses.count > 0 %}
+<datalist>
+{% for nurse in nurses %}
+
+    <option data-value="{{ nurse.id }}" value="{{ nurse.sifra_patronazne_sestre }} {{ nurse.uporabniski_profil.first_name }} {{ nurse.uporabniski_profil.last_name }}">
+
+    {%  endfor %}
+</datalist>
+{% else %}
+
+<li>None to show!</li>
+
+{%  endif %}

@@ -20,4 +20,3 @@ def name_initial(name):
 @register.filter(name='text_length')
 def text_lenght(text):
     return len(text)
-

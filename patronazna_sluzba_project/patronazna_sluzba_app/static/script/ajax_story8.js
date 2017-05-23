@@ -71,6 +71,25 @@ $(document).ready(function(){
 
     });
 
+
+    //prikaz seznama materiala
+
+     //master detail delovni nalog MS
+    $('#material_list').on('click', function (e) {
+    //alert("MATERIAL LIST MODAL");
+        $.ajax({
+            type: "GET",
+            url: "/materialList/",
+            data: {
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+            success: materialListSuccess,
+            dataType: 'html'
+        });
+
+    });
+
     //unselect the first list
         $("#id_plan_list").on('change',function(){
 
@@ -166,7 +185,7 @@ function planVisitSuccess(data, textStatus, jqXHR) {
 
 
 function planDetailSuccess(data, textStatus, jqXHR) {
-    $('.modal-body').html(data);
+    $('#modal_body_details').html(data);
 }
 function plannedListSuccess(data, textStatus, jqXHR) {
     $('#id_plan_list').html(data);
@@ -203,4 +222,9 @@ function mandatoryDate(datum) {
 		return true;
 	}
     return false;
+}
+
+function materialListSuccess(data, textStatus, jqXHR) {
+//alert("SUCCESS MATERIAL");
+    $('#modal_material_list').html(data);
 }

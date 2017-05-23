@@ -14,6 +14,44 @@ global_plan=[]
 global_nurse_id = 0
 old_plan = []
 main_nurse = None
+
+def material_list(request):
+    print("=============GLOBAL PLAN MATERIAL============")
+    medicine = {}
+    blood_tubes = {}
+    for i in global_plan:
+        tip_obiska = str(i.planirani_obisk.delovni_nalog.vrsta_obiska.ime)
+        delovni_nalog_id = str(i.planirani_obisk.delovni_nalog_id)
+
+        if tip_obiska == 'Odvzem krvi':
+            # print("Epruvete")
+            tube_query = Material_DN.objects.select_related().filter(delovni_nalog_id=delovni_nalog_id)
+            for j in tube_query:
+                tube_name = j.material.ime
+                if tube_name in blood_tubes:
+                    blood_tubes[tube_name] += j.kolicina
+                else:
+                    blood_tubes[tube_name] = j.kolicina
+
+
+        elif tip_obiska == 'Aplikacija injekcij':
+            # print("Zdravila: ")
+            medicine_query = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=delovni_nalog_id)
+            for j in medicine_query:
+                m_name = j.zdravilo.kratko_poimenovanje
+                if m_name in medicine:
+                    medicine[m_name] += 1
+                else:
+                    medicine[m_name] = 1
+    print("=========MATERIAL ZA OBISK=================")
+    print("ZDRAVILA:")
+    print(medicine)
+    print("EPRUVETE")
+    print(blood_tubes)
+
+    return render_to_response('ajax_material_list.html',{'medicine':medicine,'blood_tubes':blood_tubes})
+
+
 def work_task_plan(request):
     if request.method == 'POST':
 
@@ -29,8 +67,10 @@ def work_task_plan(request):
         #    visit_list = visit_list.split()[0]
     else:
         visit_list ='7'
-
+    #rel_obj = getattr(instance, self.cache_name) AttributeError: 'MyModel' object has no attribute '_zdravnik_cache'
     task_fk = Pacient_DN.objects.select_related().filter(delovni_nalog_id=visit_list) #Delovni_nalog.objects.select_related().get(id=visit_list) #filter(id__iexact=visit_list)    #Okolis.objects.filter(id__iexact=visit_list)
+
+    delovni_nalog = Delovni_nalog.objects.select_related().filter(id=visit_list)
 
     cas_obiskov_tip = task_fk[0].delovni_nalog.cas_obiskov_tip
 
@@ -46,7 +86,11 @@ def work_task_plan(request):
     obisk = Obisk.objects.select_related().filter(delovni_nalog_id=visit_list)
     material = Material_DN.objects.select_related().filter(delovni_nalog_id=visit_list)#get(delovni_nalog_id=visit_list)
     medicine = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id=visit_list)
-    print('QUERY RESULT: '+str(task_fk[0].delovni_nalog.zdravnik)+'    '+str(material)+'  '+str(medicine))
+    print("####################################")
+    for field in Delovni_nalog._meta.fields:
+        print(field.name)
+    print('QUERY RESULT: '+str(delovni_nalog[0].zdravnik)+'    '+str(material)+'  '+str(medicine))
+    print("####################################")
    # task = Posta.objects.all()[1:10]
     global main_nurse
     return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse':main_nurse})
@@ -159,12 +203,35 @@ def plan_list_ajax(request):
             test_plan = replace_datum_type(test_plan,1)
             #global_plan=planned_visits
             global_plan = test_plan
-
-            print("GLOBAL PLAN")
+            """
+            print("=============GLOBAL PLAN MATERIAL============")
+            medicine = {}
+            blood_tubes = {'Zelena': 0, 'Modra': 0, 'Rdeca': 0, 'Rumena': 0}
             for i in global_plan:
-                print(str(i.planirani_obisk))
+                tip_obiska = str(i.planirani_obisk.delovni_nalog.vrsta_obiska.ime)
+                delovni_nalog_id = str(i.planirani_obisk.delovni_nalog_id)
 
+                if tip_obiska =='Odvzem krvi':
+                   # print("Epruvete")
+                    tube_query = Material_DN.objects.select_related().filter(delovni_nalog_id = delovni_nalog_id)
+                    for j in tube_query:
+                        blood_tubes[j.material.ime] += j.kolicina
 
+                elif tip_obiska == 'Aplikacija injekcij':
+                    #print("Zdravila: ")
+                    medicine_query = Zdravilo_DN.objects.select_related().filter(delovni_nalog_id = delovni_nalog_id)
+                    for j in medicine_query:
+                        m_name = j.zdravilo.kratko_poimenovanje
+                        if m_name in medicine:
+                            medicine[m_name] += 1
+                        else:
+                            medicine[m_name] = 1
+            print("=========MATERIAL ZA OBISK=================")
+            print("ZDRAVILA:")
+            print(medicine)
+            print("EPRUVETE")
+            print(blood_tubes)
+            """
             #for i in planned_visits:
              #   print(i.p_sestra_id)
                 #print(i.planirani_obisk_id)

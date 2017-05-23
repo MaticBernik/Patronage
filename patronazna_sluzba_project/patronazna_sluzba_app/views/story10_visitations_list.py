@@ -19,21 +19,22 @@ import logging
 import os
 
 def is_doctor(user):
-    if Zdravnik.objects.filter(uporabniski_profil=user).exists():
+    if Zdravnik.objects.filter(uporabniski_profil_id=user).exists():
         return True
     return False
 
 def is_leader_ps(user):
-    if Vodja_PS.objects.filter(uporabniski_profil=user).exists():
+    if Vodja_PS.objects.filter(uporabniski_profil_id=user).exists():
         return True
     return False
 
 def is_nurse(user):
-    if Patronazna_sestra.objects.filter(uporabniski_profil=user).exists():
+    if Patronazna_sestra.objects.filter(uporabniski_profil_id=user).exists():
         return True
     return False
 
 def list_visitations(request):
+    print("LIST VISITATIONS")
     filter_form = FilterVisitationsForm()
     uporabnik = request.user
 
@@ -44,18 +45,15 @@ def list_visitations(request):
 
     #filter_form.fields['filter_creator_id'].queryset=User.objects.filter(id__in=doctors_leaders)
     filter_form.fields['filter_creator_id'].queryset=Uporabnik.objects.filter(profil_id__in=doctors_leaders)
-    print(filter_form.fields['filter_creator_id'].queryset)
-
 
     izdajatelj = Uporabnik.objects.get(profil_id=uporabnik.id)
     if is_doctor(uporabnik):
         zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
-        print("zdravnik",zdravnik)
         delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.sifra_zdravnika)
-        print("Nalogi: ",delovni_nalogi)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
     elif is_leader_ps(uporabnik):
+        print("IS LEADER")
         vodja=Vodja_PS.objects.get(uporabniski_profil_id=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
         filter_form.fields['filter_creator_id'].initial = izdajatelj
@@ -78,25 +76,34 @@ def list_visitations(request):
     if not form.is_valid():
         print("ERROR: FORM NOT VALID")
 
+    print("PRE-POST")
     if request.POST:
         if request.POST.get('filter_creator_id',0):
+            print("filter_creator_id")
             uporabnik1=request.POST['filter_creator_id']
+            print("UPORABNIK1: ",uporabnik1)
             profil=int(uporabnik1)#.profil_id
+            print("PROFIL: ",profil)
             #ta filter mora biti na prvem mestu!!
             delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):
                 creator = Zdravnik.objects.get(uporabniski_profil_id=profil)
+                print("CREATOR: ",creator)
                 delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator.sifra_zdravnika)
             elif is_leader_ps(request.POST['filter_creator_id']):
                 creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
+                print("Nalogi pred filtriranjem: ",delovni_nalogi)
                 delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
+                print("Nalogi po giltriranju: ",delovni_nalogi)
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
+            print("filter date from")
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max
             #filter_form.fields['filter_date_from'] = request.POST['filter_date_from']
             filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
         if request.POST.get('filter_date_to',0):
+            print("filter date to")
             datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
             #POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
             datum+=timedelta(days=1)
@@ -120,7 +127,7 @@ def list_visitations(request):
             nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
             delovni_nalogi = delovni_nalogi.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial =  request.POST['filter_nurse_id']
-
+        print("POST-POST")
 
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
@@ -130,7 +137,9 @@ def list_visitations(request):
     pacienti = Pacient_DN.objects.all()
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
-    delovni_nalogi = Delovni_nalog.objects.all()
+    #delovni_nalogi = Delovni_nalog.objects.all()
+
+    visitations=Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
 
     context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
     return render(request, 'visitations_list.html', context)

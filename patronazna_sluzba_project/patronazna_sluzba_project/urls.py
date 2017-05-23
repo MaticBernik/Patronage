@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^base/addNursingPatient', add_nursing_patient, name="link_add_nursing"),
 	url(r'^changePassword', change_password, name="link_change_password"),
     url(r'^activate/', activate),
+	url(r'^listVisitations/', list_visitations, name="link_list_visitations"),
     url(r'^listWorkTask/', list_work_task, name="link_list_work_task"),
 	url(r'^workTask/', work_task_view, name="link_work_task"),
 	url(r'^logout', logout_user, name="link_logout"),
@@ -49,7 +50,7 @@ urlpatterns = [
     url(r'^health_visitor/$',health_visitor_view),
 	url(r'^static/(?P<path>.*)$', views.serve),
     url(r'^planned_list/$',ajax_added_to_plan),
-    url(r'^listVisitations/', list_visitations, name="link_list_visitations"),
+
 ]
 
 #ADD 

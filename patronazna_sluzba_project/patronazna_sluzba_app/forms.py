@@ -216,3 +216,10 @@ class FilterWorkTasksForm(forms.Form):
     filter_date_to = forms.DateField(label='Datum do:', required = False,
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm  form-control', 'id': 'task_date_to'}),
         input_formats=['%d.%m.%Y'])
+
+class SubstituteSisterForm(forms.Form):
+    start_date = forms.DateField(label='Začetek', widget=forms.TextInput(
+        attrs={'class': 'datepicker form-control', 'id': 'start_date'}), input_formats=['%d.%m.%Y'])
+
+    end_date = forms.DateField(label='Konec', widget=forms.TextInput(
+        attrs={'class': 'datepicker form-control', 'id': 'end_date'}), input_formats=['%d.%m.%Y'])

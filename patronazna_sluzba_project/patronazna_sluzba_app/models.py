@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from datetime import datetime,timedelta
 from django.contrib.auth.models import User
@@ -302,13 +304,26 @@ class Vrsta_obiska(models.Model):
 
 
 class Meritev(models.Model): #Oz. bolje receno aktivnost?
+    #Pove za katero vrsto obiska se meritev izvaja, in katere podatke mora vsebovati porocilo
     class Meta:
         unique_together = (('sifra', 'vrsta_obiska'),)
 
     vrsta_obiska = models.ForeignKey(Vrsta_obiska, null=False)
     sifra = models.IntegerField(null=False)
     opis = models.CharField(max_length=500, null=False)
-    porocilo = models.CharField(max_length=100, null=False)
+    #porocilo = models.CharField(max_length=100, null=False)
+
+class Polje_v_porocilu(models.Model):
+    #Tu so opisana polja, ki se lahko pojavijo na porocilu
+    ime = models.CharField(max_length=100, null=True) #ime polja oz. tip vsebine npr. Sistolični (mm Hg)
+    vnosno_polje = models.CharField(max_length=100, null=True) #tip polja, ki se ga uporabi na frontendu za vnos
+    mozne_vrednosti = models.CharField(max_length=100, null=True) #mozne vrednosti locene z vejico.. sicer razvidno ze iz imena
+
+class Polje_meritev(models.Model):
+    #Tabela povezuje Meritev oz. aktivnost z vsemi polji, ki jih potrebuje porocilo za to meritev
+    meritev = models.ForeignKey(Meritev)  # Katera meritev naj vsebuje to polje
+    polje = models.ForeignKey(Polje_v_porocilu)
+
 
 class Bolezen(models.Model):
     sifra = models.CharField(max_length=6, null=False, primary_key=True)
@@ -344,10 +359,36 @@ class Obisk(models.Model):
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
     opravljen = models.BooleanField(null=False, default=0)
 
+    def meritve(self):
+        #Metoda vrne polja, ki jih mora vsebovati porocilo o obisku
+        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog)
+        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska)
+        meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
+        return meritve
+
+    def porocilo(self):
+        #Metoda vrne polja, ki jih mora vsebovati porocilo o obisku
+        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog)
+        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska)
+        meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
+        meritve=[x.id for x in meritve]
+        polja=Polje_v_porocilu.objects.filter(meritev__in=meritve)
+        return polja
+
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)
     pacient = models.ForeignKey(Pacient, null=True)
 
+class Porocilo_o_obisku(models.Model):
+    obisk=models.ForeignKey(Obisk)
+    polje=models.ForeignKey(Polje_v_porocilu)
+    vrednost=models.CharField(max_length=100, null=False) #zal ne vem kako bi resil drugace, kot da so vse vrednosti znotraj porocila nizi znakov (kar bo dovolj za izpis), potem pa se typecasta glede na tip polja
+    pacient = models.ForeignKey(Pacient) # Pri obisku otročnice in novorojenčka(ov) je treba vnesti podatke za vsakega pacienta posebej.
+
+    def save(self, *args, **kwargs):
+        if not self.pacient:
+            self.pacient = Pacient_DN.objects.get(delovni_nalog_id=self.obisk.delovni_nalog)
+        super(Porocilo_o_obisku, self).save(*args, **kwargs)
 
 class Plan(models.Model):
     #Pripadajoca sestra, ki planira obisk je ze dolocena z izbiro obiska
@@ -390,3 +431,4 @@ class Nadomescanje(models.Model):
     datum_zacetek = models.DateTimeField(null=False,default=datetime.now())
     datum_konec = models.DateTimeField(null=False,default=datetime.now()+timedelta(days=1))
     nadomestna_sestra = models.ForeignKey(Patronazna_sestra, null=False)
+    veljavno = models.BooleanField(null=False, default=0)

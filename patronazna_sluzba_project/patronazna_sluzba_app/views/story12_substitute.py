@@ -14,7 +14,48 @@ from math import floor
 
 def substitutionView(request):
     if request.method == "POST":
-        print("POST REQUEST");
+        date_start = request.POST['start_date']
+        date_end = request.POST['end_date']
+        print("DATE", date_end)
+
+        nurse = request.POST['search_nurse']
+        nurse = Patronazna_sestra.objects.get(sifra_patronazne_sestre=nurse[0:5])
+
+        sub_nurse = request.POST['nurse_sub']
+        sub_nurse = Patronazna_sestra.objects.get(sifra_patronazne_sestre=sub_nurse[0:5])
+
+        date_start = datetime.strptime(date_start, "%d.%m.%Y")
+        date_end = datetime.strptime(date_end, "%d.%m.%Y")
+
+        substitution = Nadomescanje(sestra=nurse, datum_zacetek=date_start, datum_konec=date_end,
+                                    nadomestna_sestra=sub_nurse)
+        substitution.save()
+
+        sub_array = Nadomescanje.objects.filter(nadomestna_sestra=nurse)
+        for i in sub_array:
+            #   | Z K |
+            if i.datum_zacetek <= date_start and i.datum_konec >= date_end:
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=date_end, nadomestna_sestra=sub_nurse)
+                sub.save()
+                print("| Z K |")
+            #   | Z | K
+            if i.datum_zacetek <= date_start and i.datum_konec > date_start and i.datum_konec <= date_end:
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse)
+                sub.save
+                print(" | Z | K")
+            #   Z | K |
+            if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec >= date_end:
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=date_end, nadomestna_sestra=sub_nurse)
+                sub.save
+                print("Z | K |")
+            #   Z | | K
+            if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec > date_start and i.datum_konec <= date_end:
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse)
+                sub.save
+                print("Z | | K")
+
+        return HttpResponse("Nadomescanje dodano.")
+
     else:
         print("GET REQUEST")
     substitution_form = SubstituteSisterForm()

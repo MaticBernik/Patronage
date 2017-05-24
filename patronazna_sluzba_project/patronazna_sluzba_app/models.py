@@ -420,7 +420,7 @@ class Material_DN(models.Model):
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
-    kolicina = models.IntegerField(null=False, default=1)
+    kolicina = models.IntegerField( null=False, default=1)
 
 class Nadomescanje(models.Model):
     class Meta:

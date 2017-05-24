@@ -14,6 +14,19 @@ from math import floor
 
 def substitutionView(request):
     if request.method == "POST":
+        date_start = request.POST['start_date']
+        date_end = request.POST['end_date']
+        print("DATE", date_end)
+        """
+        nurse =
+        sub_nurse =
+
+        sub_array = Nadomescanje.objects.filter(nadomestna_sestra=nurse)
+
+        substitution = Nadomescanje(sestra=nurse, datum_zacetek=date_start, datum_konec=date_end, nadomestna_sestra=sub_nurse)
+        substitution.save()
+        """
+
         print("POST REQUEST");
     else:
         print("GET REQUEST")

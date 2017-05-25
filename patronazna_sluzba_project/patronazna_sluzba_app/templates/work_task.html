@@ -16,6 +16,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!--AJAX Zdravila-->
     <script src="{% static 'script/ajax.js' %}"></script>
+    <script src="{% static 'script/ajax_story5.js' %}"></script>
     <!--CLIENT SIDE VALIDATION-->
     <script src="{% static 'script/work_task_validation.js' %}"></script>
 
@@ -101,7 +102,7 @@
                                 </datalist>
                             
                                 <!--<input required type="number"/>-->
-                                <button class="add-baby btn btn-primary" style="display: none;">Dodaj pacient</button>
+                                <button class="add-baby btn btn-primary" style="display: none;">Dodaj pacienta</button>
                             </div>
                             </div>
                             <div  class="form-group"  id="baby-patient" style="display: none">
@@ -192,7 +193,7 @@
                                 <datalist id="search-results">
 
                                 </datalist>
-                                <button class=" btn btn-primary add-medicine">Dodaj zdravilo</button>
+                                <button class=" btn btn-primary add-medicine">Dodaj zdravila</button>
                             </div>
                             </div>
                             <div class="form-group row" >
@@ -216,14 +217,14 @@
                         <label for="id_materialColor">Barva in število euruvet</label>
                         {{ work_task_form.materialColor }}
                         {{ work_task_form.materialQuantity }}
-                             <button class=" btn btn-primary add-material">Dodaj material</button>
+                             <button class=" btn btn-primary add-material">Dodaj materiala</button>
                         </div>
                         </div>
                         <div class="form-group row" >
                         <div class="in_wrap col-lg-10 col-lg-offset-1  col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
                             <label for="id_materialDN">Izbran material</label>
                             {{ work_task_form.materialDN }}
-                            <button class=" btn btn-primary remove-material">Odstrani material</button>
+                            <button class=" btn btn-primary remove-material">Odstrani materiala</button>
                         </div>
                         </div>
                     </fieldset>

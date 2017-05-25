@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^materialList/$',material_list),
     url(r'^editProfile/$',editProfileView,name='link_edit_profile'),
     url(r'^editNursing/(?P<id>[0-9]+)/$',editNursingProfileView,name='link_edit_nursing'),
+    url(r'^resetPassword/$',resetPasswordView,name='link_reset_password'),
 
 ]
 

@@ -7,4 +7,5 @@ from .story6_work_task_list import *
 from .story8_plan_visit import *
 from .story10_visitations_list import *
 from .story12_substitute import *
+from .story15_edit_profile import *
 # import logging

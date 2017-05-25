@@ -331,7 +331,7 @@ def register_patient(request):
             print("Form not valid bro", form.errors)
             return HttpResponse("Form not valid")
 
-        return redirect('link_control_panel')
+        return redirect('/')
 
 
     # if a GET (or any other method) we'll create a blank form

@@ -54,6 +54,9 @@ urlpatterns = [
     url(r'^nurseList/$',ajax_nurse_autocomplete),
     url(r'^subNurseList/$',ajax_sub_nurse),
     url(r'^materialList/$',material_list),
+    url(r'^editProfile/$',editProfileView,name='link_edit_profile'),
+    url(r'^editNursing/(?P<id>[0-9]+)/$',editNursingProfileView,name='link_edit_nursing'),
+
 ]
 
 #ADD 

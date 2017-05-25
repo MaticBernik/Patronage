@@ -54,8 +54,9 @@ $(function () {
         });
     });
     // ajax za obisk glede na role
+/*
 $(document).ready(function(){
-   // alert("TEST FOR AJAX");
+
 
      $.ajax({
 
@@ -71,7 +72,7 @@ $(document).ready(function(){
         });
 
 });
-/*
+
 
 */
     //master detail obiski
@@ -229,11 +230,11 @@ function searchPostSuccess(data, textStatus, jqXHR) {
 function searchDistrictSuccess(data, textStatus, jqXHR) {
     $('#district_name').html(data);
 }
-
+/*
 function chooseRoleSuccess(data, textStatus, jqXHR) {
     $('#choose-visit').html(data);
 }
-
+*/
 function searchIllnessSuccess(data, textStatus, jqXHR) {
      $('#illness_list').html(data);
 }

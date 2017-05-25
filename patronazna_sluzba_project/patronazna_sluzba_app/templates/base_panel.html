@@ -40,7 +40,8 @@ http://bootsnipp.com/snippets/g0Re
                 <br>
                 {% ifequal role "Pacient" %}
                 <div id="btn_oskrbovanci">
-                <a  href="#openModal" class="btn btn-success">OSKRBOVANCI</a>
+                <a  href="#openModal" class="btn btn-success">Oskrbovanci</a>
+                <a  href="{% url 'link_edit_profile' %}" class="btn btn-success">Posodobitev profila</a>
                 </div>
                 
                 
@@ -50,11 +51,31 @@ http://bootsnipp.com/snippets/g0Re
                     <div>
                         <a href="#close" title="Close" class="close">X</a>
                         <h3>Oskrbovane osebe: </h3>
-                        {{ oskrbovanci_pacienta }}
+
                         {% if oskrbovanci_pacienta %}
+                        {% csrf_token %}
+                        <table id="patients-table" class="table">
+                            <thead>
+                              <tr>
+                                <th>St kartice</th>
+                                <th>Ime</th>
+                                <th>Priimek</th>
+
+                              </tr>
+                            </thead>
+                            <tbody>
                             {% for o in oskrbovanci_pacienta %}
-                                <p>{{ o.ime }}</p>
+
+                            <tr><td>{{ o.st_kartice }}</td><td>{{ o.ime }}</td><td>{{ o.priimek }}</td></td><td> <a id="some-link" href="/editNursing/{{ o.st_kartice }}"class="btn btn-success">Posodobi</a></td></tr>
                             {% endfor %}
+
+                            </tbody>
+                        </table>
+                        <!--<ol>
+                            {% for o in oskrbovanci_pacienta %}
+                                <li>{{ o.ime }} {{ o.priimek }}</li>
+                            {% endfor %}
+                        </ol>-->
                         {% else %}
                             <p>Nimate oskrbovanih pacientov</p>
                         {% endif %}

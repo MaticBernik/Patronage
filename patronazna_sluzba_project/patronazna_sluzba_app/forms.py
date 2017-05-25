@@ -9,6 +9,7 @@ from .models import *
 from django.core.validators import MaxValueValidator
 from django.db.models import When, F, Q, Case
 from django.forms import  ModelForm
+from django.contrib.auth.models import User
 
 USER_TYPES = (
     ('doc', 'Zdravnik'),
@@ -245,3 +246,91 @@ class SubstituteSisterForm(forms.Form):
 
     end_date = forms.DateField(label='Konec', widget=forms.TextInput(
         attrs={'class': 'datepicker form-control', 'id': 'end_date'}), input_formats=['%d.%m.%Y'])
+#queryset = Pacient.objects.get(posta_id=1000)
+class EditProfileForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        queryset = Pacient.objects.select_related().get(uporabniski_profil=self.user)
+
+        self.fields['card_number'] = forms.CharField(disabled=True,label='Številka zdravstvene kartice: ',
+                                  validators=[numberic_only, min_len_12, max_len_12], widget=forms.NumberInput(
+            attrs={'id': 'card_number', 'placeholder': 'Sifra zdrav. kartice (12 mest)', 'class': 'form-control','value':queryset.st_kartice}))
+        self.fields['last_name'] = forms.CharField(label='Priimek: ', max_length=100,
+                                    widget=forms.TextInput(attrs={'id': 'last_name', 'class': 'form-control','value':queryset.priimek}))
+        self.fields['first_name'] = forms.CharField(label='Ime: ', max_length=100,
+                                     widget=forms.TextInput(attrs={'id': 'first_name', 'class': 'form-control','value':queryset.ime}))
+        self.fields['address'] = forms.CharField(label='Naslov: ', max_length=100,
+                                  widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control','value':queryset.naslov}))
+        self.fields['phone_number'] = forms.IntegerField(label='Telefonska številka: ', widget=forms.NumberInput(
+            attrs={'id': 'phone', 'placeholder': 'xxxxxxxxx', 'class': 'form-control','value':queryset.telefonska_st}))
+        """
+        password = forms.CharField(label='Geslo: ', max_length=100,
+                                   widget=forms.PasswordInput(attrs={'id': 'pass1', 'class': 'form-control'}))
+        password2 = forms.CharField(label='Ponovite geslo: ', max_length=100,
+                                    widget=forms.PasswordInput(attrs={'id': 'pass2', 'class': 'form-control'}))
+        """
+        self.fields['sex'] = forms.ChoiceField(disabled=True,label='Spol: ', choices=SEX_CHOICES,
+                                widget=forms.Select(attrs={'class': 'form-control','value':queryset.spol}))
+        # district = forms.ChoiceField(label='Okrožje: ', choices=DISTRICT_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+        self.fields['email'] = forms.EmailField(disabled=True,label='E-poštni naslov: ', widget=forms.EmailInput(
+            attrs={'placeholder': 'uporabnik@gmail.com', 'class': 'form-control','value':queryset.email}))
+        self.fields['birth_date']  = forms.DateField(disabled=True,label='Rojstni datum: ', widget=forms.TextInput(
+            attrs={'class': 'datepicker form-control', 'id': 'birth_date','value':formatDate(queryset.datum_rojstva)}), input_formats=['%d.%m.%Y'])
+
+
+        if queryset.kontakt != None:
+            self.fields['contact_last_name'] = forms.CharField(label='Priimek: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_last_name', 'class': 'form-control','value':queryset.kontakt.priimek}))
+            self.fields['contact_first_name'] = forms.CharField(label='Ime: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_first_name', 'class': 'form-control','value':queryset.kontakt.ime}))
+            self.fields['contact_address'] = forms.CharField(label='Naslov: ', required=False,  max_length=100, widget=forms.TextInput(attrs={'id': 'contact_address', 'class': 'form-control','value':queryset.kontakt.naslov}))
+            self.fields['contact_phone_number'] = forms.IntegerField(label='Telefonska številka: ',  required=False, widget=forms.NumberInput(attrs={'id': 'contact_phone_number','placeholder': 'xxxxxxxxx', 'class': 'form-control','value':queryset.kontakt.telefon}))
+            self.fields['contact_sorodstvo'] = forms.ChoiceField(disabled=True,label='Sorodstveno razmerje: ',  required=False, choices = RELATIONS, widget=forms.Select(attrs={'id': 'relation', 'class': 'form-control','value':queryset.kontakt.sorodstvo.tip_razmerja} ))
+        else:
+            self.fields['contact_last_name'] = forms.CharField(label='Priimek: ', required=False, max_length=100,
+                                                               widget=forms.TextInput(attrs={'id': 'contact_last_name',
+                                                                                             'class': 'form-control',
+                                                                                             }))
+            self.fields['contact_first_name'] = forms.CharField(label='Ime: ', required=False, max_length=100,
+                                                                widget=forms.TextInput(
+                                                                    attrs={'id': 'contact_first_name',
+                                                                           'class': 'form-control'}))
+            self.fields['contact_address'] = forms.CharField(label='Naslov: ', required=False, max_length=100,
+                                                             widget=forms.TextInput(attrs={'id': 'contact_address',
+                                                                                           'class': 'form-control'}))
+            self.fields['contact_phone_number'] = forms.IntegerField(label='Telefonska številka: ', required=False,
+                                                                     widget=forms.NumberInput(
+                                                                         attrs={'id': 'contact_phone_number',
+                                                                                'placeholder': 'xxxxxxxxx',
+                                                                                'class': 'form-control'}))
+            self.fields['contact_sorodstvo'] = forms.ChoiceField(label='Sorodstveno razmerje: ', required=False,
+                                                                 choices=RELATIONS, widget=forms.Select(
+                    attrs={'id': 'relation', 'class': 'form-control'}))
+
+class EditNursingProfileForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(EditNursingProfileForm, self).__init__(*args, **kwargs)
+        queryset = Pacient.objects.select_related().get(st_kartice=self.user)
+
+        self.fields['card_number'] = forms.IntegerField(disabled=True,label='Številka kartice osebe: ',
+                                         widget=forms.NumberInput(attrs={'id': 'card_number', 'class': 'form-control','value':queryset.st_kartice}))
+        self.fields['last_name'] = forms.CharField(label='Priimek: ', max_length=100,
+                                    widget=forms.TextInput(attrs={'id': 'last_name', 'class': 'form-control','value':queryset.priimek}))
+        self.fields['first_name'] = forms.CharField(label='Ime: ', max_length=100,
+                                     widget=forms.TextInput(attrs={'id': 'first_name', 'class': 'form-control','value':queryset.ime}))
+        self.fields['address'] = forms.CharField(label='Naslov: ', max_length=100,
+                                  widget=forms.TextInput(attrs={'id': 'address', 'class': 'form-control','value':queryset.naslov}))
+        self.fields['phone_number'] = forms.IntegerField(label='Telefon: ',
+                                          widget=forms.NumberInput(attrs={'id': 'phone', 'class': 'form-control','value':queryset.telefonska_st}))
+        self.fields['birth_date'] = forms.DateField(disabled=True,label='Datum rojstva: ',
+                                     widget=forms.TextInput(attrs={'class': 'datepicker form-control', 'id': 'birth_date','value':formatDate(queryset.datum_rojstva)}),
+                                     input_formats=['%d.%m.%Y'])
+        self.fields['sex'] = forms.ChoiceField(disabled=True,label='Spol: ', choices=SEX_CHOICES, widget=forms.Select(attrs={'class': 'form-control','value':queryset.spol}))
+
+
+def formatDate(datum):
+    myDate = str(datum).split(" ",1)
+    temp = myDate[0].split('-')
+    newDate = temp[2]+'.'+temp[1]+'.'+temp[0]
+    return newDate

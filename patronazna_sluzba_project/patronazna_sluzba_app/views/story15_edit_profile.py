@@ -23,6 +23,8 @@ def editProfileView(request):
     print("======== PACIENT=========")
     patient_q = Pacient.objects.select_related().get(uporabniski_profil=request.user)
     print(patient_q)
+    print("==============SPOl===========")
+    print(patient_q.spol)
     return render(request, 'update_profile.html', {'registration_form': form,'patient':patient_q})
 
 def editNursingProfileView(request,id="0"):
@@ -37,5 +39,11 @@ def editNursingProfileView(request,id="0"):
     print("========ST OSKRBOVANCA=========")
     print(id)
     patient_q = Pacient.objects.select_related().get(st_kartice=id)
-    print(patient_q)
-    return render(request, 'edit_nursing_profile.html', {'add_nursing_patient_form': form, 'patient': patient_q})
+    print("============COMPARISON================")
+    print("Skrbnistvo: "+str(patient_q.skrbnistvo.uporabniski_profil.username)+" DOSTOPA: "+str(request.user))
+    print("============================")
+    if str(patient_q.skrbnistvo.uporabniski_profil.username) != str(request.user):
+        return HttpResponse("Nimate pravice dostopa do tega profila")
+    else:
+        print(patient_q)
+        return render(request, 'edit_nursing_profile.html', {'add_nursing_patient_form': form, 'patient': patient_q})

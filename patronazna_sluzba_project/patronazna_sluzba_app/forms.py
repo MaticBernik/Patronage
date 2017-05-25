@@ -342,3 +342,8 @@ def formatDate(datum):
     temp = myDate[0].split('-')
     newDate = temp[2]+'.'+temp[1]+'.'+temp[0]
     return newDate
+
+class ForgottenPasswordForm(forms.Form):
+    email = forms.EmailField(label='E-poštni naslov: ', max_length=50,widget=forms.EmailInput(attrs={'class': 'form-control','id':'reset_mail'}))
+    new_password1 = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password1', 'class': 'form-control'}))
+    new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password2', 'class': 'form-control'}))

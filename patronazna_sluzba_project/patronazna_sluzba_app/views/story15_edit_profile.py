@@ -19,8 +19,8 @@ def editProfileView(request):
         print("GET")
     #form = PatientRegistrationFrom()
 
-    form = EditProfileForm(user=request.user)#user=request.user)
-    print("========LOGIRANI PACIENT=========")
+    form = EditProfileForm(user=request.user)
+    print("======== PACIENT=========")
     patient_q = Pacient.objects.select_related().get(uporabniski_profil=request.user)
     print(patient_q)
     return render(request, 'update_profile.html', {'registration_form': form,'patient':patient_q})
@@ -28,12 +28,9 @@ def editProfileView(request):
 def editNursingProfileView(request,id="0"):
     # form = FormEditCoworker(instance=instance)
     if request.method == 'POST':
-        print("POST lalalla")
-        nursing_card = request.POST['card_number']
-        print("#########STEVILKA OSKRBOVANCA ########")
-        print(nursing_card)
+        print("POST")
     else:
-        print("GET gegege")
+        print("GET")
     # form = PatientRegistrationFrom()
 
     form = EditNursingProfileForm(user=id)  # user=request.user)

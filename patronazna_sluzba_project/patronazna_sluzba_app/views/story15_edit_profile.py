@@ -15,11 +15,18 @@ def editProfileView(request):
     #form = FormEditCoworker(instance=instance)
     if request.method == 'POST':
         patient_user = request.user
-        profile = update_patient(patient_user, request.POST['card_number'],request.POST['phone_number'],
-                                 request.POST['address'], request.POST['sex'], request.POST['birth_date'],
-                                 request.POST['first_name'], request.POST['last_name'], request.POST['email'],
-                                 okolis, skrbnistvo, kontakt, posta, sorodstvo)
-        profile.save()
+        patient_profile = Pacient.objects.get(uporabniski_profil=patient_user)
+        district = request.POST['search_district']
+        card = patient_profile.st_kartice
+        birth_date = patient_profile.datum_rojstva
+        sex = patient_profile.spol
+        mail = patient_profile.email
+        relation = patient_profile.sorodstvo
+        update_patient(patient_user, card ,request.POST['phone_number'],
+                                 request.POST['address'], sex, birth_date,
+                                 request.POST['first_name'], request.POST['last_name'], mail,
+                                 request.POST['search_district'], request.POST['search_post'], request.POST['contact_first_name'], request.POST['contact_last_name'], request.POST['contact_address'], request.POST['contact_phone_number'], relation)
+
         print("POST")
     else:
         print("GET")
@@ -56,35 +63,38 @@ def editNursingProfileView(request,id="0"):
         return render(request, 'edit_nursing_profile.html', {'add_nursing_patient_form': form, 'patient': patient_q})
 
 
-def update_patient(user, st_kartice, telefonska, naslov, spol, datum_rojstva, ime, priimek, email, okolis, skrbnistvo, posta, sorodstvo,
+def update_patient(user, st_kartice, telefonska, naslov, spol, datum_rojstva, ime, priimek, email, okolis, posta,
                    contact_last_name, contact_first_name, contact_address, contact_phone_number, contact_sorodstvo):
     patient_profile = Pacient.objects.get(uporabniski_profil=user)
-    if st_kartice == '':
-        st_kartice = patient_profile.st_kartice
-    if telefonska == '':
-        telefonska = patient_profile.telefonska
-    if naslov == '':
-        naslov = patient_profile.naslov
-    if spol == '':
-        spol = patient_profile.spol
-    if datum_rojstva == '':
-        datum_rojstva = patient_profile.datum_rojstva
-    if ime == '':
-        ime = patient_profile.ime
-    if priimek == '':
-        priimek = patient_profile.priimek
-    if email == '':
-        email = patient_profile.email
-    if okolis == '':
-        okolis = patient_profile.okolis
-    if skrbnistvo == '':
-        skrbnistvo = patient_profile.skrbnistvo
-#   DODAJ KONTAKT
-    if posta == '':
-        posta = patient_profile.posta
-    if sorodstvo == '':
-        sorodstvo = patient_profile.sorodstvo
+    print("pacieeeeeent", patient_profile.ime)
 
-    prof = patient_profile(st_kartice=st_kartice, telefonska_st=telefonska, naslov=naslov, spol=spol, datum_rojstva=datum_rojstva, ime=ime,
-                           priimek=priimek, email=email, kontakt=kontakt, posta=posta, okolis=okolis, skrbnistvo=skrbnistvo, sorodstvo=sorodstvo)
-    return prof
+    patient_profile.st_kartice = st_kartice
+    patient_profile.telefonska_st = telefonska
+    patient_profile.naslov = naslov
+    patient_profile.datum_rojstva = datum_rojstva
+    patient_profile.ime = ime
+    patient_profile.priimek = priimek
+
+    okolis = Okolis.objects.get(ime=okolis)
+    patient_profile.okolis = okolis
+
+    posta = Posta.objects.get(postna_st=int(posta[:4]))
+    patient_profile.posta = posta
+
+    contact = patient_profile.kontakt
+    if contact_first_name != '':
+        contact.ime = contact_first_name
+        contact.save()
+    if contact_last_name != '':
+        contact.priimek = contact_last_name
+        contact.save()
+    if contact_address != '':
+        contact.naslov = contact_address
+        contact.save()
+    if contact_phone_number != '':
+        contact.telefon = contact_phone_number.sorodstvo
+        contact.save()
+
+    patient_profile.kontakt = contact
+    patient_profile.save()
+    return 1

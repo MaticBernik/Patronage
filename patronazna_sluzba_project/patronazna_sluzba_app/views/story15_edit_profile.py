@@ -21,11 +21,13 @@ def editProfileView(request):
         birth_date = patient_profile.datum_rojstva
         sex = patient_profile.spol
         mail = patient_profile.email
-        relation = patient_profile.sorodstvo
+        rel = request.POST.get('contact_sorodstvo', False)
+
+        print("RELATION",rel)
         update_patient(patient_user, card ,request.POST['phone_number'],
                                  request.POST['address'], sex, birth_date,
                                  request.POST['first_name'], request.POST['last_name'], mail,
-                                 request.POST['search_district'], request.POST['search_post'], request.POST['contact_first_name'], request.POST['contact_last_name'], request.POST['contact_address'], request.POST['contact_phone_number'], relation)
+                                 request.POST['search_district'], request.POST['search_post'], request.POST['contact_first_name'], request.POST['contact_last_name'], request.POST['contact_address'], request.POST['contact_phone_number'], rel)
 
         print("POST")
     else:
@@ -82,6 +84,9 @@ def update_patient(user, st_kartice, telefonska, naslov, spol, datum_rojstva, im
     patient_profile.posta = posta
 
     contact = patient_profile.kontakt
+    if contact is None:
+        contact = Kontaktna_oseba()
+        contact.save()
     if contact_first_name != '':
         contact.ime = contact_first_name
         contact.save()
@@ -92,8 +97,20 @@ def update_patient(user, st_kartice, telefonska, naslov, spol, datum_rojstva, im
         contact.naslov = contact_address
         contact.save()
     if contact_phone_number != '':
-        contact.telefon = contact_phone_number.sorodstvo
+        contact.telefon = contact_phone_number
         contact.save()
+    if contact_phone_number != '':
+        contact.telefon = contact_phone_number
+        contact.save()
+    if contact_sorodstvo is not False:
+        rel = Sorodstveno_razmerje(kontakt=contact, pacient_id=patient_profile, tip_razmerja=contact_sorodstvo)
+        rel.save()
+        contact.sorodstvo = rel
+        contact.save()
+        print("sorodstvo", rel.tip_razmerja)
+
+    print("contact", contact.ime)
+
 
     patient_profile.kontakt = contact
     patient_profile.save()

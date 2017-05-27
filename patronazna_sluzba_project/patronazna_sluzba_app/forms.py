@@ -292,7 +292,11 @@ class EditProfileForm(forms.Form):
             self.fields['contact_first_name'] = forms.CharField(label='Ime: ',  required=False, max_length=100, widget=forms.TextInput(attrs={'id': 'contact_first_name', 'class': 'form-control','value':queryset.kontakt.ime}))
             self.fields['contact_address'] = forms.CharField(label='Naslov: ', required=False,  max_length=100, widget=forms.TextInput(attrs={'id': 'contact_address', 'class': 'form-control','value':queryset.kontakt.naslov}))
             self.fields['contact_phone_number'] = forms.IntegerField(label='Telefonska številka: ',  required=False, widget=forms.NumberInput(attrs={'id': 'contact_phone_number','placeholder': 'xxxxxxxxx', 'class': 'form-control','value':queryset.kontakt.telefon}))
-            self.fields['contact_sorodstvo'] = forms.CharField(disabled=True,label='Sorodstveno razmerje: ',  required=False, widget=forms.TextInput(attrs={'id': 'relation', 'class': 'form-control','value':queryset.kontakt.sorodstvo.tip_razmerja} ))
+            self.fields['contact_sorodstvo'] = forms.ChoiceField(label='Sorodstveno razmerje: ', required=False,
+                                                                 choices=RELATIONS,
+                                                                 initial=queryset.kontakt.sorodstvo.tip_razmerja,
+                                                                 widget=forms.Select(
+                                                                     attrs={'id': 'relation', 'class': 'form-control'}))
         else:
             self.fields['contact_last_name'] = forms.CharField(label='Priimek: ', required=False, max_length=100,
                                                                widget=forms.TextInput(attrs={'id': 'contact_last_name',

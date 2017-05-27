@@ -48,7 +48,8 @@ def list_work_task(request):
 
 
     izdajatelj = Uporabnik.objects.get(profil_id=uporabnik.id)
-    current_head_nurse = None
+    current_logged = None
+    logged_role = None
     if is_doctor(uporabnik):
         zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
         print("zdravnik",zdravnik)
@@ -56,13 +57,15 @@ def list_work_task(request):
         print("Nalogi: ",delovni_nalogi)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
-
+        current_logged = zdravnik.sifra_zdravnika
+        logged_role = "Doctor"
     elif is_leader_ps(uporabnik):
         vodja=Vodja_PS.objects.get(uporabniski_profil_id=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         nurse=Patronazna_sestra.objects.all()
-        current_head_nurse = vodja.sifra_vodje_PS
+        current_logged = vodja.sifra_vodje_PS
+        logged_role = "Leader"
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil_id=uporabnik)
         pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
@@ -72,6 +75,7 @@ def list_work_task(request):
         filter_form.fields['filter_nurse_id'].initial=str(nurse.sifra_patronazne_sestre)+" "+nurse.uporabniski_profil.first_name+" "+nurse.uporabniski_profil.last_name
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
         filter_form.fields['filter_nurse_id'].widget.attrs['disabled'] = 'disabled'
+        logged_role = "Nurse"
         #DODAJ FILTER
     else:
         print("ERROR!!")
@@ -83,7 +87,7 @@ def list_work_task(request):
 
     #VSE OPRAVLJENE OBISKE
     done_visit = Obisk.objects.filter(opravljen=True).values_list("delovni_nalog_id", flat=True).distinct()
-    #current_head_nurse = None
+
     if request.POST:
         if request.POST.get('filter_creator_id',0):
             uporabnik1=request.POST['filter_creator_id']
@@ -145,8 +149,8 @@ def list_work_task(request):
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
     print("=======CURRENT HEAD NURSE======")
-    print(current_head_nurse)
+    print(current_logged)
     
-    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps,'done_visits':done_visit,"current_head_nurse":current_head_nurse}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps,'done_visits':done_visit,"current_logged":current_logged,"logged_role":logged_role}
     return render(request, 'work_task_list.html', context)
 

@@ -48,6 +48,8 @@ def list_work_task(request):
 
 
     izdajatelj = Uporabnik.objects.get(profil_id=uporabnik.id)
+    current_logged = None
+    logged_role = None
     if is_doctor(uporabnik):
         zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
         print("zdravnik",zdravnik)
@@ -55,11 +57,15 @@ def list_work_task(request):
         print("Nalogi: ",delovni_nalogi)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
+        current_logged = zdravnik.sifra_zdravnika
+        logged_role = "Doctor"
     elif is_leader_ps(uporabnik):
         vodja=Vodja_PS.objects.get(uporabniski_profil_id=uporabnik)
         delovni_nalogi = Delovni_nalog.objects.all()
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         nurse=Patronazna_sestra.objects.all()
+        current_logged = vodja.sifra_vodje_PS
+        logged_role = "Leader"
     elif is_nurse(uporabnik):
         nurse=Patronazna_sestra.objects.get(uporabniski_profil_id=uporabnik)
         pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
@@ -69,6 +75,7 @@ def list_work_task(request):
         filter_form.fields['filter_nurse_id'].initial=str(nurse.sifra_patronazne_sestre)+" "+nurse.uporabniski_profil.first_name+" "+nurse.uporabniski_profil.last_name
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
         filter_form.fields['filter_nurse_id'].widget.attrs['disabled'] = 'disabled'
+        logged_role = "Nurse"
         #DODAJ FILTER
     else:
         print("ERROR!!")
@@ -77,6 +84,9 @@ def list_work_task(request):
     form=FilterWorkTasksForm(request.POST)
     if not form.is_valid():
         print("ERROR: FORM NOT VALID")
+
+    #VSE OPRAVLJENE OBISKE
+    done_visit = Obisk.objects.filter(opravljen=True).values_list("delovni_nalog_id", flat=True).distinct()
 
     if request.POST:
         if request.POST.get('filter_creator_id',0):
@@ -90,6 +100,7 @@ def list_work_task(request):
             elif is_leader_ps(request.POST['filter_creator_id']):
                 creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
                 delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
+
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
             datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
@@ -121,7 +132,14 @@ def list_work_task(request):
             delovni_nalogi = delovni_nalogi.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
             filter_form.fields['filter_nurse_id'].initial =  request.POST['filter_nurse_id']
 
+        if '_delete' in request.POST:
+            print("=========DELETE PRESSED==============")
+            task_id = request.POST['_delete']
+            print("delovni nalog id: "+str(task_id))
 
+            Delovni_nalog.objects.get(id=task_id).delete()
+        else:
+            print("DELETE NOT PRESSED")
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
     visitations = Obisk.objects.all()
@@ -130,7 +148,9 @@ def list_work_task(request):
     pacienti = Pacient_DN.objects.all()
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
+    print("=======CURRENT HEAD NURSE======")
+    print(current_logged)
     
-    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_wrk_tsk', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps,'done_visits':done_visit,"current_logged":current_logged,"logged_role":logged_role}
     return render(request, 'work_task_list.html', context)
 

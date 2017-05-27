@@ -89,9 +89,9 @@
 	  			<button type="submit" class="btn btn-primary form-control">Filter</button>
 	  		</div>  	  	
 	  	</div>	
-	</form>
-	<hr>
 
+	<hr>
+<!--</form>-->
     {% if user.is_authenticated %}
         <div class="row">
         	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -158,7 +158,38 @@
             		<td>{{ work_task.st_obiskov }}</td>
             		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
             		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
-            		<td><button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
+            		<td><button onclick="show_work_task(this)" type="button" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
+					{% if logged_role == "Doctor" or logged_role == "Leader" %}
+						{% if work_task.vodja_PS_id %}
+								{% if work_task.vodja_PS_id == current_logged %}
+									{% if work_task.id in done_visits%}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+									{% else%}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+									{% endif %}
+								{% else %}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+
+								{% endif %}
+						{% elif work_task.zdravnik_id %}
+
+								{% if work_task.zdravnik_id == current_logged %}
+									{% if work_task.id in done_visits%}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+									{% else%}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+									{% endif %}
+								{% else %}
+									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+
+								{% endif %}
+							<!--{% if work_task.id in done_visits %}
+							<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+							{% else%}
+							<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+							{% endif %}-->
+						{% endif %}
+					{% endif %}
                 {% endfor %}
                 </tbody>
     		</table>
@@ -169,7 +200,7 @@
             </div>
         </div>
     {% endif %}
-
+	</form>
 
 
     <div class="modal fade" id="myModal" role="dialog">

@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^base/addNursingPatient', add_nursing_patient, name="link_add_nursing"),
 	url(r'^changePassword', change_password, name="link_change_password"),
     url(r'^activate/', activate),
+    url(r'^editVisitationData/', edit_visitaiton_data, name="link_visitations_nurse_edit_data"),
+    url(r'^visitationsData/', list_active_visitations, name="link_visitations_nurse_data"),
 	url(r'^listVisitations/', list_visitations, name="link_list_visitations"),
     url(r'^listWorkTask/', list_work_task, name="link_list_work_task"),
 	url(r'^workTask/', work_task_view, name="link_work_task"),

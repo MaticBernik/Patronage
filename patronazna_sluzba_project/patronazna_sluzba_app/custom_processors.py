@@ -25,8 +25,10 @@ def navbar_list_processor(request):
         change_password_arr = ["link_change_password", "Sprememba gesla", "chng_pass", "glyphicon-erase" ]
         create_work_task_arr = ["link_work_task", "Ustvarite delovni nalog", "c_wrk_tsk", "glyphicon-file" ]
         
+        visitations_nurse_data_arr = ["link_visitations_nurse_data", "Vnos podatkov o obisku", "v_nrs_visits_data", "glyphicon-pencil" ] 
+
         view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs", "glyphicon-th-list" ]
-        view_visitations_arr = ["link_list_visitations", "Pregled obiskov", "v_visits", "glyphicon-th-list" ]
+        view_visitations_arr = ["link_list_visitations", "Pregled obiskov", "v_visits", "glyphicon-th-list" ] 
         view_work_tasks_arr = ["link_list_work_task", "Pregled delovnih nalogov", "v_wrk_tsk", "glyphicon-th-list" ]
         
         visitation_planning_arr = ["link_plan_visit", "Planiranje obiskov", "v_plan_visits", "  glyphicon glyphicon-calendar" ]
@@ -43,7 +45,7 @@ def navbar_list_processor(request):
             link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, view_visitations_arr, change_password_arr]
         elif is_nurse(user):
             role="medicinska sestra"
-            link_list = [control_panel_arr, view_work_tasks_arr, visitation_planning_arr, view_visitations_arr, change_password_arr]
+            link_list = [control_panel_arr, view_work_tasks_arr, visitation_planning_arr, view_visitations_arr, visitations_nurse_data_arr, change_password_arr]
         elif is_coworker(user):
             role="Sodelavec"
             link_list = [control_panel_arr, change_password_arr ]

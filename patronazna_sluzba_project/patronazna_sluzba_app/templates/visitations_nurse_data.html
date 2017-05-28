@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block main_content %}
+	
+	<link rel="stylesheet" type="text/css" href="{% static '/css/work_task_list.css' %}">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+	<!--<script type="text/javascript" src="/path/to/jquery-latest.js"></script>--> 
+	<script type="text/javascript" src="{% static '/script/jquery.tablesorter.min.js' %}"></script> 
+	<!-- CUSTOM SCRIPT ~ SHOULD EVENTUALY BE MOVED TO OWN FILE -->
+	<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('.datepicker').datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
+		$('.task_expansion').hide();
+
+		//add table sorting
+		$("#table_of_work_tasks").tablesorter( {sortList: [[5,0]]} ); 
+
+	});
+
+	</script>
+
+	<script>
+		function show_work_task(objButton) {
+			$('.task_expansion').hide();
+		    //alert(objButton.value);
+			console.log(objButton.value);
+			button_id = objButton.value;
+			console.log('#button_id')
+			$('#button_id').show();
+			document.getElementById(button_id).style.display="block";
+
+		}
+	</script>
+
+    {% if user.is_authenticated %}
+        <div class="row">
+        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>Razpored obiskov za danes</h3>
+     		<hr>
+            {% if visitations_list_today and work_task_list %}
+
+            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+            	<thead>
+            	<tr>
+            		<th></th>
+            		<th>Šifra obiska</th>
+            		<th>Šifra naloga</th>
+            		<th>Izdajatelj naloga</th>
+            		<th>Medicinska sestra</th>
+            		<th>Nadomestna medicinska sestra</th>
+            		<th>Pacient</th>
+            		<th>Vrsta obiska</th>
+            		<th>Predviden datum obiska</th>
+            		<th>Dejanski datum obiska</th>
+            		<th>Obvezen obisk</th>
+            		<th>Opravljen obisk</th>
+            		<th></th>
+            	</tr>
+            	</thead>
+            	<tbody>
+            	{% for visit in visitations_list_today %}
+    	        <tr>
+    	        	<td></td>
+    	        	<td># {{visit.id}}</td>
+    	        	<td># {{visit.delovni_nalog.id}}</td>
+            		<td>
+
+    	        		{% if visit.delovni_nalog.zdravnik_id %}
+    	        			{% for doc in doctors %}
+    	        				{% if doc.sifra_zdravnika == visit.delovni_nalog.zdravnik_id %}
+    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% elif visit.delovni_nalog.vodja_PS_id %}
+    	        			{% for head in head_nurses %}
+    	        				{% if head.sifra_vodje_PS == visit.delovni_nalog.vodja_PS_id %}
+    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% else %}
+    	        			Podatki o izdajatelju vam niso na voljo.
+    	        		{% endif %}
+
+            		</td>
+            		<td>{{visit.p_sestra}}</td>
+            		<td> - </td>
+            		<td>
+	            		{% if pacient_list %}
+	            			{% for p in pacient_list %}
+	            				{% if p.delovni_nalog.id == visit.delovni_nalog.id %}
+	            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
+	            				{% endif %}
+	            			{% endfor %}  
+	            		{% else%}
+	            			Podatki o pacientih niso dostopni
+	            		{% endif %}
+            		</td>
+            		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
+            		<td>{{ visit.datum|date:"d.m.Y" }}</td>
+            		<td> - </td>
+            		<td>
+            			{% if visit.obvezen_obisk %}
+            				Da
+            			{% else %}
+            				Ne
+            			{% endif %}
+            		</td>
+            		<td>
+            			{% if visit.opravljen %}
+            				Da
+            			{% else %}
+            				Ne
+            			{% endif %}
+            		</td>
+            		<!--
+            		<td>
+            			<button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button>
+            		</td>
+            		-->
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm form-control" value={{visit.id}}>Podrobnosti</button>
+                    </td>
+                    <td>
+                        <form action="{% url 'link_visitations_nurse_edit_data' %}" method="post">
+                             {% csrf_token %}
+                            <button type="submit" name="edit_visitation_data" class="btn btn-primary btn-sm form-control" value={{visit.id}}>Uredi</button>
+                        </form>
+                    </td>
+
+            	</tr>
+                {% endfor %}
+                </tbody>
+    		</table>
+
+            {% else %}
+                <p>Podatki o obiskih, na podlagi izbranih kriterijev ne obstajajo!</p>
+                <p>Prosim preverite vnesene podatke.</p>
+            {% endif %}
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="row">
+        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>Razpored obiskov za včerajšnji dan</h3>
+     		<hr>
+            {% if visitations_list_yesterday and work_task_list %}
+
+            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+            	<thead>
+            	<tr>
+            		<th></th>
+            		<th>Šifra obiska</th>
+            		<th>Šifra naloga</th>
+            		<th>Izdajatelj naloga</th>
+            		<th>Medicinska sestra</th>
+            		<th>Nadomestna medicinska sestra</th>
+            		<th>Pacient</th>
+            		<th>Vrsta obiska</th>
+            		<th>Predviden datum obiska</th>
+            		<th>Dejanski datum obiska</th>
+            		<th>Obvezen obisk</th>
+            		<th>Opravljen obisk</th>
+            		<th></th>
+                    <th></th>
+            	</tr>
+            	</thead>
+            	<tbody>
+            	{% for visit in visitations_list_yesterday %}
+    	        <tr>
+    	        	<td></td>
+    	        	<td># {{visit.id}}</td>
+    	        	<td># {{visit.delovni_nalog.id}}</td>
+            		<td>
+
+    	        		{% if visit.delovni_nalog.zdravnik_id %}
+    	        			{% for doc in doctors %}
+    	        				{% if doc.sifra_zdravnika == visit.delovni_nalog.zdravnik_id %}
+    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% elif visit.delovni_nalog.vodja_PS_id %}
+    	        			{% for head in head_nurses %}
+    	        				{% if head.sifra_vodje_PS == visit.delovni_nalog.vodja_PS_id %}
+    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
+    	        				{% endif %}
+    	        			{% endfor %}
+    	        		{% else %}
+    	        			Podatki o izdajatelju vam niso na voljo.
+    	        		{% endif %}
+
+            		</td>
+            		<td>{{visit.p_sestra}}</td>
+            		<td> - </td>
+            		<td>
+	            		{% if pacient_list %}
+	            			{% for p in pacient_list %}
+	            				{% if p.delovni_nalog.id == visit.delovni_nalog.id %}
+	            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
+	            				{% endif %}
+	            			{% endfor %}  
+	            		{% else%}
+	            			Podatki o pacientih niso dostopni
+	            		{% endif %}
+            		</td>
+            		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
+            		<td>{{ visit.datum|date:"d.m.Y" }}</td>
+            		<td> - </td>
+            		<td>
+            			{% if visit.obvezen_obisk %}
+            				Da
+            			{% else %}
+            				Ne
+            			{% endif %}
+            		</td>
+            		<td>
+            			{% if visit.opravljen %}
+            				Da
+            			{% else %}
+            				Ne
+            			{% endif %}
+            		</td>
+            		<!--
+            		<td>
+            			<button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button>
+            		</td>
+            		-->
+            		<td>
+            			<button type="button" class="btn btn-info btn-sm form-control" value={{visit.id}}>Podrobnosti</button>
+            		</td>
+                    <td>
+                        <form action="{% url 'link_visitations_nurse_edit_data' %}" method="post">
+                             {% csrf_token %}
+                            <button type="submit" name="edit_visitation_data" class="btn btn-primary btn-sm form-control" value={{visit.id}}>Uredi</button>
+                        </form>
+                    </td>
+
+            	</tr>
+                {% endfor %}
+                </tbody>
+    		</table>
+
+            {% else %}
+                <p>Podatki o obiskih, na podlagi izbranih kriterijev ne obstajajo!</p>
+                <p>Prosim preverite vnesene podatke.</p>
+            {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Podrobnosti obiska</h4>
+        </div>
+       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

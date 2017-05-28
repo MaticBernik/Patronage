@@ -3,13 +3,14 @@ $(function () {
 
 
     $("#add_plan").click(function () {
+        var plan_date = String($("#date_picker").val());
         if($("#id_plan_list").find("option:first-child").val() != undefined){
-            var plan_date = String($("#id_plan_list").find("option:first-child").val());
+            //var plan_date = String($("#id_plan_list").find("option:first-child").val());
 
-        plan_date = plan_date.split(' ');
-        plan_date = plan_date [3];
+        //plan_date = plan_date.split(' ');
+        //plan_date = plan_date [3];
         //
-        // alert("AFTER "+plan_date );
+         alert("ADD CLICKED "+plan_date );
             if(editPossible(plan_date)){
                  $("#visit_list > option:selected").each(function () {
                     $(this).remove().appendTo("#id_plan_list");
@@ -17,10 +18,14 @@ $(function () {
                 });
             }
         }else{
-             $("#visit_list > option:selected").each(function () {
+
+            if(editPossible(plan_date)){
+                $("#visit_list > option:selected").each(function () {
                     $(this).remove().appendTo("#id_plan_list");
                     //rearrangeList("#list2");
                 });
+            }
+
         }
 
 
@@ -29,9 +34,10 @@ $(function () {
 
     $("#remove_plan").click(function (e) {
        // alert("BEFORE");
-        var plan_date = String($("#id_plan_list").find("option:first-child").val());
+       /* var plan_date = String($("#id_plan_list").find("option:first-child").val());
         plan_date = plan_date.split(' ');
-        plan_date = plan_date [3];
+        plan_date = plan_date [3];*/
+        var plan_date = String($("#date_picker").val());
         //alert("AFTER "+plan_date );
         if(editPossible(plan_date)){
             $("#id_plan_list > option:selected").each(function () {
@@ -56,7 +62,7 @@ $(function () {
 });
 
 function editPossible(datum) {
-    //alert("inside datum "+datum);
+    alert("inside datum "+datum);
     var today = new Date();
 	var day1 = today.getDate();
 	var month1 = (today.getMonth()+1);

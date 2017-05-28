@@ -10,7 +10,7 @@ $(function () {
         //plan_date = plan_date.split(' ');
         //plan_date = plan_date [3];
         //
-         alert("ADD CLICKED "+plan_date );
+         //alert("ADD CLICKED "+plan_date );
             if(editPossible(plan_date)){
                  $("#visit_list > option:selected").each(function () {
                     $(this).remove().appendTo("#id_plan_list");
@@ -62,7 +62,7 @@ $(function () {
 });
 
 function editPossible(datum) {
-    alert("inside datum "+datum);
+    //alert("inside datum "+datum);
     var today = new Date();
 	var day1 = today.getDate();
 	var month1 = (today.getMonth()+1);

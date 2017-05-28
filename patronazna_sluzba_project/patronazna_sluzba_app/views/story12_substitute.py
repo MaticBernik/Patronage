@@ -28,30 +28,30 @@ def substitutionView(request):
         date_end = datetime.strptime(date_end, "%d.%m.%Y")
 
         substitution = Nadomescanje(sestra=nurse, datum_zacetek=date_start, datum_konec=date_end,
-                                    nadomestna_sestra=sub_nurse)
+                                    nadomestna_sestra=sub_nurse,veljavno=True)
         substitution.save()
 
         sub_array = Nadomescanje.objects.filter(nadomestna_sestra=nurse)
         for i in sub_array:
             #   | Z K |
             if i.datum_zacetek <= date_start and i.datum_konec >= date_end:
-                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=1)
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=True)
                 sub.save()
                 print("| Z K |")
             #   | Z | K
             if i.datum_zacetek <= date_start and i.datum_konec > date_start and i.datum_konec <= date_end:
-                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=True)
+                sub.save()
                 print(" | Z | K")
             #   Z | K |
             if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec >= date_end:
-                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=True)
+                sub.save()
                 print("Z | K |")
             #   Z | | K
             if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec > date_start and i.datum_konec <= date_end:
-                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=True)
+                sub.save()
                 print("Z | | K")
 
         return HttpResponse("Nadomescanje dodano.")
@@ -72,10 +72,12 @@ def ajax_nurse_autocomplete(request):
     else:
         nurse =''
     #seznam idjev vseh odsotnih sester
-    absent_nurses = Nadomescanje.objects.values_list('sestra_id', flat=True) #get(nadomestna_sestra_id=nurse.id) Plan.objects.values_list('planirani_obisk_id', flat=True)
-    print("========================ABSENT NURSES=========")
-    print(absent_nurses)
-    nurses = Patronazna_sestra.objects.filter(~Q(id__in=absent_nurses)).filter(uporabniski_profil__first_name__icontains=nurse) #filter(~Q(id__in=plan_list))
+    #absent_nurses = Nadomescanje.objects.values_list('sestra_id', flat=True) #get(nadomestna_sestra_id=nurse.id) Plan.objects.values_list('planirani_obisk_id', flat=True)
+    #print("========================ABSENT NURSES=========")
+    #print(absent_nurses)
+    #nurses = Patronazna_sestra.objects.filter(~Q(id__in=absent_nurses)).filter(uporabniski_profil__first_name__icontains=nurse) #filter(~Q(id__in=plan_list))
+    #lahko več sester nadomešča eno
+    nurses = Patronazna_sestra.objects.filter(uporabniski_profil__first_name__icontains=nurse)  # filter(~Q(id__in=plan_list))
 
     return render_to_response('ajax_nurses.html', {'nurses': nurses})
 

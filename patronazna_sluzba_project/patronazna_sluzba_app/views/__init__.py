@@ -9,4 +9,5 @@ from .story10_visitations_list import *
 from .story12_substitute import *
 from .story15_edit_profile import *
 from .story17_reset_password import *
+from .story13_finished_substitution import *
 # import logging

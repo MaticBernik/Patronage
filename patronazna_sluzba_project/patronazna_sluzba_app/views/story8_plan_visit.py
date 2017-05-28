@@ -169,6 +169,10 @@ def plan_list_ajax(request):
             #absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
             #id vseh sester, ki jih je nadomeščala (1,5,10,11...)
             absent = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse.id).filter(veljavno=True)#.values_list('sestra_id',flat=True)
+            #preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
+            """for x in absent:
+                absent |= Nadomescanje,objects.filter(nadomestna_sestra_id=x.sestra_id).filter(veljavno=True)
+            """
             print("==================ABSENTEE====================")
             if len(absent) > 0:
                 fill_in = True

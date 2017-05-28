@@ -350,3 +350,19 @@ class ForgottenPasswordForm(forms.Form):
     email = forms.EmailField(label='E-poštni naslov: ', max_length=50,widget=forms.EmailInput(attrs={'class': 'form-control','id':'reset_mail'}))
     new_password1 = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password1', 'class': 'form-control'}))
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password2', 'class': 'form-control'}))
+
+class SubstitutionFinishedForm(forms.Form):
+    absent = Nadomescanje.objects.filter(nadomestna_sestra_id=6).filter(veljavno=True).values_list('sestra_id',flat=True)
+    # preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
+    print("================FORMS.PY===============")
+    print(absent)
+    print("=======================================")
+    for x in absent:
+        absent |= Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True).values_list('sestra_id',flat=True)
+
+    print("================FORMS.PY===============")
+    print(absent)
+    print("=======================================")
+    query = Nadomescanje.objects.filter(veljavno =True).values_list("sestra_id",flat=True)
+    query_nurses = Patronazna_sestra.objects.filter(id__in=query)
+    nurses = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))

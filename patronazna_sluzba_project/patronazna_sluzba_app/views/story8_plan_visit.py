@@ -166,8 +166,21 @@ def plan_list_ajax(request):
 
         #HARDCODE ABSENT NURSE ID
         try:
-            absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
-            fill_in = True
+            #absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
+            #id vseh sester, ki jih je nadomeščala (1,5,10,11...)
+            absent = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse.id).filter(veljavno=True)#.values_list('sestra_id',flat=True)
+            print("==================ABSENTEE====================")
+            if len(absent) > 0:
+                fill_in = True
+                print(absent)
+                for i in absent:
+                    print("Start: "+str(i.datum_zacetek)+" END: "+str(i.datum_konec))
+            else:
+                print("PRAZNO ABSENTEE")
+                fill_in = False
+            print("================THIS PRINTS======================")
+
+            #absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
         except:
             fill_in = False
 
@@ -186,9 +199,23 @@ def plan_list_ajax(request):
             else:
                 #vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE")
-                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id))
-                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list)).order_by('datum')
+                #planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id),Q(datum__gte=datetime.date(2017, 6, 1)))
+                #planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id__in=absent))
+                #planned_visits = []
+                #for i in absent:
+                #    planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id))
+                #visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list)).order_by('datum')
+                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id))
 
+                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)).filter(~Q(id__in=plan_list)).order_by('datum')
+
+                for i in absent:
+                    # print("Start: " + str(i.datum_zacetek) + " END: " + str(i.datum_konec))
+                    planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=i.sestra_id)).filter(
+                        datum__range=(i.datum_zacetek, i.datum_konec))
+
+                    visit_list |= Obisk.objects.filter(Q(p_sestra_id=i.sestra_id)).filter(
+                        datum__range=(i.datum_zacetek, i.datum_konec)).filter(~Q(id__in=plan_list)).order_by('datum')
 
             print("Query result")
             #add to global plan
@@ -244,10 +271,15 @@ def plan_list_ajax(request):
             else:
                 # vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE, PLAN JE PRAZEN")
-                print("ABSENT NURSE: "+str(absent.sestra_id))
-                visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id=absent.sestra_id)).order_by('datum')
-
-
+                #print("ABSENT NURSE: "+str(absent.sestra_id))
+                #visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id) | Q(p_sestra_id=absent.sestra_id)).order_by('datum')
+                #visit_list = Obisk.objects. filter((Q(p_sestra_id=nurse.id))|(Q(p_sestra_id=absent.sestra_id),Q(datum__gte=datetime.strptime("2017-06-01", '%Y-%m-%d')))).filter(~Q(id__in=plan_list)).order_by('datum')
+                visit_list = Obisk.objects.select_related().filter(Q(p_sestra_id=nurse.id)).order_by('datum')
+                #print("THIS WORKS ")
+                #print(absent)
+                for i in absent:
+                    #print("Start: " + str(i.datum_zacetek) + " END: " + str(i.datum_konec))
+                    visit_list |= Obisk.objects.select_related().filter(Q(p_sestra_id=i.sestra_id)).filter(datum__range=(i.datum_zacetek, i.datum_konec)).order_by('datum')
 
         print("Visit list "+str(len(visit_list)))
         visit_list = replace_datum_type(visit_list,0)

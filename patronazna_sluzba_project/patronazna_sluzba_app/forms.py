@@ -11,6 +11,7 @@ from django.db.models import When, F, Q, Case
 from django.forms import  ModelForm
 from django.contrib.auth.models import User
 
+
 USER_TYPES = (
     ('doc', 'Zdravnik'),
     ('nurse', 'Medicinska sestra / brat'),
@@ -248,6 +249,29 @@ class FilterVisitationsForm(forms.Form):
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm  form-control', 'id': 'task_date_to'}),
         input_formats=['%d.%m.%Y'])
 
+
+
+class VisitPregnantForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+            super(FunkyForm, self).__init__(*args, **kwargs)
+            for item in range(5):
+                self.fields['test_field_%s' % item] = CharField(max_length=255)
+
+
+
+# class VisitNewbornAndMother():
+
+# class VisitElderly():
+
+# class VisitApplyInjection():
+
+# class VisitBloodSample():
+
+# class VisitCheckMedicalStatus():
+
+
+
+
 class SubstituteSisterForm(forms.Form):
     start_date = forms.DateField(label='Začetek', widget=forms.TextInput(
         attrs={'class': 'datepicker form-control', 'id': 'start_date'}), input_formats=['%d.%m.%Y'])
@@ -350,3 +374,5 @@ class ForgottenPasswordForm(forms.Form):
     email = forms.EmailField(label='E-poštni naslov: ', max_length=50,widget=forms.EmailInput(attrs={'class': 'form-control','id':'reset_mail'}))
     new_password1 = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password1', 'class': 'form-control'}))
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password2', 'class': 'form-control'}))
+
+

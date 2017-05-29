@@ -368,12 +368,14 @@ class Obisk(models.Model):
 
     def porocilo(self):
         #Metoda vrne polja, ki jih mora vsebovati porocilo o obisku
-        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog)
-        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska)
+        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
+        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
         meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
         meritve=[x.id for x in meritve]
-        polja=Polje_v_porocilu.objects.filter(meritev__in=meritve)
-        return polja
+        polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
+        # return [x.polje_id for x in polja]
+        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis) for x in polja]
+
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False, on_delete=models.CASCADE)

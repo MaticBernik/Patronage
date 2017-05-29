@@ -52,8 +52,8 @@
 30;Obisk novorojenčka;30;Nudenje pomoči pri dojenju in seznanitev s tehnikami dojenja.;Prosti vnos
 30;Obisk novorojenčka;40;Ureditev ležišča.;Prosti vnos
 30;Obisk novorojenčka;50;Svetovanje o povijanju, oblačenju, slačenju;Prosti vnos
-30;Obisk novorojenčka;60;Trenutna telesna teža;"g *, (dodatno prikaže razliko od porodne teže)"
-30;Obisk novorojenčka;70;Trenutna telesna višina;"cm *, (dodatno prikaže razliko od poročne višine",
+30;Obisk novorojenčka;60;Trenutna telesna teža;"g *"
+30;Obisk novorojenčka;70;Trenutna telesna višina;"cm *"
 30;Obisk novorojenčka;80;Dojenje;"Da/Ne *, Prosti vnos"
 30;Obisk novorojenčka;90;Dodajanje adaptiranega mleka;"Da/Ne *, Prosti vnos"
 30;Obisk novorojenčka;100;Izločanje in odvajanje;"Ni posebnosti/Mikcija/Defekacija/Napenjanje/Kolike/Polivanje/Bruhanje *, Prosti vnos"
@@ -80,7 +80,7 @@
 40;Preventiva starostnika;170;Pogovor, nasvet in vzpodbuda.;Prosti vnos
 50;Aplikacija injekcij;10;Aplikacija injekcije;
 50;Aplikacija injekcij;20;Pogovor, nasvet in vzpodbuda.;Prosti vnos
-60;Odvzem krvi;10;"Odvzem krvi, Naročnik označi, katere epruvete je potrebno napolniti (rdeča, modra, rumena, zelena)";
+60;Odvzem krvi;10;"Odvzem krvi, Naročnik označi, katere epruvete je potrebno napolniti (rdeča, modra, rumena, zelena)"; 
 60;Odvzem krvi;20;Pogovor, nasvet in vzpodbuda.;Prosti vnos
 70;Kontrola zdravstvenega stanja;10;Anamneza;Prosti vnos
 70;Kontrola zdravstvenega stanja;20;Krvni pritisk: sistolični, diastolični;"Sistolični (mm Hg) *, Diastolični (mm Hg) *"

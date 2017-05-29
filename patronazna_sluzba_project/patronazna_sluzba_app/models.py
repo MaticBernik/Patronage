@@ -353,7 +353,7 @@ class Delovni_nalog(models.Model):
     #obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
 
 class Obisk(models.Model):
-    delovni_nalog = models.ForeignKey(Delovni_nalog,null=False)
+    delovni_nalog = models.ForeignKey(Delovni_nalog,null=False, on_delete=models.CASCADE)
     datum = models.DateTimeField(null=True)
     p_sestra = models.ForeignKey(Patronazna_sestra, null=True) #lahko jih je vec, ocitno -.-"
     obvezen_obisk = models.BooleanField(default=0) #    0 == NEOBVEZEN; 1 == OBVEZEN - ce je 1 pomeni da se ne sme spremenit datuma v prihodnje
@@ -376,7 +376,7 @@ class Obisk(models.Model):
         return polja
 
 class Pacient_DN(models.Model):
-    delovni_nalog = models.ForeignKey(Delovni_nalog, null=False)
+    delovni_nalog = models.ForeignKey(Delovni_nalog, null=False, on_delete=models.CASCADE)
     pacient = models.ForeignKey(Pacient, null=True)
 
 class Porocilo_o_obisku(models.Model):
@@ -413,13 +413,13 @@ class Plan(models.Model):
 
 class Material_DN(models.Model):
     material = models.ForeignKey(Material, null=True)
-    delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+    delovni_nalog = models.ForeignKey(Delovni_nalog, null=True, on_delete=models.CASCADE)
     kolicina = models.IntegerField(null=False, default=1)
 
 
 class Zdravilo_DN(models.Model):
     zdravilo = models.ForeignKey(Zdravilo, null=True)
-    delovni_nalog = models.ForeignKey(Delovni_nalog, null=True)
+    delovni_nalog = models.ForeignKey(Delovni_nalog, null=True, on_delete=models.CASCADE)
     kolicina = models.IntegerField( null=False, default=1)
 
 class Nadomescanje(models.Model):

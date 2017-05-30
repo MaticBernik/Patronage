@@ -6,10 +6,12 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 
 from .models import *
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import When, F, Q, Case
 from django.forms import  ModelForm
 from django.contrib.auth.models import User
+
+from django.forms.fields import *
 
 
 USER_TYPES = (
@@ -251,16 +253,79 @@ class FilterVisitationsForm(forms.Form):
 
 
 
-class VisitPregnantForm(forms.Form):
+# class VisitPregnantForm(forms.Form):
+    # def __init__(self, *args, **kwargs):
+            # super(FunkyForm, self).__init__(*args, **kwargs)
+            # for item in range(5):
+                # self.fields['test_field_%s' % item] = CharField(max_length=255)
+
+
+class VisitNewbornAndMotherForm(forms.Form):
+
     def __init__(self, *args, **kwargs):
-            super(FunkyForm, self).__init__(*args, **kwargs)
-            for item in range(5):
-                self.fields['test_field_%s' % item] = CharField(max_length=255)
+        super(VisitNewbornAndMotherForm, self).__init__(*args, **kwargs)
+        # for item in range(5):
+        # self.fields['test_field_%s' % item] = CharField(max_length=255)
+        
+        vrsta=Vrsta_obiska.objects.get(ime='Obisk otrocnice in novorojencka')
+        nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
+        polja = None
+        if len(nalogi)>0:
+            nalog=nalogi[0]
+            obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
+            polja = obisk[0].porocilo()
+
+            details_list = [ detail for (_,detail,_) in polja]
+
+            # clean the list
+            prev_string = details_list[0]
+            for i in range(0, len(details_list)):
+                current_string = details_list[i]
+                if(i != 0 and prev_string == current_string):
+                    details_list[i] = ""
+                else:
+                    details_list[i] = current_string.replace(".", "")
+
+                prev_string = current_string
+
+            counter = 0
+             # print("POLJA IZ POROCILA: ", polja)
+            for (p_id, p_opis, pm_id) in polja:
+                # Get required object
+                vnos = Polje_v_porocilu.objects.get(id=p_id)
+                print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+                
+                # DOLOCITEV POLJ
+                field_label = vnos.ime
+                field_title = details_list[counter]
 
 
+                if(vnos.obvezno):
+                    req = True
+                else:
+                    req = False
 
-# class VisitNewbornAndMother():
+                if(vnos.vnosno_polje == "DateField"):
+                    self.fields['polje%s' % pm_id] = DateField(label=field_label, required = req, help_text=field_title,
+                        widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
+                        input_formats=['%d.%m.%Y'])
+                elif(vnos.vnosno_polje == "DecimalField"):
+                    self.fields['polje%s' % pm_id] = IntegerField(label=field_label, required = req, help_text=field_title,
+                        widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                elif(vnos.vnosno_polje == "CharField"):
+                    self.fields['polje%s' % pm_id] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
+                elif(vnos.vnosno_polje == "ChoiceField"):
+                    given_choices = vnos.mozne_vrednosti.split(",")
+                    list_tuple = [(el, el) for el in given_choices]
+                    given_choices = tuple(list_tuple)
+                    field_label = "Izberite"
+                    self.fields['polje%s' % pm_id] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+                else:
+                    pass
 
+                counter += 1
+        else:
+            pass
 # class VisitElderly():
 
 # class VisitApplyInjection():

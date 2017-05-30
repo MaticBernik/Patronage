@@ -376,8 +376,12 @@ class Obisk(models.Model):
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
         # return [x.polje_id for x in polja]
-        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis) for x in polja]
+        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id) for x in polja]
 
+    def obisk_vrsta_tostring(self):
+        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
+        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
+        return vrsta_obiska.ime
 
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False, on_delete=models.CASCADE)

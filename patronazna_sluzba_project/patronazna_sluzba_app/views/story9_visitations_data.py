@@ -11,9 +11,10 @@ from django.template import Context, loader, RequestContext
 from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
-from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterVisitationsForm
+# from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterVisitationsForm
 # from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN, Uporabnik, Nadomescanje
 from patronazna_sluzba_app.models import *
+from patronazna_sluzba_app.forms import *
 import csv
 import django.contrib.auth
 import logging
@@ -78,25 +79,40 @@ def edit_visitaiton_data(request):
     print("GOT IN VIA NEW FUNCTION !!!")
 
 
-    vrsta=Vrsta_obiska.objects.get(ime='Obisk otrocnice in novorojencka')
-    nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
-    polja = None
-    if len(nalogi)>0:
-         nalog=nalogi[0]
-         obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
-         polja = obisk[0].porocilo()
-         # print("POLJA IZ POROCILA: ", polja)
-         for (p_id, p_opis) in polja:
-            # Get required object
-            vnos = Polje_v_porocilu.objects.get(id=p_id)
-            print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
-    else:
-        return
-
-
     if('edit_visitation_data' in request.POST):
         visit_button_id = request.POST.get('edit_visitation_data')
-        context = {'nbar': 'v_nrs_visits_data', 'visition_edit_id': visit_button_id }
+
+        current_visit = Obisk.objects.get(id=visit_button_id)
+
+        visitation_type = current_visit.obisk_vrsta_tostring()
+
+        seznam_polj = current_visit.porocilo()
+        details_list = [ detail for (_,detail,_) in seznam_polj]
+        print()
+        print("SEZNAM OPISOV")
+        print(details_list)
+        print()
+        # clean the list
+        prev_string = details_list[0]
+        for i in range(0, len(details_list)):
+            current_string = details_list[i]
+            if(i != 0 and prev_string == current_string):
+                details_list[i] = ""
+            prev_string = current_string
+
+        print()
+        print("NOV SEZNAM OPISOV")
+        print(details_list)
+        print()
+
+        if(visitation_type == "Obisk otrocnice in novorojencka"):
+            newBmotherForm = VisitNewbornAndMotherForm()
+            context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': newBmotherForm }
+            return render(request, 'visitations_nurse_editing.html', context)
+
+
+
+        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
         return render(request, 'visitations_nurse_editing.html', context)
 
 

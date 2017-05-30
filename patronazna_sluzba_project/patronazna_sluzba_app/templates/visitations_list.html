@@ -158,7 +158,15 @@
 
             		</td>
             		<td>{{visit.p_sestra}}</td>
-            		<td> - </td>
+            		<td> 
+            		{% if substitutions %}
+            			{% for sub in substitutions %}
+            				{% if sub.sestra.id == visit.p_sestra.id %}
+            					{{ sub.nadomestna_sestra }}
+            				{% endif %}
+            			{% endfor %}
+            		{% endif %}
+            		</td>
             		<td>
 	            		{% if pacient_list %}
 	            			{% for p in pacient_list %}

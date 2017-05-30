@@ -46,7 +46,7 @@
 	        	<li class="{% if nbar == link.2 %}active{% endif %}" ><a href="{% url link.0 %}"><span class="glyphicon {{link.3}}"></span>{{ link.1 }}</a></li>
 	        {% endfor %}
 	        {% for dropdown in dropdowns_list %}
-	        	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{dropdown.1}}<span class="caret"></span></a>
+	        	<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon {{dropdown.2}}"></span>{{dropdown.1}}<span class="caret"></span></a>
 	        	<ul class="dropdown-menu">
 	        	{% for choice in dropdown.0 %}
 	        		<li class="{% if nbar == choice.2 %}active{% endif %}" ><a href="{% url choice.0 %}"><span class="glyphicon {{choice.3}}"></span>{{ choice.1 }}</a></li>

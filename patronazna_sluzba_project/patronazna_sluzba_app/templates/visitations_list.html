@@ -161,7 +161,7 @@
             		<td> 
             		{% if substitutions %}
             			{% for sub in substitutions %}
-            				{% if sub.sestra.id == visit.p_sestra.id %}
+            				{% if sub.sestra.id == visit.p_sestra.id and obisk.datum >= sub.datum_zacetek and sub.datum_konec >= obisk.datum %}
             					{{ sub.nadomestna_sestra }}
             				{% endif %}
             			{% endfor %}

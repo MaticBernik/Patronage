@@ -39,6 +39,10 @@
 		}
 	</script>
 
+	<style type="text/css">
+    	span.required:after { content: '*'; color: red;}
+	</style>
+
 
     {% if visitation_form %}
 	    {{ visitation_form.non_field_errors }}
@@ -53,9 +57,14 @@
     				<br>
     				<br>
     				<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7" ><i><b>{{field.help_text}}</b></i></p>
-
     			{% endif %}
-    			<label  class="control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+    			{% if field.field.required %}
+			        <span class="required">
+			        	<label  class="control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+			        </span>
+			    {% else %}
+			        <label  class="control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+			    {% endif %}
 			    {{ field }}
 			</div>
 			{% endfor %}

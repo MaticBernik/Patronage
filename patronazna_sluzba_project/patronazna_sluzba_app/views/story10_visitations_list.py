@@ -131,16 +131,18 @@ def list_visitations(request):
     visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
     if request.POST.get('filter_substitute_nurse_id', 0):
         nurse = Patronazna_sestra.objects.get(id=request.POST['filter_substitute_nurse_id'])
+        print("***Nadomestna sestra: ",nurse)
         nadomescanja=Nadomescanje.objects.filter(nadomestna_sestra_id=nurse)
+        print("***Nadomescanja sestre: ",nadomescanja)
         if len(nadomescanja)>0:
             obiski_n=[]
             for nadomescanje in nadomescanja:
-                nadomescani_obiski=visitations.filter(datum__gte=nadomescanje.datum_zacetek, datum__lte=(nadomescanje.datum_konec + timedelta(days=1)))
+                nadomescani_obiski=visitations.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                print("***Nadomescani obiski dodajam: ",nadomescani_obiski)
                 if len(nadomescani_obiski)>0:
                     for x in nadomescani_obiski:
                         obiski_n.append(x.id)
             visitations=visitations.filter(id__in=obiski_n)
-            print("***obiski, ki jih sestra nadomesca: ",obiski_n)
         else:
             print("***NADOMESCANJE PRAZEN QUERYSET")
             visitations=visitations.filter(id__in=[])

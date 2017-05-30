@@ -78,6 +78,7 @@ def list_active_visitations(request):
 def edit_visitaiton_data(request):
     print("GOT IN VIA NEW FUNCTION !!!")
 
+    # CREATE FORMS
 
     if('edit_visitation_data' in request.POST):
         visit_button_id = request.POST.get('edit_visitation_data')
@@ -95,6 +96,23 @@ def edit_visitaiton_data(request):
 
         context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
         return render(request, 'visitations_nurse_editing.html', context)
+
+    # READ FORMS
+    elif(request.POST):
+        visitation_id = request.POST.get('submit_visitation_data', "")
+        print("VISITATION ID FROM POST REQUEST: ", visitation_id)
+
+        # BASED ONF VISITATION ID, READ THE LINKED FORM
+
+        # EXTRACT DATA FROM FORM
+
+        # SAVE DATA
+
+
+        # REDIRECT TO PREVIOUS PAGE
+        return redirect('link_visitations_nurse_data')
+
+
 
 
 

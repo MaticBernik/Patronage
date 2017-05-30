@@ -12,7 +12,7 @@ from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
 from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterVisitationsForm
-from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN, Uporabnik
+from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN, Uporabnik, Nadomescanje
 import csv
 import django.contrib.auth
 import logging
@@ -37,6 +37,11 @@ def list_visitations(request):
     print("LIST VISITATIONS")
     filter_form = FilterVisitationsForm()
     uporabnik = request.user
+
+    nadomescanja=Nadomescanje.objects.all()
+    nadomestne_sestre=[x.nadomestna_sestra_id for x in nadomescanja]
+    filter_form.fields['filter_substitute_nurse_id'].queryset=Patronazna_sestra.objects.filter(id__in=nadomestne_sestre)
+
 
     #full_staff = User.objects.filer(is_staff=1)
     doctors_profiles = [ x.uporabniski_profil_id for x in Zdravnik.objects.all()]
@@ -124,6 +129,22 @@ def list_visitations(request):
     vodje_ps = Vodja_PS.objects.all()
 
     visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
+    if request.POST.get('filter_substitute_nurse_id', 0):
+        nurse = Patronazna_sestra.objects.get(id=request.POST['filter_substitute_nurse_id'])
+        nadomescanja=Nadomescanje.objects.filter(nadomestna_sestra_id=nurse)
+        if len(nadomescanja)>0:
+            obiski_n=[]
+            for nadomescanje in nadomescanja:
+                nadomescani_obiski=visitations.filter(datum__gte=nadomescanje.datum_zacetek, datum__lte=(nadomescanje.datum_konec + timedelta(days=1)))
+                if len(nadomescani_obiski)>0:
+                    for x in nadomescani_obiski:
+                        obiski_n.append(x.id)
+            visitations=visitations.filter(id__in=obiski_n)
+            print("***obiski, ki jih sestra nadomesca: ",obiski_n)
+        else:
+            print("***NADOMESCANJE PRAZEN QUERYSET")
+            visitations=visitations.filter(id__in=[])
+        filter_form.fields['filter_substitute_nurse_id'].initial = request.POST['filter_substitute_nurse_id']
     if request.POST.get('filter_visit_complete', 0):
         if not int(request.POST.get('filter_visit_complete'))==-1:
             #visitations=visitations.filter(opravljen=request.POST['filter_visit_complete'])

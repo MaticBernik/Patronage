@@ -78,6 +78,7 @@ def list_active_visitations(request):
 def edit_visitaiton_data(request):
     print("GOT IN VIA NEW FUNCTION !!!")
 
+    # CREATE FORMS
 
     if('edit_visitation_data' in request.POST):
         visit_button_id = request.POST.get('edit_visitation_data')
@@ -86,34 +87,32 @@ def edit_visitaiton_data(request):
 
         visitation_type = current_visit.obisk_vrsta_tostring()
 
-        seznam_polj = current_visit.porocilo()
-        details_list = [ detail for (_,detail,_) in seznam_polj]
-        print()
-        print("SEZNAM OPISOV")
-        print(details_list)
-        print()
-        # clean the list
-        prev_string = details_list[0]
-        for i in range(0, len(details_list)):
-            current_string = details_list[i]
-            if(i != 0 and prev_string == current_string):
-                details_list[i] = ""
-            prev_string = current_string
-
-        print()
-        print("NOV SEZNAM OPISOV")
-        print(details_list)
-        print()
 
         if(visitation_type == "Obisk otrocnice in novorojencka"):
             newBmotherForm = VisitNewbornAndMotherForm()
             context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': newBmotherForm }
             return render(request, 'visitations_nurse_editing.html', context)
-
-
+            
 
         context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
         return render(request, 'visitations_nurse_editing.html', context)
+
+    # READ FORMS
+    elif(request.POST):
+        visitation_id = request.POST.get('submit_visitation_data', "")
+        print("VISITATION ID FROM POST REQUEST: ", visitation_id)
+
+        # BASED ONF VISITATION ID, READ THE LINKED FORM
+
+        # EXTRACT DATA FROM FORM
+
+        # SAVE DATA
+
+
+        # REDIRECT TO PREVIOUS PAGE
+        return redirect('link_visitations_nurse_data')
+
+
 
 
 

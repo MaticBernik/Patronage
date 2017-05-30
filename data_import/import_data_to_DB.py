@@ -100,6 +100,8 @@ with open("testni_pacienti.csv","r") as patients_file: #encoding="utf8"
 	patients_reader = csv.reader(patients_file, delimiter=';')
 	next(patients_reader, None) #skip header
 	for line in patients_reader:
+		if line[0]=='#':
+			continue
 		print(line)
 		#passwd=hash_password(line[9])
 		passwd="pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs=" #workaround --> geslo123
@@ -144,6 +146,8 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 	next(staff_reader, None)  # skip header
 	for line in staff_reader:
 		print(line)
+		if line[0]=='#':
+			continue
 		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",	(line[4], line[4], line[1], line[2], passwd, True, True if (line[0]=="administrator") else False, True, datetime.now()));
 		cursor = conn.execute("select id from auth_user where username = '" + line[4] + "';")
 		id = int(cursor.fetchall()[0][0])
@@ -401,6 +405,8 @@ with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
 	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
 	next(pacientiDN_reader, None)  # skip header
 	for line in pacientiDN_reader:
+		if line[0]=='#':
+			continue
 		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
 
 #Delovni nalogi
@@ -434,6 +440,13 @@ with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
 	for line in zdravilaDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 
+#Nadomescanja
+#with open("nadomescanja.csv", "r", encoding="utf8") as nadomescanja_file:  #encoding="utf8"
+with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
+	nadomescanja_reader = csv.reader(nadomescanja_file, delimiter=';')
+	next(nadomescanja_reader, None)  # skip header
+	for line in nadomescanja_reader:
+		conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (int(line[0]), int(line[1]), datetime.strptime(line[2],"%d.%m.%Y"), datetime.strptime(line[3],"%d.%m.%Y"), True if line[4]=='True' else False));
 
 
 conn.commit()

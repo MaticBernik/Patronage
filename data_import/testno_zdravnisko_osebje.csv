@@ -5,8 +5,8 @@ vodja;Matej;Smrekar;99997;vodja@mail.si;031 111 111;00100;geslo
 sodelavec;Zdravko;Dren;99995;sodelavec@mail.si;041 111 111;00100;geslo
 administrator;Alen;Grozdnik;;admin@mail.si;031 311 311;;geslo123
 zdravnik;Mirko;Dedic;99996;mirko.dedic@mail.si;041 412 111;00100;geslo
-zdravnik;Zdravko;Zdravič;99995;zdravko.zdravic@mail.si;041 314 765;00100;geslo
-zdravnik;Marko;Markič;99994;marko.markic@mail.si;051 731 431;00100;geslo
-sestra;Franja;Frankovič;99993;franja.frankovic@mail.si;040 523 553;00100;geslo;2000
-sestra;Petra;Petrovič;99992;petra.petrovic@mail.si;041 441 141;00100;geslo;4000
-sestra;Vida;Vidič;99991;vida.vidic@mail.si;031 221 451;00100;geslo;6000
+#zdravnik;Zdravko;Zdravič;99995;zdravko.zdravic@mail.si;041 314 765;00100;geslo
+#zdravnik;Marko;Markič;99994;marko.markic@mail.si;051 731 431;00100;geslo
+#sestra;Franja;Frankovič;99993;franja.frankovic@mail.si;040 523 553;00100;geslo;2000
+#sestra;Petra;Petrovič;99992;petra.petrovic@mail.si;041 441 141;00100;geslo;4000
+#sestra;Vida;Vidič;99991;vida.vidic@mail.si;031 221 451;00100;geslo;6000

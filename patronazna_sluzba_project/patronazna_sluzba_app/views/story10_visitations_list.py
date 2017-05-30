@@ -166,8 +166,10 @@ def list_visitations(request):
 
     delovni_nalogi = Delovni_nalog.objects.all()
 
+    #ROBERT KODA ZA NADOMESCANJA
+    vsa_nadomescanja = Nadomescanje.objects.all()
 
 
-    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps, 'substitutions': vsa_nadomescanja}
     return render(request, 'visitations_list.html', context)
 

@@ -42,11 +42,21 @@ def editProfileView(request):
     print(patient_q.spol)
     return render(request, 'update_profile.html', {'registration_form': form,'patient':patient_q})
 
+
 def editNursingProfileView(request,id="0"):
     # form = FormEditCoworker(instance=instance)
     if request.method == 'POST':
         print("POST")
+        card = request.POST['card_number']
+        ime =  request.POST['first_name']
+        priimek = request.POST['last_name']
+        address = request.POST['address']
+        patient_profile = Pacient.objects.get(st_kartice=card)
+        district = request.POST['search_district']
+        post = request.POST['search_post']
+        phone = request.POST['phone_number']
 
+        update_nursing_patient(patient_profile, card, phone, address, ime, priimek, district, post)
     else:
         print("GET")
     # form = PatientRegistrationFrom()
@@ -63,6 +73,23 @@ def editNursingProfileView(request,id="0"):
     else:
         print(patient_q)
         return render(request, 'edit_nursing_profile.html', {'add_nursing_patient_form': form, 'patient': patient_q})
+
+
+def update_nursing_patient(patient_profile, st_kartice, telefonska, naslov, ime, priimek, okolis, posta):
+    patient_profile.st_kartice = st_kartice
+    patient_profile.telefonska_st = telefonska
+    patient_profile.naslov = naslov
+    patient_profile.ime = ime
+    patient_profile.priimek = priimek
+
+    okolis = Okolis.objects.get(ime=okolis)
+    patient_profile.okolis = okolis
+
+    posta = Posta.objects.get(postna_st=int(posta[:4]))
+    patient_profile.posta = posta
+
+    patient_profile.save()
+    return 1
 
 
 def update_patient(user, st_kartice, telefonska, naslov, spol, datum_rojstva, ime, priimek, email, okolis, posta,

@@ -41,17 +41,17 @@ def substitutionView(request):
             #   | Z | K
             if i.datum_zacetek <= date_start and i.datum_konec > date_start and i.datum_konec <= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub.save()
                 print(" | Z | K")
             #   Z | K |
             if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec >= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub.save()
                 print("Z | K |")
             #   Z | | K
             if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec > date_start and i.datum_konec <= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save
+                sub.save()
                 print("Z | | K")
 
         return HttpResponse("Nadomescanje dodano.")

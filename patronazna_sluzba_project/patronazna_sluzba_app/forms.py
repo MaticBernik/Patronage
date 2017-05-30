@@ -413,7 +413,7 @@ class EditNursingProfileForm(forms.Form):
         super(EditNursingProfileForm, self).__init__(*args, **kwargs)
         queryset = Pacient.objects.select_related().get(st_kartice=self.user)
 
-        self.fields['card_number'] = forms.IntegerField(disabled=True,label='Številka kartice osebe: ',
+        self.fields['card_number'] = forms.IntegerField(disabled=False,label='Številka kartice osebe: ',
                                          widget=forms.NumberInput(attrs={'id': 'card_number', 'class': 'form-control','value':queryset.st_kartice}))
         self.fields['last_name'] = forms.CharField(label='Priimek: ', max_length=100,
                                     widget=forms.TextInput(attrs={'id': 'last_name', 'class': 'form-control','value':queryset.priimek}))

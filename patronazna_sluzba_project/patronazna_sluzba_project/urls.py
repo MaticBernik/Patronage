@@ -60,6 +60,7 @@ urlpatterns = [
     url(r'^editNursing/(?P<id>[0-9]+)/$',editNursingProfileView,name='link_edit_nursing'),
     url(r'^resetPassword/$',resetPasswordView,name='link_reset_password'),
     url(r'^activateNewPassword/', change_pw_view),
+    url(r'^finishedSubstitution/$', finishedSubstitutionView, name='link_sub_finished'),
 ]
 
 #ADD 

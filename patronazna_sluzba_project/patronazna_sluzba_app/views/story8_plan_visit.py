@@ -10,15 +10,18 @@ from django.db.models import Q
 from math import floor
 ########################################################################
 #######TEST THE FUNCTIONALITY
-global_plan=[]
+#global_plan=[]
 global_nurse_id = 0
-old_plan = []
-main_nurse = None
+#old_plan = []
+#main_nurse = None
+
 
 def material_list(request):
     print("=============GLOBAL PLAN MATERIAL============")
     medicine = {}
     blood_tubes = {}
+    """TRY SESSION"""
+    global_plan = request.session.get('global_plan')
     for i in global_plan:
         tip_obiska = str(i.planirani_obisk.delovni_nalog.vrsta_obiska.ime)
         delovni_nalog_id = str(i.planirani_obisk.delovni_nalog_id)
@@ -92,7 +95,9 @@ def work_task_plan(request):
     print('QUERY RESULT: '+str(delovni_nalog[0].zdravnik)+'    '+str(material)+'  '+str(medicine))
     print("####################################")
    # task = Posta.objects.all()[1:10]
-    global main_nurse
+    #global main_nurse
+    main_nurse = request.session.get('main_nurse')
+    main_nurse = Patronazna_sestra.objects.get(id=main_nurse)
     return render_to_response('ajax_task_plan.html',{'task':task_fk,'material':material,'medicine':medicine,'obisk':obisk,'interval':interval,'period':period,'main_nurse':main_nurse})
 
 def is_nurse(user):
@@ -101,7 +106,9 @@ def is_nurse(user):
     return False
 
 def plan_list_ajax(request):
-    global global_plan
+
+    #global global_plan
+
     if request.method == 'POST':
         #print("INSIDE POST BEFORE DATUM: ")
         datum = request.POST['datum']
@@ -132,21 +139,26 @@ def plan_list_ajax(request):
         print("----------------GET DATUM-------------")
         print(datum)
        # datum = datetime.now().date()
-        #datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
+       #datum_plan = (datetime.now().date() + timedelta(days=1, hours=2))
        #sestra za okoliš 18 vsi pacienti razen tone
     if is_nurse(request.user):
         nurse_profile_id = User.objects.get(username=request.user)
 
         # OBISKI KI SO V PLANU
         plan_list = Plan.objects.values_list('planirani_obisk_id',flat=True)
-        global old_plan
-        old_plan = Plan.objects.filter(datum__icontains=datum).values_list('planirani_obisk_id',flat=True) #(datetime.now().date() + timedelta(days=1))
+        #global old_plan
+        #old_plan = Plan.objects.filter(datum__icontains=datum).values_list('planirani_obisk_id',flat=True) #(datetime.now().date() + timedelta(days=1))
+
+        print("Sestra profil " + str(is_nurse(request.user)) + ' nurse profile id: ' + str(nurse_profile_id.id))
+        nurse = Patronazna_sestra.objects.get(uporabniski_profil_id=nurse_profile_id)
+        """
         print("=========================================")
-        print("=========OLD PLAN============")
+        print("=========OLD PLAN NEW QUERY============")
+        print("NURSE ID FOR OLD PLAN: "+str(nurse.id))
         print(old_plan)
         print((datetime.now().date() + timedelta(days=1)))
         print("=========================================")
-
+        """
 
 
         """
@@ -158,23 +170,63 @@ def plan_list_ajax(request):
         """
 
         #SE NEOPRAVLJENI OBISKI
-        print("Sestra profil "+str(is_nurse(request.user))+' nurse profile id: '+str(nurse_profile_id.id))
-        nurse=Patronazna_sestra.objects.get(uporabniski_profil_id =nurse_profile_id)
+        #print("Sestra profil "+str(is_nurse(request.user))+' nurse profile id: '+str(nurse_profile_id.id))
+        #nurse=Patronazna_sestra.objects.get(uporabniski_profil_id =nurse_profile_id)
         #trenutna sestra rabimo pri izpisu nadomestne sestre
-        global main_nurse
-        main_nurse = nurse
+        #global main_nurse
+        request.session['main_nurse'] = nurse.id
 
-        #HARDCODE ABSENT NURSE ID
+        """TRY SESSION"""
+        """BUG obisk vezan na logged in nurse"""
+        """PREVERI ALI JE SESTRA ODSOTNA IN ONEMOGOČI PLANIRANJE"""
+        try:
+            current_nurse_absent = Nadomescanje.objects.filter(sestra_id=nurse.id).filter(veljavno=True).filter(datum_zacetek__lte=date.today(),datum_konec__gte=date.today())
+            print(current_nurse_absent)
+        except:
+            print("QUERY ERROR!!!!!!!!!!!!!!!!!!")
+        print(date.today())
+        if len(current_nurse_absent)>0:
+            #sestra je odsotna
+            print("===========LOGIRANA SESTRA JE ODSOTNA=========")
+            old_plan = Plan.objects.filter(datum__icontains=datum).filter(planirani_obisk__p_sestra_id=nurse.id).values_list('planirani_obisk_id', flat=True)
+        else:
+            print("===============LOGIRANA SESTRA NI ODSOTNA========")
+            old_plan = Plan.objects.filter(datum__icontains=datum).filter(planirani_obisk__p_sestra_id=nurse.id).values_list('planirani_obisk_id', flat=True)
+        # request.session.get('old_plan')
+        """if not old_plan:
+            old_plan = Plan.objects.filter(datum__icontains=datum).filter(planirani_obisk__p_sestra_id=nurse.id).values_list('planirani_obisk_id', flat=True)
+        """
+
         try:
             #absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
             #id vseh sester, ki jih je nadomeščala (1,5,10,11...)
+            #absent = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse.id).filter(veljavno=True)#.values_list('sestra_id',flat=True)
             absent = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse.id).filter(veljavno=True)#.values_list('sestra_id',flat=True)
+            absent_ids = set()
+            query= Nadomescanje.objects.filter(nadomestna_sestra_id=nurse.id).filter(veljavno=True).values_list('sestra_id',flat=True)
+            absent_ids.update(query)
+            #preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
+            """for x in absent:
+                absent |= Nadomescanje,objects.filter(nadomestna_sestra_id=x.sestra_id).filter(veljavno=True)
+            """
             print("==================ABSENTEE====================")
             if len(absent) > 0:
                 fill_in = True
-                print(absent)
+                print(absent_ids)
+                """
+                for x in absent_ids:
+                    absent |= Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True)
+                    query = Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True).values_list('sestra_id', flat=True)
+                    absent_ids.update(query)
+                """
+                print(absent_ids)
+                print("<<<<<<<<<<<<<NADOMESCANJE OBSTAJA QUERY IN ALL ABSENT NURSES>>>>>>>>>>>>>>")
+                old_plan |= Plan.objects.filter(datum__icontains=datum).filter(planirani_obisk__p_sestra_id__in=absent_ids).values_list('planirani_obisk_id', flat=True)
+
+                """
                 for i in absent:
                     print("Start: "+str(i.datum_zacetek)+" END: "+str(i.datum_konec))
+                """
             else:
                 print("PRAZNO ABSENTEE")
                 fill_in = False
@@ -183,8 +235,14 @@ def plan_list_ajax(request):
             #absent = Nadomescanje.objects.get(nadomestna_sestra_id=nurse.id)
         except:
             fill_in = False
-
-        #fill_in = True
+        """JSON SERIALIZATION"""
+        temp_list = []
+        for value in old_plan:
+            temp_list.append(value)
+        old_plan = temp_list
+        print("==============OLD PLAN ON GET METHOD=========")
+        print(old_plan)
+        request.session['old_plan'] = old_plan
         print('Medicinska sestra '+str(nurse.id))
         if len(plan_list) > 0:
             print("PLAN LIST ID "+str(plan_list[0]))
@@ -193,9 +251,26 @@ def plan_list_ajax(request):
             #get the plan for the logged in sister
             if not fill_in:
                 print("BREZ NADOMESCANJA")
-                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(p_sestra_id=nurse.id)#.filter(id__in=plan_list).order_by('datum')#filter(datum__gt=date.today())# #Okolis.objects.values_list('id','ime')
-               # planned_visits=Plan.objects.select_related().filter(planirani_obisk.id__in=plan_list).filter(planirani_obisk.p_sestra_id=nurse_id)
-                visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).order_by('datum')
+                if len(current_nurse_absent)>0:
+                    absent_visits = set()
+                    for i in current_nurse_absent:
+                        """GET ALL VISITS WHILE ABSENT AND FILTER BASED ON THOSE"""
+                        query = Obisk.objects.filter(p_sestra_id=nurse.id).filter(datum__range = (i.datum_zacetek, i.datum_konec)).values_list('id',flat=True)#.filter(~Q(id__in=plan_list)).values_list('id',flat=True)
+                        absent_visits.update(query)
+                        print(absent_visits)
+                    visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).filter(~Q(id__in=absent_visits)).order_by('datum')
+                    planned_visits = Obisk.objects.filter(p_sestra_id=nurse.id).filter(Q(id__in=plan_list)).filter(~Q(id__in=absent_visits))
+                    #planned_visits = []
+                    print("PLANIRANI OBISKI  1111: ")
+                    print(plan_list)
+                    print(planned_visits)
+                else:
+                    visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).order_by('datum')
+                    planned_visits = Obisk.objects.filter(id__in=plan_list).filter(p_sestra_id=nurse.id)#.filter(id__in=plan_list).order_by('datum')#filter(datum__gt=date.today())# #Okolis.objects.values_list('id','ime')
+                   # planned_visits=Plan.objects.select_related().filter(planirani_obisk.id__in=plan_list).filter(planirani_obisk.p_sestra_id=nurse_id)
+                    print("PLANIRANI OBISKI 2222: ")
+                    print(planned_visits)
+
             else:
                 #vključi obiske sestre, ki jo nadomesca
                 print("NADOMESCANJE")
@@ -205,31 +280,72 @@ def plan_list_ajax(request):
                 #for i in absent:
                 #    planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id))
                 #visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)|Q(p_sestra_id=absent.sestra_id)).filter(~Q(id__in=plan_list)).order_by('datum')
-                planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id))
+                """SESTRA ki nadomesca je odsonta"""
+                if len(current_nurse_absent)>0:
+                    absent_visits = set()
+                    for i in current_nurse_absent:
+                        """GET ALL VISITS WHILE ABSENT AND FILTER BASED ON THOSE"""
+                        query = Obisk.objects.filter(p_sestra_id=nurse.id).filter(datum__range = (i.datum_zacetek, i.datum_konec)).values_list('id',flat=True)#.filter(~Q(id__in=plan_list)).values_list('id',flat=True)
+                        absent_visits.update(query)
+                        print(absent_visits)
+                    visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).filter(~Q(id__in=absent_visits)).order_by('datum')
+                    planned_visits = Obisk.objects.filter(p_sestra_id=nurse.id).filter(Q(id__in=plan_list)).filter(~Q(id__in=absent_visits))
 
-                visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)).filter(~Q(id__in=plan_list)).order_by('datum')
+                    for i in absent:
+                        planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(
+                            Q(p_sestra_id=i.sestra_id)).filter(
+                            datum__range=(i.datum_zacetek, i.datum_konec))
 
-                for i in absent:
-                    # print("Start: " + str(i.datum_zacetek) + " END: " + str(i.datum_konec))
-                    planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=i.sestra_id)).filter(
-                        datum__range=(i.datum_zacetek, i.datum_konec))
+                        visit_list |= Obisk.objects.filter(Q(p_sestra_id=i.sestra_id)).filter(
+                            datum__range=(i.datum_zacetek, i.datum_konec)).filter(~Q(id__in=plan_list)).order_by(
+                            'datum')
 
-                    visit_list |= Obisk.objects.filter(Q(p_sestra_id=i.sestra_id)).filter(
-                        datum__range=(i.datum_zacetek, i.datum_konec)).filter(~Q(id__in=plan_list)).order_by('datum')
+                    print("PLANIRANI OBISKI  3333: ")
+                    print(plan_list)
+                    print(planned_visits)
+                else:
+                    visit_list = Obisk.objects.filter(p_sestra_id=nurse.id).filter(~Q(id__in=plan_list)).order_by('datum')
+                    planned_visits = Obisk.objects.filter(id__in=plan_list).filter(p_sestra_id=nurse.id)#.filter(id__in=plan_list).order_by('datum')#filter(datum__gt=date.today())# #Okolis.objects.values_list('id','ime')
+                   # planned_visits=Plan.objects.select_related().filter(planirani_obisk.id__in=plan_list).filter(planirani_obisk.p_sestra_id=nurse_id)
+                    print("PLANIRANI OBISKI 4444: ")
+                    print(planned_visits)
 
-            print("Query result")
+
+                #planned_visits = Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=nurse.id))
+
+                #visit_list = Obisk.objects.filter(Q(p_sestra_id=nurse.id)).filter(~Q(id__in=plan_list)).order_by('datum')
+
+                    for i in absent:
+                        print(plan_list)
+                        print("NURSE: "+str(i.sestra_id)+" Start: " + str(i.datum_zacetek) + " END: " + str(i.datum_konec))
+                        planned_visits |= Obisk.objects.filter(id__in=plan_list).filter(Q(p_sestra_id=i.sestra_id)).filter(
+                            datum__range=(i.datum_zacetek, i.datum_konec))
+
+                        visit_list |= Obisk.objects.filter(Q(p_sestra_id=i.sestra_id)).filter(
+                            datum__range=(i.datum_zacetek, i.datum_konec)).filter(~Q(id__in=plan_list)).order_by('datum')
+
+            #print("Query result")
             #add to global plan
 
 
 
-
+            """
             for i in planned_visits:
                 print('planirani: '+str(i.id))
+            """
             # get the planned visit from all visits
             test_plan = Plan.objects.select_related().filter(planirani_obisk_id__in=planned_visits).filter(datum__icontains=datum)
             test_plan = replace_datum_type(test_plan,1)
             #global_plan=planned_visits
             global_plan = test_plan
+            temp = []
+           # print("<<<<<<<<<<<<<GLOBAL PLAN PRINTS>>>>>>>>>")
+            for x in global_plan:
+                temp.append(x.id)
+                #print(x)
+            global_plan = temp
+            request.session['global_plan'] = global_plan
+            #print("THIS WORKS MATE AFTER SESSION")
             """
             print("=============GLOBAL PLAN MATERIAL============")
             medicine = {}
@@ -265,6 +381,8 @@ def plan_list_ajax(request):
         else:
 
             global_plan = []
+            request.session['global_plan'] = global_plan
+
             if not fill_in:
                 print("BREZ NADOMESCANJA PLAN JE PRAZEN")
                 visit_list = Obisk.objects.select_related().filter(p_sestra_id=nurse.id).order_by('datum')
@@ -283,10 +401,12 @@ def plan_list_ajax(request):
 
         print("Visit list "+str(len(visit_list)))
         visit_list = replace_datum_type(visit_list,0)
+        """
         print("===========================================")
         for i in visit_list:
             print("DATUM: "+str(i.datum))
         print("===========================================")
+        """
         #print('Datum tip: '+str(visit_list[0].obvezen_obisk))
         #print("todays date is: " + str(date.today()))
         #print("Tomorrow date is: " + str(date.today() + timedelta(days=1)))
@@ -311,9 +431,10 @@ def plan_list_ajax(request):
     global global_nurse_id
     global_nurse_id = nurse.id
 
+    """
     print("==================================")
     print("==========VISIT LIST LENGTHS===========")
-    """
+   
     for i in visit_list:
         stevilka_length = len(str(i.id))
         print("Stevilka: "+str(stevilka_length))  #max length 5
@@ -322,9 +443,9 @@ def plan_list_ajax(request):
         print("Zdravnik priimek: " + str(len(str(i.delovni_nalog.zdravnik.uporabniski_profil.last_name))))
         print("Sestra ime: " + str(len(str(i.p_sestra.uporabniski_profil.first_name))))
         print("Sestra priimek: " + str(len(str(i.p_sestra.uporabniski_profil.last_name)))+": "+i.p_sestra.uporabniski_profil.last_name)
-    """
+    
     print("==================================")
-
+    """
     return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id})
 
 def replace_datum_type(list,n):
@@ -345,11 +466,30 @@ def replace_datum_type(list,n):
 
 
 def ajax_added_to_plan(request):
-
+    temp = request.session.get('global_plan')
+    test_plan = Plan.objects.select_related().filter(id__in=temp)
+    test_plan = replace_datum_type(test_plan, 1)
+    # global_plan=planned_visits
+    global_plan = test_plan
+    """
+    print("=========SESSIONG GET==========")
+    print(global_plan)
+    print("============================")
+    """
     return render_to_response('ajax_already_planned.html',{'planned':global_plan,'nurse':global_nurse_id})
 
 def plan_visit_view(request):
     if request.method == "POST":
+
+
+        #current_nurse_absent = Nadomescanje.objects.filter(sestra_id=request.session.get('main_nurse')).filter(veljavno=True)
+        current_nurse_absent = Nadomescanje.objects.filter(sestra_id=request.session.get('main_nurse')).filter(veljavno=True).filter(
+            datum_zacetek__lte=date.today(), datum_konec__gte=date.today())
+
+        if len(current_nurse_absent) > 0:
+            # sestra je odsotna
+            print("===========LOGIRANA SESTRA JE ODSOTNA=========")
+            return HttpResponse("SESTRA JE ODSOTNA ")
         visit_form = plan_visit_form(request.POST)
         plan_visit_list = request.POST.getlist('plan_list')
         my_date = request.POST['date_picker']
@@ -370,7 +510,10 @@ def plan_visit_view(request):
             print("=================DATUM NOW============")
             print(datum)
 
-        global old_plan
+        """TRY SESSION"""
+        #global old_plan
+        old_plan = request.session.get('old_plan')
+
        # print("OLDPLAN BEFORE: " + str(old_plan))
         #contained = [x for x in plan_visit_list if x in old_plan]
         #print("CONTAINED: "+str(contained))

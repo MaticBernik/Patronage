@@ -28,7 +28,8 @@ def search_post_code(request):
     else:
         search_post =''
 
-    post = Posta.objects.all()
+    #post = Posta.objects.all()
+    post = Posta.objects.filter(naziv_poste__icontains=search_post)[:20]
     return render_to_response('ajax_post.html',{'post':post})
 
 def search_district_name(request):

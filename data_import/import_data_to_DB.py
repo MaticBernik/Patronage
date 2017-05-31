@@ -419,9 +419,11 @@ with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
 			cursor = conn.execute("select id from patronazna_sluzba_app_vodja_PS where sifra_vodje_PS=" + str(line[8]) + ";")
 			vodjePS = cursor.fetchall()
 			if len(vodjePS) == 0:
-				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, zdravnik_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]), line[3], int(line[4]), int(line[5]), line[6], int(line[7]), int(line[8])));
+				cursor = conn.execute("select id from patronazna_sluzba_app_zdravnik where sifra_zdravnika=" + str(line[8]) + ";")
+				zdravnik=cursor.fetchall()
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, zdravnik_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]), line[3], int(line[4]), int(line[5]), line[6], int(line[7]), zdravnik[0][0]));
 			else:
-				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]),int(line[8])));
+				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]), vodjePS[0][0])); #int(line[8])
 			kreiraj_obiske(int(line[0]), int(line[4]), line[3], int(line[2]), datum)
 
 #Material na delovnih nalogih

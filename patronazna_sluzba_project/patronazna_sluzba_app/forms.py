@@ -441,7 +441,8 @@ class ForgottenPasswordForm(forms.Form):
     new_password2 = forms.CharField(label='Ponovite geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password2', 'class': 'form-control'}))
 
 class SubstitutionFinishedForm(forms.Form):
-    absent = Nadomescanje.objects.filter(nadomestna_sestra_id=6).filter(veljavno=True).values_list('sestra_id',flat=True)
+    #absent = Nadomescanje.objects.filter(nadomestna_sestra_id=6).filter(veljavno=True).values_list('sestra_id',flat=True)
+    absent=[]
     # preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
     print("================FORMS.PY===============")
     print(absent)

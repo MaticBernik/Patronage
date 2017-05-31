@@ -33,27 +33,28 @@ def substitutionView(request):
 
         sub_array = Nadomescanje.objects.filter(nadomestna_sestra=nurse)
         for i in sub_array:
+            sub = Nadomescanje()
             #   | Z K |
             if i.datum_zacetek <= date_start and i.datum_konec >= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save()
+
                 print("| Z K |")
             #   | Z | K
             if i.datum_zacetek <= date_start and i.datum_konec > date_start and i.datum_konec <= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=date_start, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save()
+
                 print(" | Z | K")
             #   Z | K |
             if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec >= date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=date_end, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save()
+
                 print("Z | K |")
             #   Z | | K
-            if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec > date_start and i.datum_konec <= date_end:
+            if i.datum_zacetek >= date_start and i.datum_zacetek < date_end and i.datum_konec > date_start and i.datum_konec < date_end:
                 sub = Nadomescanje(sestra=i.sestra, datum_zacetek=i.datum_zacetek, datum_konec=i.datum_konec, nadomestna_sestra=sub_nurse, veljavno=1)
-                sub.save()
-                print("Z | | K")
 
+                print("Z | | K")
+            sub.save()
         return HttpResponse("Nadomescanje dodano.")
 
     else:

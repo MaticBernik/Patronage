@@ -53,7 +53,7 @@ def list_work_task(request):
     if is_doctor(uporabnik):
         zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
         print("zdravnik",zdravnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.sifra_zdravnika)
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.id)
         print("Nalogi: ",delovni_nalogi)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
@@ -96,10 +96,10 @@ def list_work_task(request):
             delovni_nalogi = Delovni_nalog.objects.all()
             if is_doctor(profil):
                 creator = Zdravnik.objects.get(uporabniski_profil_id=profil)
-                delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator.sifra_zdravnika)
+                delovni_nalogi = delovni_nalogi.filter(zdravnik_id=creator.id)
             elif is_leader_ps(request.POST['filter_creator_id']):
                 creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
-                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
+                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.id)
 
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):

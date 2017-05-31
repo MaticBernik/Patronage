@@ -121,13 +121,13 @@
     	        	<td>
     	        		{% if work_task.zdravnik_id %}
     	        			{% for doc in doctors %}
-    	        				{% if doc.sifra_zdravnika == work_task.zdravnik_id %}
+    	        				{% if doc.sifra_zdravnika == work_task.zdravnik.sifra_zdravnika %}
     	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
     	        		{% elif work_task.vodja_PS_id %}
     	        			{% for head in head_nurses %}
-    	        				{% if head.sifra_vodje_PS == work_task.vodja_PS_id %}
+    	        				{% if head.sifra_vodje_PS == work_task.vodja_PS.sifra_vodje_PS %}
     	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
@@ -161,7 +161,7 @@
             		<td><button onclick="show_work_task(this)" type="button" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
 					{% if logged_role == "Doctor" or logged_role == "Leader" %}
 						{% if work_task.vodja_PS_id %}
-								{% if work_task.vodja_PS_id == current_logged %}
+								{% if work_task.vodja_PS.sifra_vodje_PS == current_logged %}
 									{% if work_task.id in done_visits%}
 									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
 									{% else%}
@@ -173,7 +173,7 @@
 								{% endif %}
 						{% elif work_task.zdravnik_id %}
 
-								{% if work_task.zdravnik_id == current_logged %}
+								{% if work_task.zdravnik.sifra_zdravnika == current_logged %}
 									{% if work_task.id in done_visits%}
 									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
 									{% else%}

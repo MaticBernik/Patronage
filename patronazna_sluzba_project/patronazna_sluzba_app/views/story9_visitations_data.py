@@ -63,9 +63,9 @@ def list_active_visitations(request):
     vodje_ps = Vodja_PS.objects.all()
 
     # V testne namene
-    obiski = Obisk.objects.all()
-    visitations_today = obiski
-    visitations_yesterday = obiski
+    #obiski = Obisk.objects.all()
+    #visitations_today = obiski
+    #visitations_yesterday = obiski
 
 
     context = {'work_task_list':delovni_nalogi, 'visitations_list_today':visitations_today, 'visitations_list_yesterday':visitations_yesterday, 'nbar': 'v_nrs_visits_data', 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}

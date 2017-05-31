@@ -17,6 +17,8 @@ import csv
 import django.contrib.auth
 import logging
 import os
+from itertools import chain
+
 
 def is_doctor(user):
     if Zdravnik.objects.filter(uporabniski_profil_id=user).exists():
@@ -68,10 +70,32 @@ def list_visitations(request):
         pacienti = Pacient.objects.filter(okolis_id=nurse.okolis_id)
         nalogi_vezani_na_pacienta=Pacient_DN.objects.filter(pacient_id__in=pacienti)
         delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
+
+        visitations=Obisk.objects.filter(p_sestra_id=nurse)
+        nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse)
+        print("***Nadomescanja sestre: ", nadomescanja)
+        obiski_n = []
+        if len(nadomescanja) > 0:
+            for nadomescanje in nadomescanja:
+                nadomescani_obiski = Obisk.objects.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                print("***Nadomescani obiski dodajam: ", nadomescani_obiski)
+                if len(nadomescani_obiski) > 0:
+                    for x in nadomescani_obiski:
+                        obiski_n.append(x)
+            #visitations = visitations.filter(id__in=obiski_n)
+        else:
+            print("***NADOMESCANJE PRAZEN QUERYSET")
+        #obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
+        visitations = list(chain(visitations, obiski_n))
+        visitations_nurse=visitations
+        print("!!! OBISKI SESTRE PRED FILTRIRANJEM: ",visitations)
+        print("len(visitations) = ",len(visitations))
+
         #filter_form.fields['filter_nurse_id']=nurse
         filter_form.fields['filter_nurse_id'].initial=str(nurse.sifra_patronazne_sestre)+" "+nurse.uporabniski_profil.first_name+" "+nurse.uporabniski_profil.last_name
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
         filter_form.fields['filter_nurse_id'].widget.attrs['disabled'] = 'disabled'
+        filter_form.fields['filter_substitute_nurse_id'].widget.attrs['disabled'] = 'disabled'
         #DODAJ FILTER
     else:
         print("ERROR!!")
@@ -103,12 +127,25 @@ def list_visitations(request):
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_visit_type',0):
             delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST['filter_visit_type'])
+
+            obiski_delovni_nalog=Delovni_nalog.objects.filter(vrsta_obiska_id=request.POST['filter_visit_type'], id__in=[x.delovni_nalog_id for x in visitations])
+            visitations=Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
+
+            visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
+
             #filter_form.fields['filter_visit_type'] = request.POST['filter_visit_type']
             filter_form.fields['filter_visit_type'].initial=request.POST['filter_visit_type']
         if request.POST.get('filter_patient_id',0):
             pacientDN=Pacient_DN.objects.filter(pacient_id=request.POST['filter_patient_id'])
             nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
             delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
+
+            obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in visitations])
+            obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=nalogi_vezani_na_pacienta)
+            visitations = Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
+
+            visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
+
             #filter_form.fields['filter_patient_id'] = request.POST['filter_patient_id']
             filter_form.fields['filter_patient_id'].initial=request.POST['filter_patient_id']
         if request.POST.get('filter_nurse_id',0):
@@ -121,14 +158,15 @@ def list_visitations(request):
 
     #  FORM QUERY SET
     # form.fields['adminuser'].queryset = User.objects.filter(account=accountid)
-    visitations = Obisk.objects.all()
+    #visitations = Obisk.objects.all()
     material = Material_DN.objects.all()
     zdravila = Zdravilo_DN.objects.all()
     pacienti = Pacient_DN.objects.all()
     zdravniki = Zdravnik.objects.all()
     vodje_ps = Vodja_PS.objects.all()
 
-    visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
+    if not is_nurse(uporabnik):
+        visitations = Obisk.objects.filter(delovni_nalog_id__in=delovni_nalogi)
     if request.POST.get('filter_substitute_nurse_id', 0):
         nurse = Patronazna_sestra.objects.get(id=request.POST['filter_substitute_nurse_id'])
         print("***Nadomestna sestra: ",nurse)

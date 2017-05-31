@@ -253,21 +253,16 @@ class FilterVisitationsForm(forms.Form):
 
 
 
-# class VisitPregnantForm(forms.Form):
-    # def __init__(self, *args, **kwargs):
-            # super(FunkyForm, self).__init__(*args, **kwargs)
-            # for item in range(5):
-                # self.fields['test_field_%s' % item] = CharField(max_length=255)
-
-
-class VisitNewbornAndMotherForm(forms.Form):
+class InputVisitationDataForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        super(VisitNewbornAndMotherForm, self).__init__(*args, **kwargs)
+        string_visitation_type = kwargs.pop('v_type')
+        super(InputVisitationDataForm, self).__init__(*args, **kwargs)
         # for item in range(5):
         # self.fields['test_field_%s' % item] = CharField(max_length=255)
         
-        vrsta=Vrsta_obiska.objects.get(ime='Obisk otrocnice in novorojencka')
+        # vrsta=Vrsta_obiska.objects.get(ime='Obisk otrocnice in novorojencka')
+        vrsta=Vrsta_obiska.objects.get(ime=string_visitation_type)
         nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
         polja = None
         if len(nalogi)>0:
@@ -326,14 +321,6 @@ class VisitNewbornAndMotherForm(forms.Form):
                 counter += 1
         else:
             pass
-# class VisitElderly():
-
-# class VisitApplyInjection():
-
-# class VisitBloodSample():
-
-# class VisitCheckMedicalStatus():
-
 
 
 
@@ -444,15 +431,15 @@ class SubstitutionFinishedForm(forms.Form):
     #absent = Nadomescanje.objects.filter(nadomestna_sestra_id=6).filter(veljavno=True).values_list('sestra_id',flat=True)
     absent=[]
     # preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
-    print("================FORMS.PY===============")
-    print(absent)
-    print("=======================================")
+    # print("================FORMS.PY===============")
+    # print(absent)
+    # print("=======================================")
     for x in absent:
         absent |= Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True).values_list('sestra_id',flat=True)
 
-    print("================FORMS.PY===============")
-    print(absent)
-    print("=======================================")
+    # print("================FORMS.PY===============")
+    # print(absent)
+    # print("=======================================")
     query = Nadomescanje.objects.filter(veljavno =True).values_list("sestra_id",flat=True)
     query_nurses = Patronazna_sestra.objects.filter(id__in=query)
     nurses = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))

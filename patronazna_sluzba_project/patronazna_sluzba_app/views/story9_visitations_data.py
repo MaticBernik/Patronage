@@ -76,9 +76,9 @@ def list_active_visitations(request):
     vodje_ps = Vodja_PS.objects.all()
 
     # V testne namene
-    #obiski = Obisk.objects.all()
-    #visitations_today = obiski
-    #visitations_yesterday = obiski
+    obiski = Obisk.objects.all()
+    visitations_today = obiski
+    visitations_yesterday = obiski
 
 
     context = {'work_task_list':delovni_nalogi, 'visitations_list_today':visitations_today, 'visitations_list_yesterday':visitations_yesterday, 'nbar': 'v_nrs_visits_data', 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps}
@@ -100,15 +100,18 @@ def edit_visitaiton_data(request):
 
         visitation_type = current_visit.obisk_vrsta_tostring()
 
-
-        if(visitation_type == "Obisk otrocnice in novorojencka"):
-            newBmotherForm = VisitNewbornAndMotherForm()
-            context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': newBmotherForm }
-            return render(request, 'visitations_nurse_editing.html', context)
+        #v_type
+        input_data_form = InputVisitationDataForm(v_type=visitation_type)
+        # if(visitation_type == "Obisk otrocnice in novorojencka"):
+            # newBmotherForm = VisitNewbornAndMotherForm()
+            # context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': newBmotherForm }
+            # return render(request, 'visitations_nurse_editing.html', context)
+        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': input_data_form }
+        return render(request, 'visitations_nurse_editing.html', context)
             
 
-        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
-        return render(request, 'visitations_nurse_editing.html', context)
+        # context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
+        # return render(request, 'visitations_nurse_editing.html', context)
 
     # READ FORMS
     elif(request.POST):

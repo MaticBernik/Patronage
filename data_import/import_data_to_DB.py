@@ -260,8 +260,14 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 	for line in aktivnosti_reader:
 		if len(line)==5:
 			print(line)
-			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
-			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra="+ str(line[2]) +";");
+			sifra = int(line[2])
+			sifra_storitve=int(line[0])
+			if sifra_storitve==30: #zdruzi sicer locena obiska otrocnice in novorojencka
+				sifra_storitve=20
+				sifra+=240 #offset
+
+			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (sifra_storitve, sifra, str(line[3])));
+			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(sifra_storitve) + " and sifra="+ str(sifra) +";");
 			meritev_id = cursor.fetchall()[0][0]
 			imena_polj=line[4].split(',')
 			for ime in imena_polj:

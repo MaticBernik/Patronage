@@ -21,7 +21,7 @@ import logging
 import os
 from itertools import chain
 
-POLJA_UNIKATNI_VNOSI=['Porodna teža otroka (g)','Porodna višina otroka (cm)','Datum rojstva otroka','']
+POLJA_UNIKATNI_VNOSI=['Porodna teža otroka (g)','Porodna višina otroka (cm)','Datum rojstva otroka']
 
 
 def is_doctor(user):

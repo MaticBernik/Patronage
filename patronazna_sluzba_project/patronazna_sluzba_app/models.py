@@ -353,6 +353,8 @@ class Delovni_nalog(models.Model):
     zdravnik = models.ForeignKey(Zdravnik, null=True)
     vodja_PS = models.ForeignKey(Vodja_PS, null=True)
     #obveznost_obiska = models.CharField(choices=OBVEZNOST, max_length=10, blank=True)
+    aktiven = models.NullBooleanField(null=True, default=1)
+
 
 class Obisk(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog,null=False, on_delete=models.CASCADE)

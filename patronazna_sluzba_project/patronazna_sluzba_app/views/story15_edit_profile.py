@@ -39,7 +39,7 @@ def editProfileView(request):
     patient_q = Pacient.objects.select_related().get(uporabniski_profil=request.user)
     print(patient_q)
     print("==============SPOl===========")
-    print(patient_q.spol)
+    #print(patient_q.spol)
     return render(request, 'update_profile.html', {'registration_form': form,'patient':patient_q})
 
 

@@ -434,7 +434,7 @@ class Zdravilo_DN(models.Model):
 
 class Nadomescanje(models.Model):
     class Meta:
-        unique_together = (('sestra', 'datum_zacetek','datum_konec'),)
+        unique_together = (('sestra', 'datum_zacetek','datum_konec', 'nadomestna_sestra'),)
 
     #vodja = models.ForeignKey(Vodja_PS,null=False) #vodja PS, ki je dodal nadomescanje
     sestra = models.ForeignKey(Patronazna_sestra,related_name='%(class)s_requests_created', null=False)

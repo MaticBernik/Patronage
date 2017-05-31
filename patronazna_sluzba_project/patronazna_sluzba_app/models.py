@@ -390,6 +390,9 @@ class Pacient_DN(models.Model):
     pacient = models.ForeignKey(Pacient, null=True)
 
 class Porocilo_o_obisku(models.Model):
+    class Meta:
+        unique_together = (('obisk', 'polje','pacient'),)
+
     obisk=models.ForeignKey(Obisk)
     polje=models.ForeignKey(Polje_v_porocilu)
     vrednost=models.CharField(max_length=100, null=False) #zal ne vem kako bi resil drugace, kot da so vse vrednosti znotraj porocila nizi znakov (kar bo dovolj za izpis), potem pa se typecasta glede na tip polja

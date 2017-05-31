@@ -63,16 +63,8 @@ def list_active_visitations(request):
         print("***NADOMESCANJE PRAZEN QUERYSET")
     # obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
     visitations = list(chain(visitations, obiski_n))
-    print("!!! OBISKI - VSI",visitations)
-    #visitations_today=visitations.filter(datum=datetime.now().date())
-    #visitations_yesterday=visitations.filter(datum=(datetime.now()-timedelta(days=1)).date())
-    for x in visitations:
-        print(x.datum.date()," == ",datetime.now().date(),"  ??")
-
     visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
     visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
-    print("VISITATIONS_TODAY: ",visitations_today)
-    print("VISITATIONS_YESTERDAY: ",visitations_yesterday)
 
     delovni_nalogi = Delovni_nalog.objects.all()
     material = Material_DN.objects.all()
@@ -120,10 +112,44 @@ def edit_visitaiton_data(request):
     elif(request.POST):
         visitation_id = request.POST.get('submit_visitation_data', "")
         print("VISITATION ID FROM POST REQUEST: ", visitation_id)
+        obisk=Obisk.objects.get(id=visitation_id)
+        obisk_pacienti=[x.pacient_id for x in Pacient_DN.objects.filter(delovni_nalog_id=obisk.delovni_nalog_id)]
+        polja=obisk.porocilo() #(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id)
+        polja_imena=["polje"+str(x[2]) for x in polja]
+        #polja_meritve = Polje_meritev.objects.filter(id__in=meritve)
 
-        # BASED ONF VISITATION ID, READ THE LINKED FORM
+        if obisk.obisk_vrsta_tostring() == "Obisk otrocnice in novorojencka":
+            form = VisitNewbornAndMotherForm(request.POST)
+        elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
+            form = VisitNewbornAndMotherForm(request.POST)
+        elif obisk.obisk_vrsta_tostring() == "Preventiva starostnika":
+            form = VisitNewbornAndMotherForm(request.POST)
+        elif obisk.obisk_vrsta_tostring() == "Aplikacija injekcij":
+            form = VisitNewbornAndMotherForm(request.POST)
+        elif obisk.obisk_vrsta_tostring() == "Odvzem krvi":
+            form = VisitNewbornAndMotherForm(request.POST)
+        elif obisk.obisk_vrsta_tostring() == "Kontrola zdravstvenega stanja":
+            form = VisitNewbornAndMotherForm(request.POST)
+        else:
+            print("ERROR!! Neznan tip obiska!")
+            return
+
+        if not form.is_valid():
+            print("ERROR: invalid form!!!!")
+
+            # BASED ONF VISITATION ID, READ THE LINKED FORM
 
         # EXTRACT DATA FROM FORM
+        for ime_polja in polja_imena:
+            vrednost=form.cleaned_data[ime_polja]
+            i=polja_imena.index(ime_polja)
+            if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0]).exists():
+                porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0])
+                porocilo_vnos.save()
+            else:
+                porocilo_vnos= Porocilo_o_obisku.objects.get(obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0])
+                porocilo_vnos.vrednost = vrednost
+                porocilo_vnos.save()
 
         # SAVE DATA
 

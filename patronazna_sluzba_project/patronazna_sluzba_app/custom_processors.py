@@ -34,7 +34,7 @@ def navbar_list_processor(request):
         # adapt the list based on user role and task privleges
         if is_admin(user):
             role="Admin"
-            link_list = [control_panel_arr, arr_add_medical_staff, change_password_arr]
+            link_list = [control_panel_arr, add_medical_staff_arr, change_password_arr]
         elif is_doctor(user):
             role="Zdravnik"
             link_list = [control_panel_arr, create_work_task_arr, view_work_tasks_arr, view_visitations_arr, change_password_arr]

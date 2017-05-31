@@ -54,17 +54,18 @@ def substitutionView(request):
                 sub.save()
                 print("Z | | K")
 
-        return HttpResponse("Nadomescanje dodano.")
+        return redirect('substitution')#HttpResponse("Nadomescanje dodano.")
 
     else:
         print("GET REQUEST")
     substitution_form = SubstituteSisterForm()
+    sub_query = Nadomescanje.objects.select_related().filter(veljavno=True)
     """
     print("GET REQUEST from view "+str( global_plan))
     for i in global_plan:
         print('View data: '+str(i))
     """
-    return render(request, 'nurse_substitution.html', {'substitution_form': substitution_form})
+    return render(request, 'nurse_substitution.html', {'substitution_form': substitution_form,'nadomescanje_list':sub_query})
 
 def ajax_nurse_autocomplete(request):
     if request.method == 'POST':
@@ -94,7 +95,7 @@ def ajax_sub_nurse(request):
         nurse_id = -1
         sub_nurse = ''
     #seznam idjev vseh odsotnih sester
-    absent_nurses = Nadomescanje.objects.values_list('sestra_id', flat=True) #get(nadomestna_sestra_id=nurse.id) Plan.objects.values_list('planirani_obisk_id', flat=True)
+    absent_nurses = Nadomescanje.objects.filter(veljavno=True).values_list('sestra_id', flat=True) #get(nadomestna_sestra_id=nurse.id) Plan.objects.values_list('planirani_obisk_id', flat=True)
     print("========================ABSENT NURSES 2=========")
     print(absent_nurses)
     print("nurse_id "+str(nurse_id))

@@ -24,7 +24,11 @@ def finishedSubstitutionView(request):
         #for i in q:
          #   print(i.veljavno)
         print("========UPDATED=======")
+        return redirect('link_sub_finished')
     else:
 
         form = SubstitutionFinishedForm()
-    return render(request, 'nurse_sub_finished.html', {'substitution_form': form})
+
+    sub_query = Nadomescanje.objects.select_related().filter(veljavno=True)
+
+    return render(request, 'nurse_sub_finished.html', {'substitution_form': form,"nadomescanje_list":sub_query})

@@ -31,7 +31,7 @@
         <div class="row form-group">
 
 			<!--<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">-->
-		  	<label  class="control-label" for="{{ substitution_form.nurses.id_for_label }}">{{ substitution_form.start_date.label }}</label>
+		  	<label  class="control-label" for="{{ substitution_form.nurses.id_for_label }}">{{ substitution_form.nurses.label }}</label>
             {% csrf_token %}
 			{{ substitution_form.nurses }}
 		  	<!--</div>-->
@@ -43,12 +43,46 @@
 		  		 <button type="submit" class="btn btn-primary form-control" id="confirm_nurse">Potrdi</button>
 		  	</div>
 			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">
-                 <a href="/base/controlPanel/" id="cancel" name="cancel" class="cancelbtn btn btn-default form-control">Prekliči</a>
+                 <a href="{%url 'link_sub_finished' %}" id="cancel" name="cancel" class="cancelbtn btn btn-default form-control">Prekliči</a>
 		  	</div>
 
 	  	</div>
 	  	
 	</form>
+<div class="row">
+        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>Seznam nadomeščanj </h3>
+     		<hr>
+            {% if nadomescanje_list %}
+
+            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+            	<thead>
+            	<tr>
+                    <th>#</th>
+            		<th>Odsotna sestra</th>
+            		<th>Nadomestna sestra</th>
+            		<th>Začetek nadomeščanja</th>
+            		<th>Konec nadomeščanja</th>
+            	</tr>
+            	</thead>
+            	<tbody>
+            	{% for nadomescanje in nadomescanje_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ nadomescanje.sestra }}</td>
+                    <td>{{ nadomescanje.nadomestna_sestra}}</td>
+                    <td>{{ nadomescanje.datum_zacetek|date:"d.m.Y"}}</td>
+                    <td>{{ nadomescanje.datum_konec|date:"d.m.Y"}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+    		</table>
+
+            {% else %}
+                <p>Seznam nadomeščanj je  prazen</p>
+            {% endif %}
+            </div>
+        </div>
 
 
 

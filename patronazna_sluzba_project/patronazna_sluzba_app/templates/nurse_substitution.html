@@ -64,41 +64,6 @@
 		  	</div>
 
 	  	</div>
-
-
-
-        <!--
-        {% csrf_token %}
-		<div class="form-group">
-
-            <label  class="control-label" for="{{ substitution_form.start_date.id_for_label }}">{{ substitution_form.start_date.label }}</label>
-            {% csrf_token %}
-			{{ substitution_form.start_date }}
-		</div>
-
-        {% csrf_token %}
-		<div class="form-group">
-
-            <label  class="control-label" for="{{ substitution_form.end_date.id_for_label }}">{{ substitution_form.end_date.label }}</label>
-            {% csrf_token %}
-			{{ substitution_form.end_date }}
-		</div>
-
-        <div class="in_wrap col-lg-10 col-lg-offset-1  col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
-                                <label for="search_nurse">Odsotna sestra:</label>
-                                {% csrf_token %}
-                                <input type="text" list="nurse_list" id="search_nurse" name="search_nurse" />
-                                <datalist id="nurse_list">
-
-                                </datalist>
-                                <label for="nurse_sub">Nadomestna sestra:</label>
-                                {% csrf_token %}
-                                <input type="text" list="nurse_sub_list" id="nurse_sub" name="nurse_sub" />
-                                <datalist id="nurse_sub_list">
-
-                                </datalist>
-        </div>
-        -->
 		<div class=" row form-group">
 
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">
@@ -112,42 +77,41 @@
 	  	
 	</form>
 
-   <!-- <div class="container">
-      <h2>Modal Example</h2>
+    <div class="row">
+        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>Seznam nadomeščanj </h3>
+     		<hr>
+            {% if nadomescanje_list %}
 
-      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-    -->
+            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+            	<thead>
+            	<tr>
+                    <th>#</th>
+            		<th>Odsotna sestra</th>
+            		<th>Nadomestna sestra</th>
+            		<th>Začetek nadomeščanja</th>
+            		<th>Konec nadomeščanja</th>
+            	</tr>
+            	</thead>
+            	<tbody>
+            	{% for nadomescanje in nadomescanje_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ nadomescanje.sestra }}</td>
+                    <td>{{ nadomescanje.nadomestna_sestra}}</td>
+                    <td>{{ nadomescanje.datum_zacetek|date:"d.m.Y"}}</td>
+                    <td>{{ nadomescanje.datum_konec|date:"d.m.Y"}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+    		</table>
 
-    <!-- Modal -->
-      <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Podrobnosti obiska</h4>
+            {% else %}
+                <p>Seznam nadomeščanj je  prazen</p>
+            {% endif %}
             </div>
-            <div class="modal-body">
-                {% csrf_token %}
-              <!--<div>
-                <label>Id pošte</label>
-                <input type="text" disabled>
-              </div>
-                <div>
-                <label>Ime pošte</label>
-                <input type="text" disabled>
-              </div>-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-
         </div>
-      </div>
 
-   <!-- </div>-->
 
 
 

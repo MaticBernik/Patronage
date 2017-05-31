@@ -21,6 +21,8 @@ import logging
 import os
 from itertools import chain
 
+POLJA_UNIKATNI_VNOSI=['Porodna teža otroka (g)','Porodna višina otroka (cm)','Datum rojstva otroka','']
+
 
 def is_doctor(user):
     if Zdravnik.objects.filter(uporabniski_profil_id=user).exists():
@@ -111,7 +113,6 @@ def edit_visitaiton_data(request):
     # READ FORMS
     elif(request.POST):
         visitation_id = request.POST.get('submit_visitation_data', "")
-        print("VISITATION ID FROM POST REQUEST: ", visitation_id)
         obisk=Obisk.objects.get(id=visitation_id)
         obisk_pacienti=[x.pacient_id for x in Pacient_DN.objects.filter(delovni_nalog_id=obisk.delovni_nalog_id)]
         polja=obisk.porocilo() #(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id)
@@ -120,6 +121,15 @@ def edit_visitaiton_data(request):
 
         if obisk.obisk_vrsta_tostring() == "Obisk otrocnice in novorojencka":
             form = VisitNewbornAndMotherForm(request.POST)
+            if len(obisk_pacienti)<2:
+                print("S tem obiskom nekaj ni vredu! Obisk otrocnice in novorojencka bi moral imeti pripisana 2 pacienta")
+
+            #nalogi_pacient_1 = [x.delovni_nalog_id for x in Pacient_DN.objects.filter(pacient_id=obisk_pacienti[0])]
+            #obiski_pacient_1 = Obisk.objects.filter(delovni_nalog_id__in=nalogi_pacient_1)
+            polja_porocila_pacient_1 = Polje_v_porocilu.objects.filter(id__in=[x.polje_id for x in Porocilo_o_obisku.objects.filter(pacient_id=obisk_pacienti[0])])
+            for polje in polja_porocila_pacient_1:
+                if polje.ime in POLJA_UNIKATNI_VNOSI:
+                    print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")
         elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
             form = VisitNewbornAndMotherForm(request.POST)
         elif obisk.obisk_vrsta_tostring() == "Preventiva starostnika":
@@ -144,6 +154,9 @@ def edit_visitaiton_data(request):
             vrednost=form.cleaned_data[ime_polja]
             i=polja_imena.index(ime_polja)
             if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0]).exists():
+                if not datetime.now().date() == obisk.datum.date():
+                    print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")
+
                 porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0])
                 porocilo_vnos.save()
             else:

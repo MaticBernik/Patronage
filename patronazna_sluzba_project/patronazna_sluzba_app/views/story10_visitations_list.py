@@ -72,7 +72,7 @@ def list_visitations(request):
         delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
 
         visitations=Obisk.objects.filter(p_sestra_id=nurse)
-        nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse)
+        nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
         print("***Nadomescanja sestre: ", nadomescanja)
         obiski_n = []
         if len(nadomescanja) > 0:
@@ -170,7 +170,7 @@ def list_visitations(request):
     if request.POST.get('filter_substitute_nurse_id', 0):
         nurse = Patronazna_sestra.objects.get(id=request.POST['filter_substitute_nurse_id'])
         print("***Nadomestna sestra: ",nurse)
-        nadomescanja=Nadomescanje.objects.filter(nadomestna_sestra_id=nurse)
+        nadomescanja=Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
         print("***Nadomescanja sestre: ",nadomescanja)
         if len(nadomescanja)>0:
             obiski_n=[]

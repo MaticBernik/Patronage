@@ -19,6 +19,8 @@ import csv
 import django.contrib.auth
 import logging
 import os
+from itertools import chain
+
 
 def is_doctor(user):
     if Zdravnik.objects.filter(uporabniski_profil_id=user).exists():
@@ -43,17 +45,34 @@ def list_active_visitations(request):
     else:
         print("ERROR!!")
         return
-    nadomescaneSestre=[x.sestra_id for x in Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)]
-    print("***Nadomescane sestre: ",nadomescaneSestre)
-    nadomescaneSestre.append(nurse)
-    #pacienti = Pacient.objects.filter(okolis_id__in=[x.okolis_id for x in sestre])
-    #nalogi_vezani_na_pacienta = Pacient_DN.objects.filter(pacient_id__in=pacienti)
-    #delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
-    print("***sestre",nadomescaneSestre)
-    obiski = Obisk.objects.filter(p_sestra_id__in=nadomescaneSestre)
-    print("***danes: ",datetime.now().date())
-    visitations_today=obiski.filter(datum=datetime.now().date())
-    visitations_yesterday=obiski.filter(datum=(datetime.now()-timedelta(days=1)).date())
+
+    visitations = Obisk.objects.filter(p_sestra_id=nurse)
+    nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
+    obiski_n = []
+    if len(nadomescanja) > 0:
+        for nadomescanje in nadomescanja:
+            nadomescani_obiski = Obisk.objects.filter(p_sestra_id=nadomescanje.sestra_id,
+                                                      datum__gte=nadomescanje.datum_zacetek,
+                                                      datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+            print("***Nadomescani obiski dodajam: ", nadomescani_obiski)
+            if len(nadomescani_obiski) > 0:
+                for x in nadomescani_obiski:
+                    obiski_n.append(x)
+                    # visitations = visitations.filter(id__in=obiski_n)
+    else:
+        print("***NADOMESCANJE PRAZEN QUERYSET")
+    # obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
+    visitations = list(chain(visitations, obiski_n))
+    print("!!! OBISKI - VSI",visitations)
+    #visitations_today=visitations.filter(datum=datetime.now().date())
+    #visitations_yesterday=visitations.filter(datum=(datetime.now()-timedelta(days=1)).date())
+    for x in visitations:
+        print(x.datum.date()," == ",datetime.now().date(),"  ??")
+
+    visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
+    visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
+    print("VISITATIONS_TODAY: ",visitations_today)
+    print("VISITATIONS_YESTERDAY: ",visitations_yesterday)
 
     delovni_nalogi = Delovni_nalog.objects.all()
     material = Material_DN.objects.all()

@@ -273,17 +273,21 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 			#elif sifra_storitve==20:
 			#	sifra_storitve=80
 
+			meritev_id_orig=None
 			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (sifra_storitve, sifra, str(line[3])));
 			if sifra_storitve==20:
 				if int(line[0])==20:
 					conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (80, int(line[2]), str(line[3])));
+					cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(80) + " and sifra=" + str(line[2]) + ";");
+
 				else:
 					conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
+					cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra=" + str(line[2]) + ";");
+				meritev_id_orig = cursor.fetchall()[0][0]
 
 			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(sifra_storitve) + " and sifra="+ str(sifra) +";");
 			meritev_id = cursor.fetchall()[0][0]
-			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra=" + str(line[2]) + ";");
-			meritev_id_orig = cursor.fetchall()[0][0]
+
 			imena_polj=line[4].split(',')
 			for ime in imena_polj:
 				ime=ime.strip()
@@ -321,8 +325,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					polje_id = polje_id[0][0]
 
 				conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id), str(polje_id)));
-				if sifra_storitve == 80:
-					conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
+				if sifra_storitve == 20:
+						conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
 
 #Bolezni
 #with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"

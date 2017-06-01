@@ -226,7 +226,7 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # enco
 			conn.execute("INSERT INTO patronazna_sluzba_app_izvajalec_zs (st_izvajalca, naziv, naslov, posta_id) VALUES (?,?,?,?)", (line[0], line[5], line[7], posta));
 
 #Vrste obiskov
-VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice in novorojencka', 'Preventiva starostnika')
+VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice in novorojencka', 'Preventiva starostnika', 'Obisk otrocnice', 'Obisk novorojencka')
 VRSTA_KURATIVNI = ("Aplikacija injekcij", "Odvzem krvi", "Kontrola zdravstvenega stanja")
 #with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
 with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"
@@ -244,7 +244,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 				if obisk_otrocnice_novorojencka_dodan:
 					continue
 				else:
-					ime='Obisk otrocnice in novorojencka'
+					conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (80, 'Obisk otrocnice in novorojencka', "Preventivni obisk"));
 					obisk_otrocnice_novorojencka_dodan=True
 			if ime in VRSTA_KURATIVNI:
 				tip = "Kurativni obisk"
@@ -262,13 +262,20 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 			print(line)
 			sifra = int(line[2])
 			sifra_storitve=int(line[0])
+
 			if sifra_storitve==30: #zdruzi sicer locena obiska otrocnice in novorojencka
-				sifra_storitve=20
+				sifra_storitve=80
 				sifra+=240 #offset
+			elif sifra_storitve==20:
+				sifra_storitve=80
 
 			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (sifra_storitve, sifra, str(line[3])));
+			if sifra_storitve==80:
+				conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
 			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(sifra_storitve) + " and sifra="+ str(sifra) +";");
 			meritev_id = cursor.fetchall()[0][0]
+			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra=" + str(line[2]) + ";");
+			meritev_id_orig = cursor.fetchall()[0][0]
 			imena_polj=line[4].split(',')
 			for ime in imena_polj:
 				ime=ime.strip()
@@ -306,6 +313,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					polje_id = polje_id[0][0]
 
 				conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id), str(polje_id)));
+				if sifra_storitve == 80:
+					conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
 
 #Bolezni
 #with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"

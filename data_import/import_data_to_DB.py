@@ -242,9 +242,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 			ime=line[1].replace('č','c').replace('š','s')
 
 			if ime=='Obisk otrocnice' or ime=='Obisk novorojencka':
-				if obisk_otrocnice_novorojencka_dodan:
-					continue
-				else:
+				if not obisk_otrocnice_novorojencka_dodan:
 					conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (20, 'Obisk otrocnice in novorojencka', "Preventivni obisk"));
 					obisk_otrocnice_novorojencka_dodan=True
 			if ime in VRSTA_KURATIVNI:

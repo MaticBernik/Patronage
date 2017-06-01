@@ -100,6 +100,57 @@ def edit_visitaiton_data(request):
 
         visitation_type = current_visit.obisk_vrsta_tostring()
 
+        
+        #####################################################################
+        ################## ROBERT's TEST AREA FOR MERITVE FORMS #############
+        #####################################################################
+        string_visitation_type = visitation_type
+        vrsta=Vrsta_obiska.objects.get(ime=string_visitation_type)
+        nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
+        polja = None
+        if len(nalogi)>0:
+            nalog=nalogi[0]
+            obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
+            polja = obisk[0].porocilo()
+
+            print(" =========================================== ")
+            print("TIP POLJA: ", polja[0])
+            print(" =========================================== ")
+
+            details_list = [ detail for (_,detail,_) in polja]
+
+            # clean the list
+            prev_string = details_list[0]
+            for i in range(0, len(details_list)):
+                current_string = details_list[i]
+                if(i != 0 and prev_string == current_string):
+                    details_list[i] = ""
+                else:
+                    details_list[i] = current_string.replace(".", "")
+
+                prev_string = current_string
+            
+
+
+            counter = 0
+             # print("POLJA IZ POROCILA: ", polja)
+            for (p_id, p_opis, pm_id) in polja:
+                # Get required object
+                vnos = Polje_v_porocilu.objects.get(id=p_id)
+                print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+
+        else:
+            pass
+
+
+
+
+
+
+
+
+
+
         #v_type
         input_data_form = InputVisitationDataForm(v_type=visitation_type)
         # if(visitation_type == "Obisk otrocnice in novorojencka"):

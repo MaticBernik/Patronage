@@ -244,13 +244,18 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 				if obisk_otrocnice_novorojencka_dodan:
 					continue
 				else:
-					conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (80, 'Obisk otrocnice in novorojencka', "Preventivni obisk"));
+					conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (20, 'Obisk otrocnice in novorojencka', "Preventivni obisk"));
 					obisk_otrocnice_novorojencka_dodan=True
 			if ime in VRSTA_KURATIVNI:
 				tip = "Kurativni obisk"
 			else:
 				tip = "Preventivni obisk"
-			conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (int(line[0]), ime, tip));
+
+			if int(line[0])==20:
+				conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (80, ime, tip));
+			else:
+				conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (int(line[0]), ime, tip));
+
 
 #Meritve oz. Aktivnosti
 #with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  #encoding="utf8"
@@ -264,14 +269,18 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 			sifra_storitve=int(line[0])
 
 			if sifra_storitve==30: #zdruzi sicer locena obiska otrocnice in novorojencka
-				sifra_storitve=80
+				sifra_storitve=20
 				sifra+=240 #offset
-			elif sifra_storitve==20:
-				sifra_storitve=80
+			#elif sifra_storitve==20:
+			#	sifra_storitve=80
 
 			conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (sifra_storitve, sifra, str(line[3])));
-			if sifra_storitve==80:
-				conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
+			if sifra_storitve==20:
+				if int(line[0])==20:
+					conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (80, int(line[2]), str(line[3])));
+				else:
+					conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
+
 			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(sifra_storitve) + " and sifra="+ str(sifra) +";");
 			meritev_id = cursor.fetchall()[0][0]
 			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra=" + str(line[2]) + ";");

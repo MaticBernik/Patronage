@@ -31,6 +31,8 @@ conn = sqlite3.connect("../patronazna_sluzba_project/db.sqlite3")
 conn.text_factory = str
 print("***Connection to DB successful",os.getcwd())
 
+first_names=['Jana','Ana','Anja','Andreja','Zala','Lisa','Sara','Eva','Spela','Lara','Larisa','Marko','Luka','Martina','Franja','Ursa','Andrej','Jozef','Stefan','Aleksandra','Beti','Bostjan','David','Darja','Dasa','Darinka','Emanuela','Eneja','Filip','Gaja','Gabriela','Gasper','Ian','Ivan','Igor','Iztok','Ivana','Iza','Janja','Jana','Janez','Jelka','Katarina','Karmen','Karin','Katja','Laura','Lina','Matea','Martin','Maja']
+last_names=['Novak','Kovac','Savic','Bohinc','Jakopin','Kozamernik','Bostjancic','Klepec','Saje','Godler','Mlakar','Mihalic','Zavec','Zajec','Petkovsek','Trubar','Begic','Bosnic','Brankovic','Cepec','Cevljar','Copatar','Kotnik','Koprivec','Koprivnikar','Jazbinsek','Jagodnik','Jagodic','Javornik','Lancic','Sebastjancic','Zalokar','Zavrsnik','Zebnik','Pozebnik','Zelenic','Hvaljnik','Hrastnik','Topoljsek','Sobotnik','Srebernik','Hlastnik']
 
 #Okrozja
 imena_okrozij_lj = ["Bežigrad","Črnuče","Mislejeva","Center","Kotnikova","Aškerčeva","Moste-Polje","Polje","Fužine","Jarše","Šentvid","Šiška","LEK","Vič-Rudnik","Rudnik","Tehnološki park","SNMP"]
@@ -164,8 +166,6 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 		conn.execute("INSERT INTO patronazna_sluzba_app_uporabnik (profil_id) VALUES (?)",	(id,));
 
 #Make sure, that every area has its nurse
-first_names=['Jana','Ana','Anja','Andreja','Zala','Lisa','Sara','Eva','Spela','Lara','Larisa','Marko','Luka','Martina','Franja','Ursa']
-last_names=['Novak','Kovac','Savic','Bohinc','Jakopin','Kozamernik','Bostjancic','Klepec','Saje','Godler','Mlakar','Mihalic','Zavec','Zajec','Petkovsek','Trubar']
 email_domains=['@gmail.com','@hotmail.com','@siol.net','@arnes.si']
 passwd = "pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs="  # workaround --> geslo123
 cursor = conn.execute("select id,ime,posta_id from patronazna_sluzba_app_okolis;")
@@ -476,7 +476,19 @@ with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
 	next(nadomescanja_reader, None)  # skip header
 	for line in nadomescanja_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (int(line[0]), int(line[1]), datetime.strptime(line[2],"%d.%m.%Y"), datetime.strptime(line[3],"%d.%m.%Y"), True if line[4]=='True' else False));
+#za sestra2@mail.si in sestra3@mail.si se posebej dodaj nadomescanja..
 
+cursor=conn.execute("select id from auth_user where username='sestra2@mail.si';")
+sestra2_profil=cursor.fetchall()[0][0]
+cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where uporabniski_profil_id=" + str(sestra2_profil) + ";")
+sestra2=cursor.fetchall()[0][0]
+conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (sestra2, 1, datetime.now(), datetime.now() + timedelta(days=14), True));
+
+cursor=conn.execute("select id from auth_user where username='sestra3@mail.si';")
+sestra3_profil=cursor.fetchall()[0][0]
+cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where uporabniski_profil_id=" + str(sestra3_profil) + ";")
+sestra3=cursor.fetchall()[0][0]
+conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (sestra2, sestra3, datetime.now()-timedelta(days=8), datetime.now() - timedelta(days=1), True));
 
 conn.commit()
 conn.close()

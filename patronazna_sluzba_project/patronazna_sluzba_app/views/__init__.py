@@ -8,7 +8,9 @@ from .story8_plan_visit import *
 from .story9_visitations_data import *
 from .story10_visitations_list import *
 from .story12_substitute import *
-from .story15_edit_profile import *
-from .story17_reset_password import *
 from .story13_finished_substitution import *
+from .story15_edit_profile import *
+from .story16_patient_visitations_list import *
+from .story17_reset_password import *
+
 # import logging

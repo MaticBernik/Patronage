@@ -33,6 +33,7 @@ def navbar_list_processor(request):
 
 
         view_substitutes_arr = ["link_empty", "Nadomeščanje", "v_subs", "glyphicon-th-list" ]
+        view_patient_visitations_arr = ["link_list_patient_visitations", "Pregled mojih obiskov", "v_pat_visits", "glyphicon-th-list" ] 
         view_visitations_arr = ["link_list_visitations", "Pregled obiskov", "v_visits", "glyphicon-th-list" ] 
         view_work_tasks_arr = ["link_list_work_task", "Pregled delovnih nalogov", "v_wrk_tsk", "glyphicon-th-list" ]
         
@@ -82,7 +83,7 @@ def navbar_list_processor(request):
             link_list = [control_panel_arr, change_password_arr ]
         else:
             role="Pacient"
-            link_list = [control_panel_arr, add_nursing_patient_arr, change_password_arr ]
+            link_list = [control_panel_arr, add_nursing_patient_arr, view_patient_visitations_arr, change_password_arr ]
         
         oskrbovanci = None
 

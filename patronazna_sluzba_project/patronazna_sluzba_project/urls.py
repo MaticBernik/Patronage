@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^activate/', activate),
     url(r'^editVisitationData/', edit_visitaiton_data, name="link_visitations_nurse_edit_data"),
     url(r'^visitationsData/', list_active_visitations, name="link_visitations_nurse_data"),
+    url(r'^listPatientVisitations/', list_patient_visitations, name="link_list_patient_visitations"),
 	url(r'^listVisitations/', list_visitations, name="link_list_visitations"),
     url(r'^listWorkTask/', list_work_task, name="link_list_work_task"),
 	url(r'^workTask/', work_task_view, name="link_work_task"),

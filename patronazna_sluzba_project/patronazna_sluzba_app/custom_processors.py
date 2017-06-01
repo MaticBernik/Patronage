@@ -67,7 +67,7 @@ def navbar_list_processor(request):
             dropdown_worktasks.append(view_work_tasks_arr)
             dropdown_visitations.append(view_visitations_arr)
             dropdown_substitutions.append(create_substitution_arr)
-            # dropdown_substitutions.append(end_substitution_arr)
+            dropdown_substitutions.append(end_substitution_arr)
             dropdown_settings.append(change_password_arr)
         elif is_nurse(user):
             role="medicinska sestra"

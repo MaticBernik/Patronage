@@ -55,7 +55,7 @@ def substitutionView(request):
 
                 print("Z | | K")
             sub.save()
-        return HttpResponse("Nadomescanje dodano.")
+        return redirect("substitution")
 
     else:
         print("GET REQUEST")

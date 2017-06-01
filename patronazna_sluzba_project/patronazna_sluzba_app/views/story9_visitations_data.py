@@ -133,6 +133,19 @@ def edit_visitaiton_data(request):
             for polje in polja_porocila_pacient_1:
                 if polje.ime in POLJA_UNIKATNI_VNOSI:
                     print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")
+
+            # Doloci, ali polje pripada otrocnici ali novorojencku:
+            for polje in polja:
+                pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
+                pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
+
+                if len(pripadajoce_vrste_obiskov)==0:
+                    print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
+                if 30 in pripadajoce_vrste_obiskov:
+                    print("To polje se nanasa na NOVOROJENCKA!")
+                elif 80 in pripadajoce_vrste_obiskov:
+                    print("To polje se nanasa na OTROCNICO!")
+
         elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
             form = VisitNewbornAndMotherForm(request.POST)
         elif obisk.obisk_vrsta_tostring() == "Preventiva starostnika":
@@ -150,7 +163,6 @@ def edit_visitaiton_data(request):
         if not form.is_valid():
             print("ERROR: invalid form!!!!")
 
-            # BASED ONF VISITATION ID, READ THE LINKED FORM
 
         # EXTRACT DATA FROM FORM
         for ime_polja in polja_imena:

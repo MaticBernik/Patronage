@@ -43,6 +43,33 @@
     	span.required:after { content: '*'; color: red;}
 	</style>
 
+	<style type="text/css">
+    	.form-control.patient-name{
+    		border-color: #2eb82e; 
+    		background-color: #2eb82e; 
+    		color:white;
+    		text-align: center;
+    		margin-top: 30px;
+    	}
+	</style>
+
+
+	{% if visitation_patients %}
+		{% if visitation_patients|length == 1 %}
+			<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za pacienta:<br></b></i>
+				{% for p in visitation_patients %}
+					{{p.pacient.ime}} {{p.pacient.priimek}}
+				{% endfor %}
+			</p>
+		{% else %}
+			<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za paciente:<br></b></i>
+				{% for p in visitation_patients %}
+					{{p.pacient.ime}} {{p.pacient.priimek}} <br>
+				{% endfor %}
+			</p>
+		{% endif %}
+
+	{% endif %}
 
     {% if visitation_form %}
 	    {{ visitation_form.non_field_errors }}
@@ -50,13 +77,15 @@
 			{% csrf_token %}
     		{% for field in visitation_form %}
     		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 3px;">
+
+
     			{% if field.help_text and field.help_text.strip %}
     				<!--<hr style="height:5px;border:none;color:#333;background-color:#333;" >
     				<p style="text-align:center;font-size: 25px;" ><i><b>{{field.help_text}}</b></i></p>
     				<hr style="height:5px;border:none;color:#333;background-color:#333;" >-->
     				<br>
     				<br>
-    				<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7" ><i><b>{{field.help_text}}</b></i></p>
+    				<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>{{field.help_text}}</b></i></p>
     			{% endif %}
     			{% if field.field.required %}
 			        <span class="required">

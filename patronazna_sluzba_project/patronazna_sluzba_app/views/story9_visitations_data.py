@@ -100,90 +100,15 @@ def edit_visitaiton_data(request):
 
         visitation_type = current_visit.obisk_vrsta_tostring()
 
-        
-        #####################################################################
-        ################## ROBERT's TEST AREA FOR MERITVE FORMS #############
-        #####################################################################
-        string_visitation_type = visitation_type
-        vrsta=Vrsta_obiska.objects.get(ime=string_visitation_type)
-        nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
-        polja = None
-        if len(nalogi)>0:
-            nalog=nalogi[0]
-            obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
-            polja = obisk[0].porocilo()
+        input_data_form = InputVisitationDataForm(v_type=visitation_type, visit=current_visit)
 
-            print(" =========================================== ")
-            print("TIP POLJA: ", polja[0])
-            print(" =========================================== ")
+        current_worktask = Delovni_nalog.objects.get(id=current_visit.delovni_nalog_id)
+        pacienti_obiska = Pacient_DN.objects.filter(delovni_nalog=current_worktask)
 
-            details_list = [ detail for (_,detail,_) in polja]
-
-            # clean the list
-            prev_string = details_list[0]
-            for i in range(0, len(details_list)):
-                current_string = details_list[i]
-                if(i != 0 and prev_string == current_string):
-                    details_list[i] = ""
-                else:
-                    details_list[i] = current_string.replace(".", "")
-
-                prev_string = current_string
-            
-
-
-            counter = 0
-             # print("POLJA IZ POROCILA: ", polja)
-            for (p_id, p_opis, pm_id) in polja:
-                # Get required object
-                vnos = Polje_v_porocilu.objects.get(id=p_id)
-                print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
-
-        else:
-            pass
-
-
-
-        # Doloci, ali polje pripada otrocnici ali novorojencku:
-        print()
-        print()
-        print("POLJA CHECK")
-        for polje in polja:
-            pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
-            pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
-            print()
-            print(polje)
-            print("pripadajoce_vrste_obiskov> ",pripadajoce_vrste_obiskov)
-            print()
-            print()
-            if len(pripadajoce_vrste_obiskov)==0:
-                print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
-            if 30 in pripadajoce_vrste_obiskov:
-                print("To polje se nanasa na NOVOROJENCKA!")
-            elif 80 in pripadajoce_vrste_obiskov:
-                print("To polje se nanasa na OTROCNICO!")
-
-        
-
-
-
-
-
-
-
-
-        #v_type
-        input_data_form = InputVisitationDataForm(v_type=visitation_type)
-        # if(visitation_type == "Obisk otrocnice in novorojencka"):
-            # newBmotherForm = VisitNewbornAndMotherForm()
-            # context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': newBmotherForm }
-            # return render(request, 'visitations_nurse_editing.html', context)
-        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': input_data_form }
+        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': input_data_form, 'visitation_patients': pacienti_obiska }
         return render(request, 'visitations_nurse_editing.html', context)
             
 
-        # context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id }
-        # return render(request, 'visitations_nurse_editing.html', context)
 
     # READ FORMS
     elif(request.POST):

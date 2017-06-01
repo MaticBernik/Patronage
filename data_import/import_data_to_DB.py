@@ -167,6 +167,7 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 first_names=['Jana','Ana','Anja','Andreja','Zala','Lisa','Sara','Eva','Spela','Lara','Larisa','Marko','Luka','Martina','Franja','Ursa']
 last_names=['Novak','Kovac','Savic','Bohinc','Jakopin','Kozamernik','Bostjancic','Klepec','Saje','Godler','Mlakar','Mihalic','Zavec','Zajec','Petkovsek','Trubar']
 email_domains=['@gmail.com','@hotmail.com','@siol.net','@arnes.si']
+passwd = "pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs="  # workaround --> geslo123
 cursor = conn.execute("select id,ime,posta_id from patronazna_sluzba_app_okolis;")
 okolisi = cursor.fetchall()
 for okolis in okolisi:
@@ -189,7 +190,7 @@ for okolis in okolisi:
 			if len(nurse)==0:
 				break
 
-		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(email, email, first_name, last_name, 'geslo123', True, False, True, datetime.now()));
+		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",(email, email, first_name, last_name, passwd, True, False, True, datetime.now()));
 		cursor = conn.execute("select id from auth_user where username = '" + email + "';")
 		id = int(cursor.fetchall()[0][0])
 		conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)",	(sifra, '031 111 111', line[6], id, okolis[0]));

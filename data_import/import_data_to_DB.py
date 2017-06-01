@@ -476,9 +476,10 @@ with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
 	next(nadomescanja_reader, None)  # skip header
 	for line in nadomescanja_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (int(line[0]), int(line[1]), datetime.strptime(line[2],"%d.%m.%Y"), datetime.strptime(line[3],"%d.%m.%Y"), True if line[4]=='True' else False));
-#za sestra2@mail.si in sestra3@mail.si se posebej dodaj nadomescanja..
 
-cursor=conn.execute("select id from auth_user where username='sestra2@mail.si';")
+
+#*****za sestra2@mail.si in sestra3@mail.si se posebej dodaj nadomescanja..
+'''cursor=conn.execute("select id from auth_user where username='sestra2@mail.si';")
 sestra2_profil=cursor.fetchall()[0][0]
 cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where uporabniski_profil_id=" + str(sestra2_profil) + ";")
 sestra2=cursor.fetchall()[0][0]
@@ -489,6 +490,7 @@ sestra3_profil=cursor.fetchall()[0][0]
 cursor = conn.execute("select id from patronazna_sluzba_app_patronazna_sestra where uporabniski_profil_id=" + str(sestra3_profil) + ";")
 sestra3=cursor.fetchall()[0][0]
 conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (sestra2, sestra3, datetime.now()-timedelta(days=8), datetime.now() - timedelta(days=1), True));
+'''
 
 conn.commit()
 conn.close()

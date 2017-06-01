@@ -186,16 +186,34 @@ def edit_visitaiton_data(request):
                     print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")
 
             # Doloci, ali polje pripada otrocnici ali novorojencku:
+
+            pacient_polje=[]
             for polje in polja:
                 pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
                 pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
+                pripadajoce_sifre_meritev=[x.sifra for x in pripadajoce_meritve]
 
-                if len(pripadajoce_vrste_obiskov)==0:
+                # 1. VARIANTA
+                '''if len(pripadajoce_vrste_obiskov)==0:
                     print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
                 if 30 in pripadajoce_vrste_obiskov:
                     print("To polje se nanasa na NOVOROJENCKA!")
                 elif 80 in pripadajoce_vrste_obiskov:
-                    print("To polje se nanasa na OTROCNICO!")
+                    print("To polje se nanasa na OTROCNICO!")'''
+
+                #2.VARIANTA
+                if len(pripadajoce_sifre_meritev) == 0:
+                    print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
+
+                for i in range(len(pripadajoce_sifre_meritev)):
+                    sifra = pripadajoce_sifre_meritev[i]
+                    if pripadajoce_vrste_obiskov[i]==20:
+                        if sifra >=10 and sifra <=240:
+                            print("To polje se nanasa na OTROCNICO!")
+                            pacient_polje.append("OTROCNICA")
+                        elif sifra >=250 and sifra <=380:
+                            print("To polje se nanasa na NOVOROJENCKA!")
+                            pacient_polje.append("NOVOROJENCEK")
 
         elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
             form = VisitNewbornAndMotherForm(request.POST)

@@ -144,6 +144,27 @@ def edit_visitaiton_data(request):
 
 
 
+        # Doloci, ali polje pripada otrocnici ali novorojencku:
+        print()
+        print()
+        print("POLJA CHECK")
+        for polje in polja:
+            pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
+            pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
+            print()
+            print(polje)
+            print("pripadajoce_vrste_obiskov> ",pripadajoce_vrste_obiskov)
+            print()
+            print()
+            if len(pripadajoce_vrste_obiskov)==0:
+                print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
+            if 30 in pripadajoce_vrste_obiskov:
+                print("To polje se nanasa na NOVOROJENCKA!")
+            elif 80 in pripadajoce_vrste_obiskov:
+                print("To polje se nanasa na OTROCNICO!")
+
+        
+
 
 
 

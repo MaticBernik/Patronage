@@ -105,7 +105,7 @@ def edit_visitaiton_data(request):
         current_worktask = Delovni_nalog.objects.get(id=current_visit.delovni_nalog_id)
         pacienti_obiska = Pacient_DN.objects.filter(delovni_nalog=current_worktask)
 
-        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': input_data_form, 'visitation_patients': pacienti_obiska }
+        context = {'nbar': 'v_nrs_visits_data', 'visitation_edit_id': visit_button_id, 'visitation_form': input_data_form, 'visitation_patients': pacienti_obiska, 'type_of_visit': visitation_type }
         return render(request, 'visitations_nurse_editing.html', context)
             
 

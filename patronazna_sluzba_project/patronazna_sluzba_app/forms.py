@@ -12,7 +12,7 @@ from django.forms import  ModelForm
 from django.contrib.auth.models import User
 
 from django.forms.fields import *
-
+from datetime import datetime, date
 
 USER_TYPES = (
     ('doc', 'Zdravnik'),
@@ -283,6 +283,16 @@ class InputVisitationDataForm(forms.Form):
         print("UPORABNIKI: ", care_taker)
         print("OSKRBOVANCI: ", nursing_patients)
 
+        visit_date = current_visit.datum.date()
+        print(visit_date)
+        todays_date = date.today()
+        print(todays_date)
+        if(visit_date < todays_date):
+            self.fields['dateinfobox'] = CharField(label="POZOR",required = False, widget=forms.TextInput(attrs={'class': 'form-control dateinfobox'}))
+            self.fields['dateinfobox'].initial="DATUM OBISKA SE NANAŠA NA VČREAJŠNJI DAN."
+            self.fields['dateinfobox'].widget.attrs['readonly'] = True
+            self.fields['change_visitation_date'] =BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = True, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
+
 
         if(string_visitation_type == 'Obisk otrocnice in novorojencka'):   
         # EXTRA COMPLICATIONS DUE TO MULTIPLE PACIENTS INPUT    
@@ -352,6 +362,8 @@ class InputVisitationDataForm(forms.Form):
                 self.fields['personal_card_id_%s' % care_taker[0].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
                 self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].widget.attrs['readonly'] = True
                 self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].initial = pat_name
+
+
 
                 for (p_id, p_opis, pm_id) in polja:
                     # Get required object

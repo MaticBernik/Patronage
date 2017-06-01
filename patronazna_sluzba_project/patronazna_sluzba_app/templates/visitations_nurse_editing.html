@@ -16,7 +16,7 @@
 	<script type="text/javascript">
 
 	$(document).ready(function() {
-		$('.datepicker').datepicker({changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
+		$('.datepicker').datepicker({maxDate: -1, changeYear:true, dateFormat: 'dd.mm.yy',yearRange: "-100:+0",beforeShowDay: $.datepicker.noWeekends });
 		$('.task_expansion').hide();
 
 		//add table sorting
@@ -35,8 +35,9 @@
 			console.log('#button_id')
 			$('#button_id').show();
 			document.getElementById(button_id).style.display="block";
-
 		}
+
+
 	</script>
 
 	<style type="text/css">
@@ -51,25 +52,37 @@
     		text-align: center;
     		margin-top: 30px;
     	}
+
+    	.form-control.dateinfobox{
+    		border-color: #2eb82e; 
+    		background-color: red; 
+    		color:white;
+    		text-align: center;
+    		margin-top: 30px;
+    	}
 	</style>
 
 
 	{% if visitation_patients %}
 		{% if visitation_patients|length == 1 %}
-			<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za pacienta:<br></b></i>
+			<p style=" padding-top: 10px; padding-bottom: 10px; text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za pacienta:<br></b></i>
 				{% for p in visitation_patients %}
 					{{p.pacient.ime}} {{p.pacient.priimek}}
 				{% endfor %}
+			<br>
+			<b>Tip obiska:<br></b></i>{{ type_of_visit }}
 			</p>
 		{% else %}
-			<p style=" text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za paciente:<br></b></i>
+			<p style=" padding-top: 10px; padding-bottom: 10px; text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #15a7c7; background-color: #15a7c7; color:white" ><i><b>Vnos podatkov o obisku za paciente:<br></b></i>
 				{% for p in visitation_patients %}
 					{{p.pacient.ime}} {{p.pacient.priimek}} <br>
 				{% endfor %}
+			<br>
+			<b>Tip obiska:<br></b></i>{{ type_of_visit }}
 			</p>
 		{% endif %}
-
 	{% endif %}
+
 
     {% if visitation_form %}
 	    {{ visitation_form.non_field_errors }}

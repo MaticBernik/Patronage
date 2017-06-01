@@ -8,10 +8,11 @@ from django.template.context_processors import csrf
 from datetime import date,datetime,timedelta
 from django.db.models import Q
 from math import floor
+from django.contrib import messages
 ########################################################################
 #######TEST THE FUNCTIONALITY
 #global_plan=[]
-global_nurse_id = 0
+#global_nurse_id = 0
 #old_plan = []
 #main_nurse = None
 
@@ -407,8 +408,8 @@ def plan_list_ajax(request):
         visit_list = []
 
    # main_nurse_id = nurse.id
-    global global_nurse_id
-    global_nurse_id = nurse.id
+    #global global_nurse_id
+    request.session['global_nurse_id'] = nurse.id
     return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id})
 
 def replace_datum_type(list,n):
@@ -439,6 +440,7 @@ def ajax_added_to_plan(request):
     print(global_plan)
     print("============================")
     """
+    global_nurse_id = request.session.get('global_nurse_id')
     return render_to_response('ajax_already_planned.html',{'planned':global_plan,'nurse':global_nurse_id})
 
 def plan_visit_view(request):
@@ -452,7 +454,8 @@ def plan_visit_view(request):
         if len(current_nurse_absent) > 0:
             # sestra je odsotna
             print("===========LOGIRANA SESTRA JE ODSOTNA=========")
-            return HttpResponse("SESTRA JE ODSOTNA ")
+            messages.error(request, 'Odsotna sestra ne more popravljati plana',extra_tags='list-group-item-danger')
+            return redirect("link_plan_visit")
         visit_form = plan_visit_form(request.POST)
         plan_visit_list = request.POST.getlist('plan_list')
         my_date = request.POST['date_picker']
@@ -522,7 +525,8 @@ def plan_visit_view(request):
             for i in old_plan:     #empty plan visit list =6 pk=6
                  Plan.objects.get(planirani_obisk_id=str(i)).delete()
 
-
+        messages.success(request, 'Plan je bil uspešno posodobljen', extra_tags='list-group-item-success')
+        return redirect("link_plan_visit")
     else:
        visit_form = plan_visit_form()
     """

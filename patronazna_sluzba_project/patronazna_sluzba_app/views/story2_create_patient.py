@@ -133,13 +133,27 @@ def sendEmail(activation_key, customer_mail):
 
     link="http://127.0.0.1:8000/activate?token="+activation_key
     sporocilo = "Greetings. Thank you for working with PARSEK. We would like to ask you to click the link below for email verification.  "+link+" Have a nice day. Parsek team."
-
+    msg = """\
+    <html>
+      <head></head>
+      <body>
+        <p>Lep pozdrav!<br>
+           Hvala za sodelovanje.<br>
+           Sledite tej <a href=""" + link + """">povezavi</a> za aktivacijo vašega računa .
+        </p>        
+        <hr>
+           Lep pozdrav, Parsek.<br>
+        </p>
+      </body>
+    </html>
+    """
     send_mail(
         'Parsek RULES. You will want to activate',
-        sporocilo,
+        msg,
         'activation@parsekrules.si',
         [customer_mail],
         fail_silently=False,
+        html_message=msg
     )
     print("mail poslan")
 

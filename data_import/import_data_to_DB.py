@@ -516,8 +516,8 @@ for obisk in obiski:
 		opravljen=False
 
 	pacient_id = pacienti[0]
-
-	cursor = conn.execute("update patronazna_sluzba_app_obisk set opravljen=1 where id = "+str(id)+";");
+	if opravljen:
+		cursor = conn.execute("update patronazna_sluzba_app_obisk set opravljen=1 where id = "+str(id)+";");
 
 	if opravljen:
 		cursor = conn.execute("select vrsta_obiska_id from patronazna_sluzba_app_delovni_nalog where id="+str(obisk[3])+";");

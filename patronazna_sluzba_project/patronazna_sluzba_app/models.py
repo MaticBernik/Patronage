@@ -111,6 +111,7 @@ class Patronazna_sestra(models.Model):
     telefonska_st = models.CharField(max_length=15, null=False)
     sifra_izvajalca_ZS = models.ForeignKey(Izvajalec_ZS, null=True)
     okolis = models.OneToOneField(Okolis,default=1)
+    #okolis = models.ForeignKey(Okolis, default=1)
     def __str__(self):
         return str(self.sifra_patronazne_sestre)+' '+self.uporabniski_profil.first_name+' '+self.uporabniski_profil.last_name
 
@@ -390,8 +391,9 @@ class Pacient_DN(models.Model):
     pacient = models.ForeignKey(Pacient, null=True)
 
 class Porocilo_o_obisku(models.Model):
-    class Meta:
-        unique_together = (('obisk', 'polje','pacient'),)
+    #testno/zacasno zakomentiral
+    '''class Meta:
+        unique_together = (('obisk', 'polje','pacient'),)'''
 
     obisk=models.ForeignKey(Obisk)
     polje=models.ForeignKey(Polje_v_porocilu)

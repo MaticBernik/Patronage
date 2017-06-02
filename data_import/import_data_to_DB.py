@@ -492,5 +492,152 @@ sestra3=cursor.fetchall()[0][0]
 conn.execute("INSERT INTO patronazna_sluzba_app_nadomescanje (sestra_id, nadomestna_sestra_id, datum_zacetek, datum_konec, veljavno) VALUES (?,?,?,?,?)", (sestra2, sestra3, datetime.now()-timedelta(days=8), datetime.now() - timedelta(days=1), True));
 '''
 
+#Obiske, ki so ze potekli oznaci kot opravljene in zanje v bazo vnesi meritve
+cursor = conn.execute("select id,datum,opravljen,delovni_nalog_id,p_sestra_id from patronazna_sluzba_app_obisk;");
+obiski = cursor.fetchall()
+
+for obisk in obiski:
+	id=int(obisk[0])
+	datum=datetime.strptime(obisk[1],"%Y-%m-%d %H:%M:%S")
+	cursor = conn.execute("select pacient_id from patronazna_sluzba_app_pacient_dn where delovni_nalog_id="+str(obisk[3])+";");
+	pacienti=[x[0] for x in cursor.fetchall()]
+	skrbniki=[]
+	oskrbovanci=[]
+	for pacient in pacienti:
+		cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient where st_kartice=" + str(pacient) + " and uporabniski_profil_id=NULL;");
+		result = cursor.fetchall()
+		if len(result)==0:
+			skrbniki.append(pacient)
+		else:
+			oskrbovanci.append(pacient)
+	if datetime.now() > datum:
+		opravljen=True
+	else:
+		opravljen=False
+
+	pacient_id = pacienti[0]
+
+	cursor = conn.execute("update patronazna_sluzba_app_obisk set opravljen=1 where id = "+str(id)+";");
+
+	if opravljen:
+		cursor = conn.execute("select vrsta_obiska_id from patronazna_sluzba_app_delovni_nalog where id="+str(obisk[3])+";");
+		delovni_nalog_vrsta_obiska = cursor.fetchall()[0][0]
+		cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id="+str(delovni_nalog_vrsta_obiska)+";");
+		meritve=cursor.fetchall()
+		meritve=[x[0] for x in meritve]
+		polja=[]
+		for meritev_id in meritve:
+			cursor = conn.execute("select polje_id from patronazna_sluzba_app_polje_meritev where meritev_id="+str(meritev_id)+";");
+			polja_tmp=cursor.fetchall()
+			if len (polja_tmp)>0:
+				for x in polja_tmp:
+					polja.append(x[0])
+
+		'''print("***SEZNAM PRIPADAJOCIH POLJ: ")
+		for polje in polja:
+			print(polje)'''
+		for polje_id in polja:
+			cursor = conn.execute("select id,ime,vnosno_polje,obvezno,mozne_vrednosti from patronazna_sluzba_app_polje_v_porocilu where id=" + str(polje_id) + ";");
+			polje_info = cursor.fetchall()[0]
+
+			if polje_info[3]==1: #Ustvari samo obvezna polja
+				if polje_info[1]=='Prosti vnos':
+					continue
+				elif polje_info[1]=='Datum':
+					datum_tmp=datum-timedelta(days=random.choice([1,2,3,4,5,6,7]))
+				elif '/' in polje_info[1] and polje_info[1][polje_info[1].index('/')+1]!='L':
+					izbira=random.choice(str(polje_info[3]).split(','))
+				#elif polje_info[1] == 'Moteno/Ni moteno':
+				#elif polje_info[1] == 'Nizka/Srednja/Visoka':
+				elif polje_info[1] == 'Sistolični (mm Hg)':
+					izbira=90+int(random.random()*200-90)
+				elif polje_info[1] == 'Diastolični (mm Hg)':
+					izbira = 40 + int(random.random() * 90 - 40)
+				elif polje_info[1] == 'Udarci na minuto':
+					izbira=45+int(random.random()*140 - 45)
+				elif polje_info[1] == 'Vdihi na minuto':
+					izbira = 90 + int(random.random() * 80 - 90)
+				elif polje_info[1] == 'st C':
+					izbira = 36 + int(random.random() * 39 - 36)
+				elif polje_info[1] == 'kg':
+					izbira = 45 + (random.random() * 120 - 45)
+				elif polje_info[1] == 'Datum rojstva otroka':
+					if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					cursor = conn.execute("select datum_rojstva from patronazna_sluzba_app_pacient where st_kartice=" + str(
+					pacient_id) +";");
+					datum_rojstva=datetime.strptime(cursor.fetchall()[0][0],"%Y-%m-%d %H:%M:%S")
+					izbira=datum_rojstva
+
+				elif polje_info[1] == 'Porodna teža otroka (g)':
+					if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					izbira = 2000 + int(random.random() * 6400 - 2000)
+				elif polje_info[1] == 'Porodna višina otroka (cm)':
+					if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					izbira = 40 + int(random.random() * 65 - 40)
+				elif polje_info[1] == 'g':
+					if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					izbira = 2600 + int(random.random() * 8200 - 2600)
+				elif polje_info[1] == 'cm':
+					if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					izbira = 48 + int(random.random() * 80 - 48)
+				#elif polje_info[1] == 'Da/Ne':
+				#elif polje_info[1] == 'Ni posebnosti/Mikcija/Defekacija/Napenjanje/Kolike/Polivanje/Bruhanje':
+				elif polje_info[1] == 'Urin: prosti vnos':
+					continue
+				elif polje_info[1] == 'Blato: prosti vnos':
+					continue
+				elif polje_info[1] == 'Vid: prosti vnos':
+					continue
+				elif polje_info[1] == 'Vonj: prosti vnos':
+					continue
+				elif polje_info[1] == 'Sluh: prosti vnos':
+					continue
+				elif polje_info[1] == 'Okus: prosti vnos':
+					continue
+				elif polje_info[1] == 'Otip: prosti vnos':
+					continue
+				#elif polje_info[1] == 'Samostojen/Delno odvisen/Povsem odvisen':
+				elif polje_info[1] == 'Pomoč: svojci':
+					continue
+				elif polje_info[1] == 'drugi':
+					continue
+				elif polje_info[1] =='mmol/L':
+					izbira = 50 + int(random.random() * 230 - 50)
+				elif polje_info[1] == '%':
+					izbira = 85 + int(random.random() * 100 - 85)
+				#elif polje_info[1] == 'Da/Delno/Ne':
+
+
+
+				for m in meritve:
+					cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where id=" + str(m) + ";");
+					meritev_info = cursor.fetchall()[0]
+					if meritev_info[3]==30:
+						pacient_id=oskrbovanci[0]
+						break
+					if meritev_info[3]==80:
+						pacient_id=skrbniki[0]
+
+
+				conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost) VALUES (?,?,?,?)", (int(id), int(pacient_id), int(polje_info[0]),str(izbira)));
+
+
+
+
 conn.commit()
 conn.close()

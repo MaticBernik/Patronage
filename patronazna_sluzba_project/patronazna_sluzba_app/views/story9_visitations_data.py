@@ -65,8 +65,13 @@ def list_active_visitations(request):
         print("***NADOMESCANJE PRAZEN QUERYSET")
     # obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
     visitations = list(chain(visitations, obiski_n))
+    print("!!!!!!!!!VISITATIONS - pred delitvijo: ",visitations)
+    for x in visitations:
+        print(x.datum)
     visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
     visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
+    print("!!!!!!!!!!!VISITATIONS_TODAY: ",visitations_today)
+    print("!!!!!!!!!!!VISITATIONS_YESTERDAY: ",visitations_yesterday)
 
     delovni_nalogi = Delovni_nalog.objects.all()
     material = Material_DN.objects.all()
@@ -101,7 +106,7 @@ def edit_visitaiton_data(request):
 
         visitation_type = current_visit.obisk_vrsta_tostring()
 
-        input_data_form = InputVisitationDataForm(v_type=visitation_type, visit=current_visit)
+        input_data_form = InputVisitationDataForm(request.POST,v_type=visitation_type, visit=current_visit)
 
         current_worktask = Delovni_nalog.objects.get(id=current_visit.delovni_nalog_id)
         pacienti_obiska = Pacient_DN.objects.filter(delovni_nalog=current_worktask)
@@ -117,6 +122,7 @@ def edit_visitaiton_data(request):
         obisk=Obisk.objects.get(id=visitation_id)
         obisk_pacienti=[x.pacient_id for x in Pacient_DN.objects.filter(delovni_nalog_id=obisk.delovni_nalog_id)]
         polja=obisk.porocilo() #(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id)
+        polja_tmp=[]
         polja_imena_tmp=["polje"+str(x[2]) for x in polja]
         polja_imena=[]
         for ime in polja_imena_tmp:
@@ -124,8 +130,14 @@ def edit_visitaiton_data(request):
                 polja_imena.append(ime+"_"+str(pacient_id))
         #polja_meritve = Polje_meritev.objects.filter(id__in=meritve)
 
+        for polje in polja:
+            polja_tmp.append(polje)
+            polja_tmp.append(polje)
+        polja=polja_tmp
+
         if obisk.obisk_vrsta_tostring() == "Obisk otrocnice in novorojencka":
-            form = VisitNewbornAndMotherForm(request.POST)
+            #form = InputVisitationDataForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
             if len(obisk_pacienti)<2:
                 print("S tem obiskom nekaj ni vredu! Obisk otrocnice in novorojencka bi moral imeti pripisana 2 pacienta")
 
@@ -167,15 +179,15 @@ def edit_visitaiton_data(request):
                             pacient_polje.append("NOVOROJENCEK")'''
 
         elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
-            form = VisitNewbornAndMotherForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
         elif obisk.obisk_vrsta_tostring() == "Preventiva starostnika":
-            form = VisitNewbornAndMotherForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
         elif obisk.obisk_vrsta_tostring() == "Aplikacija injekcij":
-            form = VisitNewbornAndMotherForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
         elif obisk.obisk_vrsta_tostring() == "Odvzem krvi":
-            form = VisitNewbornAndMotherForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
         elif obisk.obisk_vrsta_tostring() == "Kontrola zdravstvenega stanja":
-            form = VisitNewbornAndMotherForm(request.POST)
+            form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
         else:
             print("ERROR!! Neznan tip obiska!")
             return
@@ -188,20 +200,28 @@ def edit_visitaiton_data(request):
         for ime_polja in polja_imena:
             if not request.POST.get(ime_polja,0):
                 continue
+            id_pacienta=ime_polja[ime_polja.index('_')+1:]
             vrednost=form.cleaned_data[ime_polja]
             i=polja_imena.index(ime_polja)
-            if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0]).exists():
+            print("ID OBISKA",obisk.id)
+            if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0]).exists():
                 if not datetime.now().date() == obisk.datum.date():
                     print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")
 
-                porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0])
+                porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0])
                 porocilo_vnos.save()
             else:
-                porocilo_vnos= Porocilo_o_obisku.objects.get(obisk_id=obisk.id, pacient_id=obisk_pacienti[0], polje_id=polja[i][0])
+                porocilo_vnos= Porocilo_o_obisku.objects.get(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0])
                 porocilo_vnos.vrednost = vrednost
                 porocilo_vnos.save()
 
         # SAVE DATA
+        if request.POST.get('change_visitation_date',0):
+            popravi_datum=request.POST['change_visitation_date']
+            print("!!!!!!!!POPRAVI DATUM: ",popravi_datum)
+            if popravi_datum=='on':
+                obisk.datum=datetime.now()
+                obisk.save()
 
 
         # REDIRECT TO PREVIOUS PAGE

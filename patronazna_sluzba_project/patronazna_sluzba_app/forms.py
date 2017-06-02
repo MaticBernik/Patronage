@@ -12,7 +12,7 @@ from django.forms import  ModelForm
 from django.contrib.auth.models import User
 
 from django.forms.fields import *
-
+from datetime import datetime, date
 
 USER_TYPES = (
     ('doc', 'Zdravnik'),
@@ -257,70 +257,267 @@ class InputVisitationDataForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         string_visitation_type = kwargs.pop('v_type')
+        current_visit = kwargs.pop('visit')
         super(InputVisitationDataForm, self).__init__(*args, **kwargs)
         # for item in range(5):
         # self.fields['test_field_%s' % item] = CharField(max_length=255)
-        
-        # vrsta=Vrsta_obiska.objects.get(ime='Obisk otrocnice in novorojencka')
         vrsta=Vrsta_obiska.objects.get(ime=string_visitation_type)
-        nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
-        polja = None
-        if len(nalogi)>0:
-            nalog=nalogi[0]
-            obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
-            polja = obisk[0].porocilo()
 
-            details_list = [ detail for (_,detail,_) in polja]
-
-            # clean the list
-            prev_string = details_list[0]
-            for i in range(0, len(details_list)):
-                current_string = details_list[i]
-                if(i != 0 and prev_string == current_string):
-                    details_list[i] = ""
-                else:
-                    details_list[i] = current_string.replace(".", "")
-
-                prev_string = current_string
-
-            counter = 0
-             # print("POLJA IZ POROCILA: ", polja)
-            for (p_id, p_opis, pm_id) in polja:
-                # Get required object
-                vnos = Polje_v_porocilu.objects.get(id=p_id)
-                print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
-                
-                # DOLOCITEV POLJ
-                field_label = vnos.ime
-                field_title = details_list[counter]
+        current_worktask = Delovni_nalog.objects.get(id=current_visit.delovni_nalog_id)
+        pacienti_obiska = Pacient_DN.objects.filter(delovni_nalog=current_worktask)
+        print(pacienti_obiska)
 
 
-                if(vnos.obvezno):
-                    req = True
-                else:
-                    req = False
+        care_taker = []
+        nursing_patients = []
 
-                if(vnos.vnosno_polje == "DateField"):
-                    self.fields['polje%s' % pm_id] = DateField(label=field_label, required = req, help_text=field_title,
-                        widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
-                        input_formats=['%d.%m.%Y'])
-                elif(vnos.vnosno_polje == "DecimalField"):
-                    self.fields['polje%s' % pm_id] = IntegerField(label=field_label, required = req, help_text=field_title,
-                        widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
-                elif(vnos.vnosno_polje == "CharField"):
-                    self.fields['polje%s' % pm_id] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
-                elif(vnos.vnosno_polje == "ChoiceField"):
-                    given_choices = vnos.mozne_vrednosti.split(",")
-                    list_tuple = [(el, el) for el in given_choices]
-                    given_choices = tuple(list_tuple)
-                    field_label = "Izberite"
-                    self.fields['polje%s' % pm_id] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
-                else:
-                    pass
+        for p in pacienti_obiska:
+            print(p.pacient.ime)
+            if(p.pacient.uporabniski_profil):
+                print("UPORABNIK")
+                care_taker.append(p.pacient)
+            else:
+                print("OSKRBOVANEC")
+                nursing_patients.append(p.pacient)
 
-                counter += 1
+        print("UPORABNIKI: ", care_taker)
+        print("OSKRBOVANCI: ", nursing_patients)
+
+        visit_date = current_visit.datum.date()
+        print(visit_date)
+        todays_date = date.today()
+        print(todays_date)
+        if(visit_date < todays_date):
+            self.fields['dateinfobox'] = CharField(label="POZOR",required = False, widget=forms.TextInput(attrs={'class': 'form-control dateinfobox'}))
+            self.fields['dateinfobox'].initial="DATUM OBISKA SE NANAŠA NA VČREAJŠNJI DAN."
+            self.fields['dateinfobox'].widget.attrs['readonly'] = True
+            self.fields['change_visitation_date'] =BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = True, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
+
+
+        if(string_visitation_type == 'Obisk otrocnice in novorojencka'):   
+        # EXTRA COMPLICATIONS DUE TO MULTIPLE PACIENTS INPUT    
+            nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
+            polja = None
+            if len(nalogi)>0:
+                nalog=nalogi[0]
+                obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
+                polja = obisk[0].porocilo()
+
+                index = 0
+
+                mother_indices = []
+                child_indices = []
+
+                for polje in polja:
+                    pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
+                    pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
+                    print()
+                    print(polje)
+                    print("pripadajoce_vrste_obiskov> ",pripadajoce_vrste_obiskov)
+                    print()
+                    print()
+                    if len(pripadajoce_vrste_obiskov)==0:
+                        print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
+                    if 30 in pripadajoce_vrste_obiskov:
+                        print("To polje se nanasa na NOVOROJENCKA!")
+                        child_indices.append(index)
+                    elif 80 in pripadajoce_vrste_obiskov:
+                        print("To polje se nanasa na OTROCNICO!")
+                        mother_indices.append(index)
+
+
+                    index += 1
+
+                print("mother fields: ", mother_indices)
+                print("child_indices: ", child_indices)
+
+                #STORE BEFORE ORVERRIDING
+                default_polja = polja.copy()
+
+
+
+                details_list = [ detail for (_,detail,_) in polja]
+
+                # clean the list
+                prev_string = details_list[0]
+                for i in range(0, len(details_list)):
+                    current_string = details_list[i]
+                    if(i != 0 and prev_string == current_string):
+                        details_list[i] = ""
+                    else:
+                        details_list[i] = current_string.replace(".", "")
+
+                    prev_string = current_string
+
+                #STORE BEFORE ORVERRIDING
+                default_details_list = details_list.copy()
+
+
+                """ THESE ARE FIELDS READY FOR MOTHER """
+                polja = [ default_polja[i] for i in mother_indices ]
+                details_list = [ default_details_list[i] for i in mother_indices ]
+                counter = 0
+                 # print("POLJA IZ POROCILA: ", polja)
+                pat_name = str(care_taker[0].ime + " " + care_taker[0].priimek).upper()
+                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
+                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].widget.attrs['readonly'] = True
+                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].initial = pat_name
+
+
+
+                for (p_id, p_opis, pm_id) in polja:
+                    # Get required object
+                    vnos = Polje_v_porocilu.objects.get(id=p_id)
+                    print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+                    
+                    # DOLOCITEV POLJ
+                    field_label = vnos.ime
+                    field_title = details_list[counter]
+
+
+                    if(vnos.obvezno):
+                        req = True
+                    else:
+                        req = False
+
+                    if(vnos.vnosno_polje == "DateField"):
+                        self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = DateField(label=field_label, required = req, help_text=field_title,
+                            widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
+                            input_formats=['%d.%m.%Y'])
+                    elif(vnos.vnosno_polje == "DecimalField"):
+                        self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
+                            widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                    elif(vnos.vnosno_polje == "CharField"):
+                        self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
+                    elif(vnos.vnosno_polje == "ChoiceField"):
+                        given_choices = vnos.mozne_vrednosti.split(",")
+                        list_tuple = [(el, el) for el in given_choices]
+                        given_choices = tuple(list_tuple)
+                        field_label = "Izberite"
+                        self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+                    else:
+                        pass
+
+                    counter += 1
+
+
+                """ THESE ARE FIELDS READY FOR ALL CHILDREN """
+
+                polja = [ default_polja[i] for i in child_indices ]
+                details_list = [ default_details_list[i] for i in child_indices ]
+
+
+                for nrs_pt in range(0, len(nursing_patients)): 
+                    pat_name = str(nursing_patients[nrs_pt].ime + " " + nursing_patients[nrs_pt].priimek).upper()
+                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
+                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ].widget.attrs['readonly'] = True
+                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ].initial = pat_name
+
+                    counter = 0
+                     # print("POLJA IZ POROCILA: ", polja)
+                    for (p_id, p_opis, pm_id) in polja:
+                        # Get required object
+                        vnos = Polje_v_porocilu.objects.get(id=p_id)
+                        print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+                        
+                        # DOLOCITEV POLJ
+                        field_label = vnos.ime
+                        field_title = details_list[counter]
+
+
+                        if(vnos.obvezno):
+                            req = True
+                        else:
+                            req = False
+
+                        if(vnos.vnosno_polje == "DateField"):
+                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = DateField(label=field_label, required = req, help_text=field_title,
+                                widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
+                                input_formats=['%d.%m.%Y'])
+                        elif(vnos.vnosno_polje == "DecimalField"):
+                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
+                                widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                        elif(vnos.vnosno_polje == "CharField"):
+                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
+                        elif(vnos.vnosno_polje == "ChoiceField"):
+                            given_choices = vnos.mozne_vrednosti.split(",")
+                            list_tuple = [(el, el) for el in given_choices]
+                            given_choices = tuple(list_tuple)
+                            field_label = "Izberite"
+                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+                        else:
+                            pass
+
+                        counter += 1
+
+            else:
+                pass
+        #other visitation types
         else:
-            pass
+            nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
+            polja = None
+            if len(nalogi)>0:
+                nalog=nalogi[0]
+                obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
+                polja = obisk[0].porocilo()
+
+                details_list = [ detail for (_,detail,_) in polja]
+
+                # clean the list
+                prev_string = details_list[0]
+                for i in range(0, len(details_list)):
+                    current_string = details_list[i]
+                    if(i != 0 and prev_string == current_string):
+                        details_list[i] = ""
+                    else:
+                        details_list[i] = current_string.replace(".", "")
+
+                    prev_string = current_string
+
+                pacient = pacienti_obiska[0].pacient
+                pat_name = str(pacient.ime + " " + pacient.priimek).upper()
+                self.fields['personal_card_id_%s' % pacient.st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
+                self.fields['personal_card_id_%s' % pacient.st_kartice ].widget.attrs['readonly'] = True
+                self.fields['personal_card_id_%s' % pacient.st_kartice ].initial = pat_name
+
+                counter = 0
+                 # print("POLJA IZ POROCILA: ", polja)
+                for (p_id, p_opis, pm_id) in polja:
+                    # Get required object
+                    vnos = Polje_v_porocilu.objects.get(id=p_id)
+                    print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+                    
+                    # DOLOCITEV POLJ
+                    field_label = vnos.ime
+                    field_title = details_list[counter]
+
+
+                    if(vnos.obvezno):
+                        req = True
+                    else:
+                        req = False
+
+                    if(vnos.vnosno_polje == "DateField"):
+                        self.fields['polje%s' % pm_id] = DateField(label=field_label, required = req, help_text=field_title,
+                            widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
+                            input_formats=['%d.%m.%Y'])
+                    elif(vnos.vnosno_polje == "DecimalField"):
+                        self.fields['polje%s' % pm_id] = IntegerField(label=field_label, required = req, help_text=field_title,
+                            widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                    elif(vnos.vnosno_polje == "CharField"):
+                        self.fields['polje%s' % pm_id] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
+                    elif(vnos.vnosno_polje == "ChoiceField"):
+                        given_choices = vnos.mozne_vrednosti.split(",")
+                        list_tuple = [(el, el) for el in given_choices]
+                        given_choices = tuple(list_tuple)
+                        field_label = "Izberite"
+                        self.fields['polje%s' % pm_id] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+                    else:
+                        pass
+
+                    counter += 1
+            else:
+                pass
 
 
 

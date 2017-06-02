@@ -640,3 +640,6 @@ class SubstitutionFinishedForm(forms.Form):
     query = Nadomescanje.objects.filter(veljavno =True).values_list("sestra_id",flat=True)
     query_nurses = Patronazna_sestra.objects.filter(id__in=query)
     nurses = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))
+
+class DeleteUserForm(forms.Form):
+    confirm_pass = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password1', 'class': 'form-control'}))

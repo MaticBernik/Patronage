@@ -439,8 +439,11 @@ class InputVisitationDataForm(forms.Form):
                                 widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
                                 input_formats=['%d.%m.%Y'])
                         elif(vnos.vnosno_polje == "DecimalField"):
+                            vrednosti = vnos.mozne_vrednosti.split(",")
+                            min_val = int(vrednosti[0])
+                            max_val = int(vrednosti[1])
                             self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                                widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                                widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                         elif(vnos.vnosno_polje == "CharField"):
                             self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
                         elif(vnos.vnosno_polje == "ChoiceField"):
@@ -506,8 +509,11 @@ class InputVisitationDataForm(forms.Form):
                             widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
                             input_formats=['%d.%m.%Y'])
                     elif(vnos.vnosno_polje == "DecimalField"):
+                        vrednosti = vnos.mozne_vrednosti.split(",")
+                        min_val = int(vrednosti[0])
+                        max_val = int(vrednosti[1])
                         self.fields['polje%s_%s' % (pm_id,pacient.st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                            widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
+                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                     elif(vnos.vnosno_polje == "CharField"):
                         self.fields['polje%s_%s' % (pm_id,pacient.st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
                     elif(vnos.vnosno_polje == "ChoiceField"):

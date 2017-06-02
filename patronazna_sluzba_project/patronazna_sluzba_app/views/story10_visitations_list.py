@@ -56,7 +56,8 @@ def list_visitations(request):
     izdajatelj = Uporabnik.objects.get(profil_id=uporabnik.id)
     if is_doctor(uporabnik):
         zdravnik=Zdravnik.objects.get(uporabniski_profil_id=uporabnik)
-        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.sifra_zdravnika)
+        #delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.sifra_zdravnika)
+        delovni_nalogi = Delovni_nalog.objects.filter(zdravnik_id=zdravnik.id)
         filter_form.fields['filter_creator_id'].initial = izdajatelj
         filter_form.fields['filter_creator_id'].widget.attrs['disabled'] = 'disabled'
     elif is_leader_ps(uporabnik):
@@ -122,16 +123,19 @@ def list_visitations(request):
             elif is_leader_ps(request.POST['filter_creator_id']):
                 creator = Vodja_PS.objects.get(uporabniski_profil_id=profil)
                 print("Nalogi pred filtriranjem: ",delovni_nalogi)
-                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
+                #delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.sifra_vodje_PS)
+                delovni_nalogi = delovni_nalogi.filter(vodja_PS_id=creator.id)
                 print("Nalogi po giltriranju: ",delovni_nalogi)
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_visit_type',0):
             delovni_nalogi = delovni_nalogi.filter(vrsta_obiska_id=request.POST['filter_visit_type'])
 
-            obiski_delovni_nalog=Delovni_nalog.objects.filter(vrsta_obiska_id=request.POST['filter_visit_type'], id__in=[x.delovni_nalog_id for x in visitations])
-            visitations=Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
+            print("****** FILTER VISIT TYPE: ",request.POST['filter_visit_type'])
+            if is_nurse(uporabnik):
+                obiski_delovni_nalog=Delovni_nalog.objects.filter(vrsta_obiska_id=request.POST['filter_visit_type'], id__in=[x.delovni_nalog_id for x in visitations])
+                visitations=Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
+                visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
 
-            visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
 
             #filter_form.fields['filter_visit_type'] = request.POST['filter_visit_type']
             filter_form.fields['filter_visit_type'].initial=request.POST['filter_visit_type']
@@ -140,11 +144,12 @@ def list_visitations(request):
             nalogi_vezani_na_pacienta=[x.delovni_nalog_id for x in pacientDN]
             delovni_nalogi = delovni_nalogi.filter(id__in=nalogi_vezani_na_pacienta)
 
-            obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in visitations])
-            obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=nalogi_vezani_na_pacienta)
-            visitations = Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
+            if is_nurse(uporabnik):
+                obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in visitations])
+                obiski_delovni_nalog = Delovni_nalog.objects.filter(id__in=nalogi_vezani_na_pacienta)
+                visitations = Obisk.objects.filter(delovni_nalog_id__in=obiski_delovni_nalog)
 
-            visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
+                visitations = visitations.filter(id__in=[x.id for x in visitations_nurse])
 
             #filter_form.fields['filter_patient_id'] = request.POST['filter_patient_id']
             filter_form.fields['filter_patient_id'].initial=request.POST['filter_patient_id']

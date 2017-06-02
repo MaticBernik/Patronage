@@ -492,7 +492,7 @@ class InputVisitationDataForm(forms.Form):
                 for (p_id, p_opis, pm_id) in polja:
                     # Get required object
                     vnos = Polje_v_porocilu.objects.get(id=p_id)
-                    print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
+                    #print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti )
                     
                     # DOLOCITEV POLJ
                     field_label = vnos.ime
@@ -636,20 +636,29 @@ class ForgottenPasswordForm(forms.Form):
 
 class SubstitutionFinishedForm(forms.Form):
     #absent = Nadomescanje.objects.filter(nadomestna_sestra_id=6).filter(veljavno=True).values_list('sestra_id',flat=True)
-    absent=[]
+    #absent=[]
     # preveri ali sestra, ki jo nadomecam že nadomešča drugo sestro
     # print("================FORMS.PY===============")
     # print(absent)
     # print("=======================================")
-    for x in absent:
-        absent |= Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True).values_list('sestra_id',flat=True)
-
+    #for x in absent:
+    #    absent |= Nadomescanje.objects.filter(nadomestna_sestra_id=x).filter(veljavno=True).values_list('sestra_id',flat=True)
+    #
     # print("================FORMS.PY===============")
     # print(absent)
     # print("=======================================")
-    query = Nadomescanje.objects.filter(veljavno =True).values_list("sestra_id",flat=True)
-    query_nurses = Patronazna_sestra.objects.filter(id__in=query)
-    nurses = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))
+    def __init__(self, *args, **kwargs):
+        super(SubstitutionFinishedForm, self).__init__(*args, **kwargs)
+        query = Nadomescanje.objects.filter(veljavno =True).values_list("sestra_id","nadomestna_sestra_id")
+        for i in query:
+            print(i)
+        query_nurses = Patronazna_sestra.objects.filter(id__in=[x[0] for x in query])
+        query_substitues = Patronazna_sestra.objects.filter(id__in=[x[1] for x in query])
+        print(query_nurses)
+        print(query_substitues)
+        self.fields['nurses_absent'] = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))
+        self.fields['nurses_substitutes'] = forms.ModelChoiceField(label='Nadomestne sestre: ', queryset=query_substitues,widget=forms.Select(attrs={'class': 'form-control'}))
+
 
 class DeleteUserForm(forms.Form):
     confirm_pass = forms.CharField(label='Novo geslo: ', max_length=100, widget=forms.PasswordInput(attrs={'id': 'reset_password1', 'class': 'form-control'}))

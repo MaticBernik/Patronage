@@ -215,7 +215,8 @@ def list_visitations(request):
     delovni_nalogi = Delovni_nalog.objects.all()
 
     #ROBERT KODA ZA NADOMESCANJA
-    vsa_nadomescanja = Nadomescanje.objects.all()
+    #vsa_nadomescanja = Nadomescanje.objects.all()
+    vsa_nadomescanja = Nadomescanje.objects.filter(veljavno=True)
     vsa_porocila = Porocilo_o_obisku.objects.all()
     vsa_polja_meritev = Polje_meritev.objects.all()
     vsa_pacient_DN = Pacient_DN.objects.all()

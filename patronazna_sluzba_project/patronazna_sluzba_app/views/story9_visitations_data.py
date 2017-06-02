@@ -84,6 +84,7 @@ def list_active_visitations(request):
     obiski = Obisk.objects.all()
     visitations_today = obiski
     visitations_yesterday = obiski
+    
     vsa_nadomescanja = Nadomescanje.objects.all()
     vsa_porocila = Porocilo_o_obisku.objects.all()
     vsa_polja_meritev = Polje_meritev.objects.all()

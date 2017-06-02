@@ -12,5 +12,6 @@ from .story13_finished_substitution import *
 from .story15_edit_profile import *
 from .story16_patient_visitations_list import *
 from .story17_reset_password import *
+from .story25_disable_user import *
 
 # import logging

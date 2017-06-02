@@ -30,8 +30,8 @@
 	</script>
 
 	<script>
-		function show_work_task(objButton) {
-			$('.task_expansion').hide();
+		function show_visit_detail(objButton) {
+			$('.visit_expansion').hide();
 		    //alert(objButton.value);
 			console.log(objButton.value);
 			button_id = objButton.value;
@@ -77,19 +77,20 @@
 
     	        		{% if visit.delovni_nalog.zdravnik_id %}
     	        			{% for doc in doctors %}
-    	        				{% if doc.sifra_zdravnika == visit.delovni_nalog.zdravnik_id %}
+    	        				{% if doc.id == visit.delovni_nalog.zdravnik_id %}
     	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
     	        		{% elif visit.delovni_nalog.vodja_PS_id %}
     	        			{% for head in head_nurses %}
-    	        				{% if head.sifra_vodje_PS == visit.delovni_nalog.vodja_PS_id %}
+    	        				{% if head.id == visit.delovni_nalog.vodja_PS_id %}
     	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
     	        		{% else %}
     	        			Podatki o izdajatelju vam niso na voljo.
     	        		{% endif %}
+
 
             		</td>
             		<td>{{visit.p_sestra}}</td>
@@ -133,7 +134,7 @@
             			{% endif %}
             		</td>
             		<td>
-            			<button type="button" class="btn btn-info btn-sm form-control" value={{visit.id}}>Podrobnosti</button>
+            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-info btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
             		</td>
 
             	</tr>
@@ -239,7 +240,7 @@
             			{% endif %}
             		</td>
             		<td>
-            			<button type="button" class="btn btn-info btn-sm form-control" value={{visit.id}}>Podrobnosti</button>
+            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-info btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
             		</td>
 
             	</tr>
@@ -257,119 +258,80 @@
 
 
     <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+    	<div class="modal-dialog">
     
-      <!-- Modal content-->
-      <div class="modal-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Podrobnosti obiska</h4>
-        </div>
-        <!--
-			{% if work_task_list %}
-				{% for work_task in work_task_list %}
-				<div class="task_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{work_task.id}}">
-					<div class ="row " style="padding-top: 10px;">
-						<label style="float: center;">PACIENT</label>
-							{% for pac in pacient_list %}
-								{% if pac.delovni_nalog.id == work_task.id %}
-									<div class="row" style="text-align: center;">
-										<p>{{ pac.pacient.priimek }} {{ pac.pacient.ime }}</p>
-									</div>
-								{% endif %}
-							{% endfor %}
-					</div>
-					<hr>
-					<div class ="row" style="background-color: PowderBlue;">
-						<label style="float: left;">Izvajalec ZS:</label>
-						<p  style="float: right;">{{work_task.izvajalec_zs.naziv}}</p>
-					</div>
-					<div class ="row">
-						<label style="float: left;">Sifra delovnega naloga:</label>
-						<p style="float: right;">{{work_task.id}}</p>
-					</div>
-					<div class ="row" style="background-color: PowderBlue;">
-						<label style="float: left;">Sifra zdravnika / vodje PS:</label>
-						<p style="float: right;">
-						{% if work_task.zdravnik %}
-							{{work_task.zdravnik.sifra_zdravnika }}
-						{% endif %}
-						{% if work_task.vodja_PS %}
-							{{work_task.vodja_PS.sifra_vodje_PS }}
-						{% endif %}</p>
-					</div>
-					<div class ="row">
-						<label style="float: left;">Tip obiska:</label>
-						<p style="float: right;">{{work_task.vrsta_obiska.tip}}</p>
-					</div>
-					<div class ="row" style="background-color: PowderBlue;">
-						<label style="float: left;">Vrsta obiska:</label>
-						<p style="float: right;">{{work_task.vrsta_obiska.ime}}</p>
-					</div>
-					<div class ="row">
-						<label style="float: left;">Bolezen:</label>
-						<p style="float: right;">{{work_task.bolezen.ime}}</p>
-					</div>
-					<div class ="row" style="background-color: PowderBlue;">
-						<label style="float: left;">Datum prvega obiska:</label>
-						<p style="float: right;">{{work_task.datum_prvega_obiska|date:"d.m.Y"}}</p>
-					</div>
-					<div class ="row">
-						<label style="float: left;">Stevilo obiskov:</label>
-						<p style="float: right;">{{work_task.st_obiskov}}</p>
-					</div>
-					<hr>
-					<div class ="row">
-						<label style="float: left;">Seznam obiskov:</label>
-					</div>
-					{% for v in visits_list %}
+	      <!-- Modal content-->
+	      	<div class="modal-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		        <div class="modal-header">
+		          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+		          	<h4 class="modal-title">Podrobnosti obiska</h4>
+		        </div>
+		        	{% if visitations_list_complete and work_task_list %}
+		        		{% for visit in visitations_list_complete %}
+				        	<div class="visit_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{visit.id}}">
+		        				{% for pdn in all_p_DN %}
+				        			{% if pdn.delovni_nalog == visit.delovni_nalog %}
+				        				PACIENT: <br>
+				        				{{ pdn.pacient.ime }} {{ pdn.pacient.priimek }}
+				    					<hr>
+				        			{% endif %}			
+				        		{% endfor %}
+				        		<p>DNE: {{visit.datum|date:"d.m.Y" }}</p>
+				        		<p>Izvedla patronazna sestra <br> {{visit.p_sestra.uporabniski_profil.first_name }}  {{visit.p_sestra.uporabniski_profil.last_name }}</p>
+				        		<hr>
+				        		<p>OPRAVLJENE MERITVE: </p>
+				        		<hr>
+				        		{% for report in all_visit_reports %}
+				        			{% if report.obisk.id == visit.id %}
+										
+				        				{% for mf in all_measure_fields %}
+				        					{% if mf.polje == report.polje %}
+				        						{{mf.polje.opis}}
+				        					{% endif %}
+				        				{% endfor %}
+				        				<p>{{ report.polje.ime }}: {{ report.vrednost }}</p>
+				        				
+				        			{% endif %}
+				        		{% endfor %}
+				        	</div>
+		        		{% endfor %}
+		        	{% endif %}
+                    {% if visitations_list_waiting and work_task_list %}
+		        		{% for visit in visitations_list_waiting %}
+				        	<div class="visit_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{visit.id}}">
+		        				{% for pdn in all_p_DN %}
+				        			{% if pdn.delovni_nalog == visit.delovni_nalog %}
+				        				PACIENT: <br>
+				        				{{ pdn.pacient.ime }} {{ pdn.pacient.priimek }}
+				    					<hr>
+				        			{% endif %}			
+				        		{% endfor %}
+				        		<p>DNE: {{visit.datum|date:"d.m.Y" }}</p>
+				        		<p>Izvedla patronazna sestra <br> {{visit.p_sestra.uporabniski_profil.first_name }}  {{visit.p_sestra.uporabniski_profil.last_name }}</p>
+				        		<hr>
+				        		<p>OPRAVLJENE MERITVE: </p>
+				        		<hr>
+				        		{% for report in all_visit_reports %}
+				        			{% if report.obisk.id == visit.id %}
+										
+				        				{% for mf in all_measure_fields %}
+				        					{% if mf.polje == report.polje %}
+				        						{{mf.polje.opis}}
+				        					{% endif %}
+				        				{% endfor %}
+				        				<p>{{ report.polje.ime }}: {{ report.vrednost }}</p>
+				        				
+				        			{% endif %}
+				        		{% endfor %}
+				        	</div>
+		        		{% endfor %}
+		        	{% endif %}
+		        <div class="modal-footer">
+		          	<button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
+		        </div>
+	      	</div>
+    	</div>
+  	</div>
 
-						{% if v.delovni_nalog.id == work_task.id %}
-							<div class="row">
-								<p style="float: right; text-align: center;">{{v.datum|date:"d.m.Y"}}</p>
-								<p style="float: left; text-align: center;">Patronazna sestra: {{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}</p>
-							</div>
-						{% endif %}
-					{% endfor %}
-					<hr>
-										<div class ="row">
-						<label style="float: left;">Seznam zdravil:</label>
-					</div>
-					{% for med in medications %}
-
-						{% if med.delovni_nalog.id == work_task.id %}
-							<div class="row">
-								<p style="float: right; text-align: center;">{{med.kolicina}}</p>
-								<p style="float: left; text-align: center;">{{med.zdravilo.ime }}</p>
-							</div>
-						{% endif %}
-					{% endfor %}
-					<hr>
-										<div class ="row">
-						<label style="float: left;">Seznam materiala:</label>
-					</div>
-						
-						{% for mat in material %}
-
-						{% if mat.delovni_nalog.id == work_task.id %}
-							<div class="row">
-								<p style="float: right; text-align: center;">{{mat.kolicina}}</p>
-								<p style="float: left; text-align: center;">{{mat.material.ime }}</p>
-							</div>
-						{% endif %}
-					{% endfor %}
-					<hr>
-
-				</div>
-				{% endfor %}
-			{% endif %}
-		-->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
 
 {% endblock %}

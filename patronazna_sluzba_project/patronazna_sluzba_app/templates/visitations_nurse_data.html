@@ -74,19 +74,20 @@
 
     	        		{% if visit.delovni_nalog.zdravnik_id %}
     	        			{% for doc in doctors %}
-    	        				{% if doc.sifra_zdravnika == visit.delovni_nalog.zdravnik_id %}
+    	        				{% if doc.id == visit.delovni_nalog.zdravnik_id %}
     	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
     	        		{% elif visit.delovni_nalog.vodja_PS_id %}
     	        			{% for head in head_nurses %}
-    	        				{% if head.sifra_vodje_PS == visit.delovni_nalog.vodja_PS_id %}
+    	        				{% if head.id == visit.delovni_nalog.vodja_PS_id %}
     	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
     	        				{% endif %}
     	        			{% endfor %}
     	        		{% else %}
     	        			Podatki o izdajatelju vam niso na voljo.
     	        		{% endif %}
+
 
             		</td>
             		<td>{{visit.p_sestra}}</td>

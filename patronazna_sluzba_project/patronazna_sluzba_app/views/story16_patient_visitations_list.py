@@ -54,7 +54,12 @@ def list_patient_visitations(request):
     print("VISITATIONS", visitations)
     visitations_complete = visitations.filter(opravljen=True)
     visitations_waiting = visitations.filter(opravljen=False)
-    
-    context = {'work_task_list':delovni_nalogi, 'visitations_list_complete':visitations_complete,  'visitations_list_waiting':visitations_waiting, 'nbar': 'v_pat_visits', 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps, 'substitutions': vsa_nadomescanja}
+
+    vsa_nadomescanja = Nadomescanje.objects.all()
+    vsa_porocila = Porocilo_o_obisku.objects.all()
+    vsa_polja_meritev = Polje_meritev.objects.all()
+    vsa_pacient_DN = Pacient_DN.objects.all()
+
+    context = {'work_task_list':delovni_nalogi, 'visitations_list_complete':visitations_complete,  'visitations_list_waiting':visitations_waiting, 'nbar': 'v_pat_visits', 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps, 'substitutions': vsa_nadomescanja, 'all_visit_reports': vsa_porocila, 'all_measure_fields': vsa_polja_meritev, 'all_p_DN': vsa_pacient_DN}
     return render(request, 'patient_visitations_list.html', context)
 

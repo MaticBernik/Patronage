@@ -431,20 +431,20 @@ class InputVisitationDataForm(forms.Form):
                             req = False
 
                         if(vnos.vnosno_polje == "DateField"):
-                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = DateField(label=field_label, required = req, help_text=field_title,
+                            self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = DateField(label=field_label, required = req, help_text=field_title,
                                 widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control'}),
                                 input_formats=['%d.%m.%Y'])
                         elif(vnos.vnosno_polje == "DecimalField"):
-                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
+                            self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
                                 widget=forms.NumberInput(attrs={'class': 'form-control'}), validators=[MinValueValidator(0)])
                         elif(vnos.vnosno_polje == "CharField"):
-                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
+                            self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
                         elif(vnos.vnosno_polje == "ChoiceField"):
                             given_choices = vnos.mozne_vrednosti.split(",")
                             list_tuple = [(el, el) for el in given_choices]
                             given_choices = tuple(list_tuple)
                             field_label = "Izberite"
-                            self.fields['polje_%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+                            self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = ChoiceField(label=field_label, required = req, help_text=field_title, choices=given_choices, widget=forms.Select(attrs={'class': 'form-control'}))
                         else:
                             pass
 

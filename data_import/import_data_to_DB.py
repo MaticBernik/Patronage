@@ -312,6 +312,73 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 				else:
 					vnosno_polje='DecimalField'
 				print("IME: ",ime,"  VNOSNO POLJE: ",vnosno_polje)
+				
+				
+				if ime=='Prosti vnos':
+					continue
+				elif ime=='Datum':
+					continue
+				#elif ime == 'Moteno/Ni moteno':
+				#elif ime == 'Nizka/Srednja/Visoka':
+				elif ime == 'Sistolični (mm Hg)':
+					mozne_vrednosti='0,500'
+				elif ime == 'Diastolični (mm Hg)':
+					mozne_vrednosti='0,500'
+				elif ime == 'Udarci na minuto':
+					mozne_vrednosti='0,300'
+				elif ime == 'Vdihi na minuto':
+					mozne_vrednosti='0,500'
+				elif ime == 'st C':
+					mozne_vrednosti='0,60'
+				elif ime == 'kg':
+					mozne_vrednosti='0,300'
+				elif ime == 'Datum rojstva otroka':
+					continue
+					'''if len(oskrbovanci)==0:
+						print("Napaka!")
+						continue
+					pacient_id=oskrbovanci[0]
+					cursor = conn.execute("select datum_rojstva from patronazna_sluzba_app_pacient where st_kartice=" + str(
+					pacient_id) +";");
+					datum_rojstva=datetime.strptime(cursor.fetchall()[0][0],"%Y-%m-%d %H:%M:%S")
+					izbira=datum_rojstva'''
+
+				elif ime == 'Porodna teža otroka (g)':
+					mozne_vrednosti='0,20000'
+				elif ime == 'Porodna višina otroka (cm)':
+					mozne_vrednosti='0,100'
+				elif ime == 'g':
+					mozne_vrednosti='0,50000'
+				elif ime == 'cm':
+					mozne_vrednosti='0,200'
+				#elif ime == 'Da/Ne':
+				#elif ime == 'Ni posebnosti/Mikcija/Defekacija/Napenjanje/Kolike/Polivanje/Bruhanje':
+				elif ime == 'Urin: prosti vnos':
+					continue
+				elif ime == 'Blato: prosti vnos':
+					continue
+				elif ime == 'Vid: prosti vnos':
+					continue
+				elif ime == 'Vonj: prosti vnos':
+					continue
+				elif ime == 'Sluh: prosti vnos':
+					continue
+				elif ime == 'Okus: prosti vnos':
+					continue
+				elif ime == 'Otip: prosti vnos':
+					continue
+				#elif ime == 'Samostojen/Delno odvisen/Povsem odvisen':
+				elif ime == 'Pomoč: svojci':
+					continue
+				elif ime == 'drugi':
+					continue
+				elif ime =='mmol/L':
+					mozne_vrednosti='0,500'
+				elif ime == '%':
+					mozne_vrednosti='0,100'
+				#elif ime == 'Da/Delno/Ne':
+				
+				
 				cursor = conn.execute("select id from patronazna_sluzba_app_polje_v_porocilu where ime = '" + ime + "' and vnosno_polje = '" + vnosno_polje + "';");
 				polje_id=cursor.fetchall()
 				if len(polje_id)==0:

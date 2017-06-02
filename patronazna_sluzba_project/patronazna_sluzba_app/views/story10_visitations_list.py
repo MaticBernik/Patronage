@@ -11,8 +11,8 @@ from django.template import Context, loader, RequestContext
 from django.urls import reverse
 from ipware.ip import get_ip #pip install django-ipware
 from patronazna_sluzba_app import token
-from patronazna_sluzba_app.forms import AddNursingPatientForm, ChangePasswordForm, LoginForm, PatientRegistrationFrom, RegisterMedicalStaffForm, WorkTaskForm, FilterVisitationsForm
-from patronazna_sluzba_app.models import Izvajalec_ZS, Pacient, Patronazna_sestra, Sodelavec_ZD, User, Vodja_PS, Zdravnik, Obisk, Delovni_nalog, Pacient_DN, Material_DN, Zdravilo_DN, Uporabnik, Nadomescanje
+from patronazna_sluzba_app.forms import *
+from patronazna_sluzba_app.models import *
 import csv
 import django.contrib.auth
 import logging
@@ -213,8 +213,10 @@ def list_visitations(request):
 
     #ROBERT KODA ZA NADOMESCANJA
     vsa_nadomescanja = Nadomescanje.objects.all()
+    vsa_porocila = Porocilo_o_obisku.objects.all()
+    vsa_polja_meritev = Polje_meritev.objects.all()
+    vsa_pacient_DN = Pacient_DN.objects.all()
 
-
-    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps, 'substitutions': vsa_nadomescanja}
+    context = {'work_task_list':delovni_nalogi, 'visitations_list':visitations, 'nbar': 'v_visits', 'filter_form': filter_form, 'medications':zdravila, 'material': material, 'pacient_list': pacienti, 'doctors': zdravniki, 'head_nurses': vodje_ps, 'substitutions': vsa_nadomescanja, 'all_visit_reports': vsa_porocila, 'all_measure_fields': vsa_polja_meritev, 'all_p_DN': vsa_pacient_DN}
     return render(request, 'visitations_list.html', context)
 

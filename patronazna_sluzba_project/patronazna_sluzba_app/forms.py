@@ -291,7 +291,7 @@ class InputVisitationDataForm(forms.Form):
             self.fields['dateinfobox'] = CharField(label="POZOR",required = False, widget=forms.TextInput(attrs={'class': 'form-control dateinfobox'}))
             self.fields['dateinfobox'].initial="DATUM OBISKA SE NANAŠA NA VČREAJŠNJI DAN."
             self.fields['dateinfobox'].widget.attrs['readonly'] = True
-            self.fields['change_visitation_date'] =BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = True, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
+            self.fields['change_visitation_date'] =BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = False, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
 
 
         if(string_visitation_type == 'Obisk otrocnice in novorojencka'):   

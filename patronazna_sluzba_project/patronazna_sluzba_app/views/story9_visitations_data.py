@@ -135,8 +135,8 @@ def edit_visitaiton_data(request):
         #polja_meritve = Polje_meritev.objects.filter(id__in=meritve)
 
         for polje in polja:
-            polja_tmp.append(polje)
-            polja_tmp.append(polje)
+            for i in range(len(obisk_pacienti)):
+                polja_tmp.append(polje)
         polja=polja_tmp
 
         if obisk.obisk_vrsta_tostring() == "Obisk otrocnice in novorojencka":
@@ -147,10 +147,10 @@ def edit_visitaiton_data(request):
 
             #nalogi_pacient_1 = [x.delovni_nalog_id for x in Pacient_DN.objects.filter(pacient_id=obisk_pacienti[0])]
             #obiski_pacient_1 = Obisk.objects.filter(delovni_nalog_id__in=nalogi_pacient_1)
-            polja_porocila_pacient_1 = Polje_v_porocilu.objects.filter(id__in=[x.polje_id for x in Porocilo_o_obisku.objects.filter(pacient_id=obisk_pacienti[0])])
+            '''polja_porocila_pacient_1 = Polje_v_porocilu.objects.filter(id__in=[x.polje_id for x in Porocilo_o_obisku.objects.filter(pacient_id=obisk_pacienti[0])])
             for polje in polja_porocila_pacient_1:
                 if polje.ime in POLJA_UNIKATNI_VNOSI:
-                    print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")
+                    print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")'''
 
             #Sedaj nepotrebno, saj dobim informacijo iz id-ja polja
             '''# Doloci, ali polje pripada otrocnici ali novorojencku:
@@ -209,8 +209,8 @@ def edit_visitaiton_data(request):
             i=polja_imena.index(ime_polja)
             print("ID OBISKA",obisk.id)
             if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0]).exists():
-                if not datetime.now().date() == obisk.datum.date():
-                    print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")
+                '''if not datetime.now().date() == obisk.datum.date():
+                    print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")'''
 
                 porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0])
                 porocilo_vnos.save()

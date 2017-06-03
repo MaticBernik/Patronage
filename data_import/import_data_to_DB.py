@@ -313,7 +313,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					vnosno_polje='DecimalField'
 				print("IME: ",ime,"  VNOSNO POLJE: ",vnosno_polje)
 				
-				
+				enkraten_vnos=False;
 				if ime=='Prosti vnos':
 					continue
 				elif ime=='Datum':
@@ -333,6 +333,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 				elif ime == 'kg':
 					mozne_vrednosti='0,300'
 				elif ime == 'Datum rojstva otroka':
+					enkraten_vnos=True
 					continue
 					'''if len(oskrbovanci)==0:
 						print("Napaka!")
@@ -344,8 +345,10 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					izbira=datum_rojstva'''
 
 				elif ime == 'Porodna teža otroka (g)':
+					enkraten_vnos=True;
 					mozne_vrednosti='0,20000'
 				elif ime == 'Porodna višina otroka (cm)':
+					enkraten_vnos=True
 					mozne_vrednosti='0,100'
 				elif ime == 'g':
 					mozne_vrednosti='0,50000'
@@ -383,9 +386,9 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 				polje_id=cursor.fetchall()
 				if len(polje_id)==0:
 					if mozne_vrednosti:
-						conn.execute("INSERT INTO patronazna_sluzba_app_polje_v_porocilu (ime, vnosno_polje, obvezno, mozne_vrednosti) VALUES (?,?,?,?)", (ime, vnosno_polje, obvezen_vnos, mozne_vrednosti));
+						conn.execute("INSERT INTO patronazna_sluzba_app_polje_v_porocilu (ime, vnosno_polje, obvezno, mozne_vrednosti, enkraten_vnos) VALUES (?,?,?,?,?)", (ime, vnosno_polje, obvezen_vnos, mozne_vrednosti, enkraten_vnos));
 					else:
-						conn.execute("INSERT INTO patronazna_sluzba_app_polje_v_porocilu (ime, vnosno_polje, obvezno) VALUES (?,?,?)", (ime, vnosno_polje, obvezen_vnos));
+						conn.execute("INSERT INTO patronazna_sluzba_app_polje_v_porocilu (ime, vnosno_polje, obvezno, enkraten_vnos) VALUES (?,?,?,?)", (ime, vnosno_polje, obvezen_vnos, enkraten_vnos));
 					cursor = conn.execute("select id from patronazna_sluzba_app_polje_v_porocilu where ime='" + ime + "' and vnosno_polje='" + vnosno_polje + "';");
 					polje_id = cursor.fetchall()[0][0]
 				else:
@@ -701,7 +704,7 @@ for obisk in obiski:
 						pacient_id=skrbniki[0]
 
 
-				conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost) VALUES (?,?,?,?)", (int(id), int(pacient_id), int(polje_info[0]),str(izbira)));
+				conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost) VALUES (?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira)));
 
 
 

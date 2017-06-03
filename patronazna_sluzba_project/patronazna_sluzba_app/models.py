@@ -320,6 +320,7 @@ class Polje_v_porocilu(models.Model):
     vnosno_polje = models.CharField(max_length=100, null=True) #tip polja, ki se ga uporabi na frontendu za vnos
     obvezno = models.BooleanField(default=0)
     mozne_vrednosti = models.CharField(max_length=100, null=True) #mozne vrednosti locene z vejico.. sicer razvidno ze iz imena
+    enkraten_vnos = models.BooleanField(default=False)
 
 
 class Polje_meritev(models.Model):

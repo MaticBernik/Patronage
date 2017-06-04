@@ -287,15 +287,20 @@ class InputVisitationDataForm(forms.Form):
         print(visit_date)
         todays_date = date.today()
         print(todays_date)
+
         if(visit_date < todays_date):
-            self.fields['dateinfobox'] = CharField(label="POZOR",required = False, widget=forms.TextInput(attrs={'class': 'form-control dateinfobox'}))
-            self.fields['dateinfobox'].initial="DATUM OBISKA SE NANAŠA NA VČREAJŠNJI DAN."
-            self.fields['dateinfobox'].widget.attrs['readonly'] = True
-            self.fields['change_visitation_date'] =BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = False, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
+            print("SETTING DATEINFOBOX")
+            infobox_data = 'DATUM OBISKA SE NANAŠA NA VČREAJŠNJI DAN'
+            self.fields['dateinfobox'] = CharField(label="POZOR", required = False, widget=forms.TextInput(attrs={'class': 'form-control date-info-box','readonly':'readonly','value':infobox_data}))
+            self.fields['change_visitation_date'] = BooleanField(label="Datum želim spremeniti na današnji: (obljukajte za DA)", initial=False, required = False, widget=forms.CheckboxInput(attrs={'class': 'form-control patient-name'}))
 
 
         if(string_visitation_type == 'Obisk otrocnice in novorojencka'):   
-        # EXTRA COMPLICATIONS DUE TO MULTIPLE PACIENTS INPUT    
+        ###
+        ###
+        ###   MOTHER AND ALL NEWBORNS
+        ###
+        ###
             nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
             polja = None
             if len(nalogi)>0:
@@ -359,10 +364,7 @@ class InputVisitationDataForm(forms.Form):
                 counter = 0
                  # print("POLJA IZ POROCILA: ", polja)
                 pat_name = str(care_taker[0].ime + " " + care_taker[0].priimek).upper()
-                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
-                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].widget.attrs['readonly'] = True
-                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ].initial = pat_name
-
+                self.fields['personal_card_id_%s' % care_taker[0].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':pat_name}))
 
 
                 for (p_id, p_opis, pm_id) in polja:
@@ -413,9 +415,7 @@ class InputVisitationDataForm(forms.Form):
 
                 for nrs_pt in range(0, len(nursing_patients)): 
                     pat_name = str(nursing_patients[nrs_pt].ime + " " + nursing_patients[nrs_pt].priimek).upper()
-                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
-                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ].widget.attrs['readonly'] = True
-                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ].initial = pat_name
+                    self.fields['personal_card_id_%s' % nursing_patients[nrs_pt].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':pat_name}))
 
                     counter = 0
                      # print("POLJA IZ POROCILA: ", polja)
@@ -459,7 +459,11 @@ class InputVisitationDataForm(forms.Form):
 
             else:
                 pass
-        #other visitation types
+        ###
+        ###
+        ###   OTHER VISITATION TYPES
+        ###
+        ###
         else:
             nalogi=Delovni_nalog.objects.filter(vrsta_obiska_id=vrsta)
             polja = None
@@ -483,9 +487,8 @@ class InputVisitationDataForm(forms.Form):
 
                 pacient = pacienti_obiska[0].pacient
                 pat_name = str(pacient.ime + " " + pacient.priimek).upper()
-                self.fields['personal_card_id_%s' % pacient.st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name'}))
-                self.fields['personal_card_id_%s' % pacient.st_kartice ].widget.attrs['readonly'] = True
-                self.fields['personal_card_id_%s' % pacient.st_kartice ].initial = pat_name
+                self.fields['personal_card_id_%s' % pacient.st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':pat_name}))
+
 
                 counter = 0
                  # print("POLJA IZ POROCILA: ", polja)

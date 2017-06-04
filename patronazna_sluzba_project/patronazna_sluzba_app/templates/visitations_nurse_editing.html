@@ -36,8 +36,6 @@
 			$('#button_id').show();
 			document.getElementById(button_id).style.display="block";
 		}
-
-
 	</script>
 
 	<style type="text/css">
@@ -53,7 +51,7 @@
     		margin-top: 30px;
     	}
 
-    	.form-control.dateinfobox{
+    	.form-control.date-info-box{
     		border-color: #2eb82e; 
     		background-color: red; 
     		color:white;
@@ -90,8 +88,6 @@
 			{% csrf_token %}
     		{% for field in visitation_form %}
     		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 3px;">
-
-
     			{% if field.help_text and field.help_text.strip %}
     				<!--<hr style="height:5px;border:none;color:#333;background-color:#333;" >
     				<p style="text-align:center;font-size: 25px;" ><i><b>{{field.help_text}}</b></i></p>

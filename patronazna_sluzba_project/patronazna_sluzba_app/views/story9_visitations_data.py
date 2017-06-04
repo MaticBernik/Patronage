@@ -104,6 +104,7 @@ def edit_visitaiton_data(request):
     # CREATE FORMS
 
     if('edit_visitation_data' in request.POST):
+        print(" POST - edit_visitation_data ")
         visit_button_id = request.POST.get('edit_visitation_data')
 
         current_visit = Obisk.objects.get(id=visit_button_id)
@@ -122,6 +123,7 @@ def edit_visitaiton_data(request):
 
     # READ FORMS
     elif(request.POST):
+        print(" POST - FORM SUBMITTION ")
         visitation_id = request.POST.get('submit_visitation_data', "")
         obisk=Obisk.objects.get(id=visitation_id)
         obisk_pacienti=[x.pacient_id for x in Pacient_DN.objects.filter(delovni_nalog_id=obisk.delovni_nalog_id)]
@@ -144,43 +146,6 @@ def edit_visitaiton_data(request):
             form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)
             if len(obisk_pacienti)<2:
                 print("S tem obiskom nekaj ni vredu! Obisk otrocnice in novorojencka bi moral imeti pripisana 2 pacienta")
-
-            #nalogi_pacient_1 = [x.delovni_nalog_id for x in Pacient_DN.objects.filter(pacient_id=obisk_pacienti[0])]
-            #obiski_pacient_1 = Obisk.objects.filter(delovni_nalog_id__in=nalogi_pacient_1)
-            '''polja_porocila_pacient_1 = Polje_v_porocilu.objects.filter(id__in=[x.polje_id for x in Porocilo_o_obisku.objects.filter(pacient_id=obisk_pacienti[0])])
-            for polje in polja_porocila_pacient_1:
-                if polje.ime in POLJA_UNIKATNI_VNOSI:
-                    print("Polje ",polje.ime," v formi bi moralo biti zaklenjeno, saj je ze bilo vneseno pri enem od predhodnjih meritev (meri pa se samo enkrat)")'''
-
-            #Sedaj nepotrebno, saj dobim informacijo iz id-ja polja
-            '''# Doloci, ali polje pripada otrocnici ali novorojencku:
-            pacient_polje=[]
-            for polje in polja:
-                pripadajoce_meritve=Meritev.objects.filter(opis=polje[1], id__in=[x.meritev_id for x in Polje_meritev.objects.filter(polje_id=polje[0])])
-                pripadajoce_vrste_obiskov = [x.vrsta_obiska_id for x in pripadajoce_meritve]
-                pripadajoce_sifre_meritev=[x.sifra for x in pripadajoce_meritve]
-
-                # 1. VARIANTA
-                #if len(pripadajoce_vrste_obiskov)==0:
-                #    print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
-                #if 30 in pripadajoce_vrste_obiskov:
-                #    print("To polje se nanasa na NOVOROJENCKA!")
-                #elif 80 in pripadajoce_vrste_obiskov:
-                #    print("To polje se nanasa na OTROCNICO!")
-
-                #2.VARIANTA
-                if len(pripadajoce_sifre_meritev) == 0:
-                    print("NAPAKA! Polje gotovo pripada vsaj eni vrsti obiska.")
-
-                for i in range(len(pripadajoce_sifre_meritev)):
-                    sifra = pripadajoce_sifre_meritev[i]
-                    if pripadajoce_vrste_obiskov[i]==20:
-                        if sifra >=10 and sifra <=240:
-                            print("To polje se nanasa na OTROCNICO!")
-                            pacient_polje.append("OTROCNICA")
-                        elif sifra >=250 and sifra <=380:
-                            print("To polje se nanasa na NOVOROJENCKA!")
-                            pacient_polje.append("NOVOROJENCEK")'''
 
         elif obisk.obisk_vrsta_tostring() == "Obisk nosecnice":
             form = InputVisitationDataForm(request.POST, v_type=obisk.obisk_vrsta_tostring(), visit=obisk)

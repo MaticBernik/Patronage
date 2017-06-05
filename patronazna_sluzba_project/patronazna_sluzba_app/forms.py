@@ -659,8 +659,13 @@ class SubstitutionFinishedForm(forms.Form):
         query_substitues = Patronazna_sestra.objects.filter(id__in=[x[1] for x in query])
         print(query_nurses)
         print(query_substitues)
-        self.fields['nurses_absent'] = forms.ModelChoiceField(label='Odsotne sestre: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))
-        self.fields['nurses_substitutes'] = forms.ModelChoiceField(label='Nadomestne sestre: ', queryset=query_substitues,widget=forms.Select(attrs={'class': 'form-control'}))
+        self.fields['nurses_absent'] = forms.ModelChoiceField(label='Odsotna sestra: ', queryset=query_nurses,widget=forms.Select(attrs={'class': 'form-control'}))
+        self.fields['nurses_substitutes'] = forms.ModelChoiceField(label='Nadomestna sestra: ', queryset=query_substitues,widget=forms.Select(attrs={'class': 'form-control'}))
+        self.fields['start_date'] = forms.DateField(label='Začetek', widget=forms.TextInput(
+            attrs={'class': 'datepicker form-control', 'id': 'start_date'}), input_formats=['%d.%m.%Y'])
+
+        self.fields['end_date'] = forms.DateField(label='Konec', widget=forms.TextInput(
+            attrs={'class': 'datepicker form-control', 'id': 'end_date'}), input_formats=['%d.%m.%Y'])
 
 
 class DeleteUserForm(forms.Form):

@@ -36,7 +36,20 @@
     {% endif %}
    <!-- {{ plan_visit_form.non_field_errors }}-->
 	<form method="post" id="medical_reg_form" class="left form-horizontal col-lg-10 col-lg-offset-1  col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" style="text-align: left">
+        <div class="row form-group">
 
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">
+		  	<label  class="control-label" for="{{ substitution_form.nurses.id_for_label }}">{{ substitution_form.start_date.label }}</label>
+            {% csrf_token %}
+			{{ substitution_form.start_date }}
+		  	</div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">
+		  	<label  class="control-label" for="{{ substitution_form.nurses.id_for_label }}">{{ substitution_form.end_date.label }}</label>
+            {% csrf_token %}
+			{{ substitution_form.end_date }}
+            </div>
+	  	</div>
         <div class="row form-group">
 
 			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 3px;">

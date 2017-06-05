@@ -383,6 +383,20 @@ class Obisk(models.Model):
         # return [x.polje_id for x in polja]
         return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id,x.meritev_id) for x in polja]
 
+    
+    '''def porocilo_izpis(self):
+        #Metoda vrne polja, ki jih mora vsebovati porocilo o obisku
+        delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
+        vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
+        meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
+        meritve=[x.id for x in meritve]
+        polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
+        # return [x.polje_id for x in polja]
+        # return [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, x.polje.enkraten_vnos, Porocilo_o_obisku.objects.filter(obisk_id=self.id, polje_id=x.polje.id)[0]) for x in polja]
+        # osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.filter(obisk_id=self.id, polje_id=x.polje.id)[0].vrednost) for x in polja]
+        osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.filter(polje= x.polje)) for x in polja]
+        return osnutek'''
+
     def obisk_vrsta_tostring(self):
         delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
         vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
@@ -448,7 +462,8 @@ class Nadomescanje(models.Model):
 
     #vodja = models.ForeignKey(Vodja_PS,null=False) #vodja PS, ki je dodal nadomescanje
     sestra = models.ForeignKey(Patronazna_sestra,related_name='%(class)s_requests_created', null=False)
-    datum_zacetek = models.DateTimeField(null=False,default=datetime.now())
+    #datum_zacetek = models.DateTimeField(null=False,default=datetime.now())
+    datum_zacetek = models.DateTimeField(null=False,default=timezone.now)
     datum_konec = models.DateTimeField(null=False,default=datetime.now()+timedelta(days=1))
     nadomestna_sestra = models.ForeignKey(Patronazna_sestra, null=False)
     veljavno = models.BooleanField(null=False, default=0)

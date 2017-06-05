@@ -98,101 +98,102 @@
             <h3>Seznam delovnih nalogov </h3>
      		<hr>
             {% if work_task_list %}
+            <div class="table-responsive">
+	            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+	            	<thead>
+	            	<tr>
+	            		<th></th>
+	            		<th>Šifra naloga</th>
+	            		<th>Izdajatelj naloga</th>
+	            		<th>Medicinska sestra</th>
+	            		<th>Pacient</th>
+	            		<th>Vrsta obiska</th>
+	            		<th>Datum prvega obiska</th>
+	            		<th>Stevilo obiskov</th>
+	            		<th></th>
+	            	</tr>
+	            	</thead>
+	            	<tbody>
+	            	{% for work_task in work_task_list %}
+	    	        <tr>
+	    	        	<td></td>
+	    	        	<td># {{ work_task.id }}</td>
+	    	        	<td>
+	    	        		{% if work_task.zdravnik_id %}
+	    	        			{% for doc in doctors %}
+	    	        				{% if doc.sifra_zdravnika == work_task.zdravnik.sifra_zdravnika %}
+	    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
+	    	        				{% endif %}
+	    	        			{% endfor %}
+	    	        		{% elif work_task.vodja_PS_id %}
+	    	        			{% for head in head_nurses %}
+	    	        				{% if head.sifra_vodje_PS == work_task.vodja_PS.sifra_vodje_PS %}
+	    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
+	    	        				{% endif %}
+	    	        			{% endfor %}
+	    	        		{% else %}
+	    	        			Podatki o izdajatelju vam niso na voljo.
+	    	        		{% endif %}
+	    	        	</td>
+	            		<td>
+	            			{% for v in visitations_list%}
+								{% if v.delovni_nalog.id == work_task.id and v.datum == work_task.datum_prvega_obiska %}
+									{{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}
+								{% endif %}
+							{% endfor %}
+	            		</td>
+	            		<td>
+		            		{% if pacient_list %}
+		            			{% for p in pacient_list %}
+		            				{% if p.delovni_nalog.id == work_task.id %}
+		            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
+		            				{% endif %}
+		            			{% endfor %}  
+		            		{% else%}
+		            			Podatki o pacientih niso dostopni
+		            		{% endif %}
+		            	</td>
+	            		<td>{{ work_task.vrsta_obiska.ime }}</td>
+	            		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y" }}</td>
+	            		<td>{{ work_task.st_obiskov }}</td>
+	            		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
+	            		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
+	            		<td><button onclick="show_work_task(this)" type="button" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
+						{% if logged_role == "Doctor" or logged_role == "Leader" %}
+							{% if work_task.vodja_PS_id %}
+									{% if work_task.vodja_PS.sifra_vodje_PS == current_logged %}
+										{% if work_task.id in done_visits%}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+										{% else%}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+										{% endif %}
+									{% else %}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
 
-            <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
-            	<thead>
-            	<tr>
-            		<th></th>
-            		<th>Šifra naloga</th>
-            		<th>Izdajatelj naloga</th>
-            		<th>Medicinska sestra</th>
-            		<th>Pacient</th>
-            		<th>Vrsta obiska</th>
-            		<th>Datum prvega obiska</th>
-            		<th>Stevilo obiskov</th>
-            		<th></th>
-            	</tr>
-            	</thead>
-            	<tbody>
-            	{% for work_task in work_task_list %}
-    	        <tr>
-    	        	<td></td>
-    	        	<td># {{ work_task.id }}</td>
-    	        	<td>
-    	        		{% if work_task.zdravnik_id %}
-    	        			{% for doc in doctors %}
-    	        				{% if doc.sifra_zdravnika == work_task.zdravnik.sifra_zdravnika %}
-    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
-    	        				{% endif %}
-    	        			{% endfor %}
-    	        		{% elif work_task.vodja_PS_id %}
-    	        			{% for head in head_nurses %}
-    	        				{% if head.sifra_vodje_PS == work_task.vodja_PS.sifra_vodje_PS %}
-    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
-    	        				{% endif %}
-    	        			{% endfor %}
-    	        		{% else %}
-    	        			Podatki o izdajatelju vam niso na voljo.
-    	        		{% endif %}
-    	        	</td>
-            		<td>
-            			{% for v in visitations_list%}
-							{% if v.delovni_nalog.id == work_task.id and v.datum == work_task.datum_prvega_obiska %}
-								{{v.p_sestra.uporabniski_profil.first_name}} {{v.p_sestra.uporabniski_profil.last_name}}
+									{% endif %}
+							{% elif work_task.zdravnik_id %}
+
+									{% if work_task.zdravnik.sifra_zdravnika == current_logged %}
+										{% if work_task.id in done_visits%}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+										{% else%}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+										{% endif %}
+									{% else %}
+										<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+
+									{% endif %}
+								<!--{% if work_task.id in done_visits %}
+								<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
+								{% else%}
+								<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
+								{% endif %}-->
 							{% endif %}
-						{% endfor %}
-            		</td>
-            		<td>
-	            		{% if pacient_list %}
-	            			{% for p in pacient_list %}
-	            				{% if p.delovni_nalog.id == work_task.id %}
-	            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
-	            				{% endif %}
-	            			{% endfor %}  
-	            		{% else%}
-	            			Podatki o pacientih niso dostopni
-	            		{% endif %}
-	            	</td>
-            		<td>{{ work_task.vrsta_obiska.ime }}</td>
-            		<td>{{ work_task.datum_prvega_obiska|date:"d.m.Y" }}</td>
-            		<td>{{ work_task.st_obiskov }}</td>
-            		<!-- <td><button type="submit" class="btn btn-primary btn-sm form-control" id={{work_task.id}} data-target="#openModal">Podrobnosti</button></td> -->
-            		<!--<td><a  href="#openModal" class="btn btn-primary btn-sm form-control" id={{work_task.id}}>Podrobonosti</a></td> -->
-            		<td><button onclick="show_work_task(this)" type="button" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button></td>
-					{% if logged_role == "Doctor" or logged_role == "Leader" %}
-						{% if work_task.vodja_PS_id %}
-								{% if work_task.vodja_PS.sifra_vodje_PS == current_logged %}
-									{% if work_task.id in done_visits%}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
-									{% else%}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
-									{% endif %}
-								{% else %}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
-
-								{% endif %}
-						{% elif work_task.zdravnik_id %}
-
-								{% if work_task.zdravnik.sifra_zdravnika == current_logged %}
-									{% if work_task.id in done_visits%}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
-									{% else%}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
-									{% endif %}
-								{% else %}
-									<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
-
-								{% endif %}
-							<!--{% if work_task.id in done_visits %}
-							<td><button type="submit" class="btn btn-danger btn-sm form-control disabled" value="{{work_task.id}}" name="_delete" disabled="disabled">Brisanje</button></td>
-							{% else%}
-							<td><button type="submit" class="btn btn-danger btn-sm form-control" value="{{work_task.id}}" name="_delete">Brisanje</button></td>
-							{% endif %}-->
 						{% endif %}
-					{% endif %}
-                {% endfor %}
-                </tbody>
-    		</table>
+	                {% endfor %}
+	                </tbody>
+	    		</table>
+            </div>
 
             {% else %}
                 <p>Seznam delovnih nalogov je prazen</p>

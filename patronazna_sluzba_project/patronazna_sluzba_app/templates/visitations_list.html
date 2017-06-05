@@ -116,101 +116,102 @@
             <h3>Seznam obiskov</h3>
      		<hr>
             {% if visitations_list and work_task_list %}
+            <div class="table-responsive">
+	            <table class="table table-striped tablesorter list-table" id="table_of_work_tasks" style="text-align: center">
+	            	<thead>
+	            	<tr>
+	            		<th></th>
+	            		<th>Šifra obiska</th>
+	            		<th>Šifra naloga</th>
+	            		<th>Izdajatelj naloga</th>
+	            		<th>Medicinska sestra</th>
+	            		<th>Nadomestna medicinska sestra</th>
+	            		<th>Pacient</th>
+	            		<th>Vrsta obiska</th>
+	            		<th>Predviden datum obiska</th>
+	            		<th>Dejanski datum obiska</th>
+	            		<th>Obvezen obisk</th>
+	            		<th>Opravljen obisk</th>
+	            		<th></th>
+	            	</tr>
+	            	</thead>
+	            	<tbody>
+	            	{% for visit in visitations_list %}
+	    	        <tr>
+	    	        	<td></td>
+	    	        	<td># {{visit.id}}</td>
+	    	        	<td># {{visit.delovni_nalog.id}}</td>
+	            		<td>
 
-            <table class="table table-striped tablesorter list-table" id="table_of_work_tasks" style="text-align: center">
-            	<thead>
-            	<tr>
-            		<th></th>
-            		<th>Šifra obiska</th>
-            		<th>Šifra naloga</th>
-            		<th>Izdajatelj naloga</th>
-            		<th>Medicinska sestra</th>
-            		<th>Nadomestna medicinska sestra</th>
-            		<th>Pacient</th>
-            		<th>Vrsta obiska</th>
-            		<th>Predviden datum obiska</th>
-            		<th>Dejanski datum obiska</th>
-            		<th>Obvezen obisk</th>
-            		<th>Opravljen obisk</th>
-            		<th></th>
-            	</tr>
-            	</thead>
-            	<tbody>
-            	{% for visit in visitations_list %}
-    	        <tr>
-    	        	<td></td>
-    	        	<td># {{visit.id}}</td>
-    	        	<td># {{visit.delovni_nalog.id}}</td>
-            		<td>
+	    	        		{% if visit.delovni_nalog.zdravnik_id %}
+	    	        			{% for doc in doctors %}
+	    	        				{% if doc.id == visit.delovni_nalog.zdravnik_id %}
+	    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
+	    	        				{% endif %}
+	    	        			{% endfor %}
+	    	        		{% elif visit.delovni_nalog.vodja_PS_id %}
+	    	        			{% for head in head_nurses %}
+	    	        				{% if head.id == visit.delovni_nalog.vodja_PS_id %}
+	    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
+	    	        				{% endif %}
+	    	        			{% endfor %}
+	    	        		{% else %}
+	    	        			Podatki o izdajatelju vam niso na voljo.
+	    	        		{% endif %}
 
-    	        		{% if visit.delovni_nalog.zdravnik_id %}
-    	        			{% for doc in doctors %}
-    	        				{% if doc.id == visit.delovni_nalog.zdravnik_id %}
-    	        					{{doc.uporabniski_profil.first_name}} {{doc.uporabniski_profil.last_name}}
-    	        				{% endif %}
-    	        			{% endfor %}
-    	        		{% elif visit.delovni_nalog.vodja_PS_id %}
-    	        			{% for head in head_nurses %}
-    	        				{% if head.id == visit.delovni_nalog.vodja_PS_id %}
-    	        					{{head.uporabniski_profil.first_name}} {{head.uporabniski_profil.last_name}}
-    	        				{% endif %}
-    	        			{% endfor %}
-    	        		{% else %}
-    	        			Podatki o izdajatelju vam niso na voljo.
-    	        		{% endif %}
-
-            		</td>
-            		<td>{{visit.p_sestra}}</td>
-            		<td> 
-            		{% if substitutions %}
-            			{% for sub in substitutions %}
-            				{% if sub.sestra.id == visit.p_sestra.id and visit.datum >= sub.datum_zacetek and sub.datum_konec >= visit.datum %}
-                                {{ sub.nadomestna_sestra }}
-            				{% endif %}
-            			{% endfor %}
-            		{% endif %}
-            		</td>
-            		<td>
-	            		{% if pacient_list %}
-	            			{% for p in pacient_list %}
-	            				{% if p.delovni_nalog.id == visit.delovni_nalog.id %}
-	            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
+	            		</td>
+	            		<td>{{visit.p_sestra}}</td>
+	            		<td> 
+	            		{% if substitutions %}
+	            			{% for sub in substitutions %}
+	            				{% if sub.sestra.id == visit.p_sestra.id and visit.datum >= sub.datum_zacetek and sub.datum_konec >= visit.datum %}
+	                                {{ sub.nadomestna_sestra }}
 	            				{% endif %}
-	            			{% endfor %}  
-	            		{% else%}
-	            			Podatki o pacientih niso dostopni
+	            			{% endfor %}
 	            		{% endif %}
-            		</td>
-            		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
-            		<td>{{ visit.datum|date:"d.m.Y" }}</td>
-            		<td> - </td>
-            		<td>
-            			{% if visit.obvezen_obisk %}
-            				Da
-            			{% else %}
-            				Ne
-            			{% endif %}
-            		</td>
-            		<td>
-            			{% if visit.opravljen %}
-            				Da
-            			{% else %}
-            				Ne
-            			{% endif %}
-            		</td>
-            		<!--
-            		<td>
-            			<button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button>
-            		</td>
-            		-->
-            		<td>
-            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
-            		</td>
+	            		</td>
+	            		<td>
+		            		{% if pacient_list %}
+		            			{% for p in pacient_list %}
+		            				{% if p.delovni_nalog.id == visit.delovni_nalog.id %}
+		            					<p>{{ p.pacient.ime }} {{ p.pacient.priimek }}</p>
+		            				{% endif %}
+		            			{% endfor %}  
+		            		{% else%}
+		            			Podatki o pacientih niso dostopni
+		            		{% endif %}
+	            		</td>
+	            		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
+	            		<td>{{ visit.datum|date:"d.m.Y" }}</td>
+	            		<td> - </td>
+	            		<td>
+	            			{% if visit.obvezen_obisk %}
+	            				Da
+	            			{% else %}
+	            				Ne
+	            			{% endif %}
+	            		</td>
+	            		<td>
+	            			{% if visit.opravljen %}
+	            				Da
+	            			{% else %}
+	            				Ne
+	            			{% endif %}
+	            		</td>
+	            		<!--
+	            		<td>
+	            			<button onclick="show_work_task(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{work_task.id}}>Podrobnosti</button>
+	            		</td>
+	            		-->
+	            		<td>
+	            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
+	            		</td>
 
-            	</tr>
-                {% endfor %}
-                </tbody>
-    		</table>
+	            	</tr>
+	                {% endfor %}
+	                </tbody>
+	    		</table>
+    		</div>
 
             {% else %}
                 <p>Podatki o obiskih, na podlagi izbranih kriterijev ne obstajajo!</p>

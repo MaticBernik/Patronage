@@ -8,7 +8,7 @@
     {% if visit.planirani_obisk.p_sestra_id == nurse  %}
         {% if visit.planirani_obisk.delovni_nalog.zdravnik != None  %}
 
-        <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.datum|date:'d.m.Y'}}">
+        <option value="{{ visit.planirani_obisk.id }} {{ visit.planirani_obisk.delovni_nalog_id }} {{ visit.planirani_obisk.obvezen_obisk }} {{ visit.planirani_obisk.datum|date:'d.m.Y'}}">
 
             {{ visit.planirani_obisk.id }}
                     {% with visit.planirani_obisk.id|int_length as dolzina %}

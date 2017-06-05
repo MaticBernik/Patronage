@@ -616,17 +616,21 @@ for obisk in obiski:
 		meritve=cursor.fetchall()
 		meritve=[x[0] for x in meritve]
 		polja=[]
+		#meritve_id=[]
 		for meritev_id in meritve:
-			cursor = conn.execute("select polje_id from patronazna_sluzba_app_polje_meritev where meritev_id="+str(meritev_id)+";");
+			cursor = conn.execute("select polje_id, meritev_id from patronazna_sluzba_app_polje_meritev where meritev_id="+str(meritev_id)+";");
 			polja_tmp=cursor.fetchall()
 			if len (polja_tmp)>0:
 				for x in polja_tmp:
-					polja.append(x[0])
+					polja.append((x[0],x[1]))
+					#meritve_id.append(x[1])
 		print("STEVILO MERITEV: ",len(polja))
 		'''print("***SEZNAM PRIPADAJOCIH POLJ: ")
 		for polje in polja:
 			print(polje)'''
-		for polje_id in polja:
+		for vrednosti_id in polja:
+			polje_id = vrednosti_id[0]
+			meritev_id= vrednosti_id[1]
 			cursor = conn.execute("select id,ime,vnosno_polje,obvezno,mozne_vrednosti from patronazna_sluzba_app_polje_v_porocilu where id=" + str(polje_id) + ";");
 			polje_info = cursor.fetchall()[0]
 
@@ -659,10 +663,10 @@ for obisk in obiski:
 				pacient_id=oskrbovanci[0]
 				print("ST KARTICEE: ",pacient_id)
 
-				'''cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient;")
+				cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient;")
 				test=cursor.fetchall()
 				for t in test:
-					print("**Pacient v bazi: ",t[0])'''
+					print("**Pacient v bazi: ",t[0])
 
 				cursor = conn.execute("select datum_rojstva from patronazna_sluzba_app_pacient where st_kartice='" + str(
 				pacient_id) +"';");
@@ -742,8 +746,7 @@ for obisk in obiski:
 				if meritev_info[3]==80:
 					pacient_id=skrbniki[0]
 
-
-			conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost) VALUES (?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira)));
+			conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost, meritev_id) VALUES (?,?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira), meritev_id));
 
 
 

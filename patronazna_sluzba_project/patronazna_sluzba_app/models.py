@@ -381,7 +381,7 @@ class Obisk(models.Model):
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
         # return [x.polje_id for x in polja]
-        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id) for x in polja]
+        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id,x.meritev_id) for x in polja]
 
     def obisk_vrsta_tostring(self):
         delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
@@ -395,10 +395,11 @@ class Pacient_DN(models.Model):
 class Porocilo_o_obisku(models.Model):
     #testno/zacasno zakomentiral
     '''class Meta:
-        unique_together = (('obisk', 'polje','pacient'),)'''
+        unique_together = (('obisk', 'polje','pacient', 'meritev'),)'''
 
     obisk=models.ForeignKey(Obisk)
     polje=models.ForeignKey(Polje_v_porocilu)
+    meritev = models.ForeignKey(Meritev) #dodaj pregled, da to polje res spada pod navedeno meritev??
     vrednost=models.CharField(max_length=100, null=False) #zal ne vem kako bi resil drugace, kot da so vse vrednosti znotraj porocila nizi znakov (kar bo dovolj za izpis), potem pa se typecasta glede na tip polja
     pacient = models.ForeignKey(Pacient) # Pri obisku otročnice in novorojenčka(ov) je treba vnesti podatke za vsakega pacienta posebej.
 
@@ -440,8 +441,10 @@ class Zdravilo_DN(models.Model):
     kolicina = models.IntegerField( null=False, default=1)
 
 class Nadomescanje(models.Model):
-    class Meta:
-        unique_together = (('sestra', 'datum_zacetek','datum_konec', 'nadomestna_sestra'),)
+
+    #unique constraint je bil umaknjen, zaradi prepovedi brisanja podatkov iz baze
+    #class Meta:
+    #    unique_together = (('sestra', 'datum_zacetek','datum_konec', 'nadomestna_sestra'),)
 
     #vodja = models.ForeignKey(Vodja_PS,null=False) #vodja PS, ki je dodal nadomescanje
     sestra = models.ForeignKey(Patronazna_sestra,related_name='%(class)s_requests_created', null=False)

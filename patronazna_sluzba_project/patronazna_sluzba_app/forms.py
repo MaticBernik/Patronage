@@ -559,7 +559,7 @@ class InputVisitationDataForm(forms.Form):
                 obisk=Obisk.objects.filter(delovni_nalog_id=nalog.id)
                 polja = obisk[0].porocilo()
 
-                details_list = [ detail for (_,detail,_) in polja]
+                details_list = [ detail for (_,detail,_,_) in polja]
 
                 # clean the list
                 prev_string = details_list[0]
@@ -579,7 +579,7 @@ class InputVisitationDataForm(forms.Form):
 
                 counter = 0
                  # print("POLJA IZ POROCILA: ", polja)
-                for (p_id, p_opis, pm_id) in polja:
+                for (p_id, p_opis, pm_id, _) in polja:
                     # Get required object
                     vnos = Polje_v_porocilu.objects.get(id=p_id)
                     print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti, " - - - ", vnos.enkraten_vnos  )

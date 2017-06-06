@@ -65,13 +65,13 @@ def list_active_visitations(request):
         print("***NADOMESCANJE PRAZEN QUERYSET")
     # obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
     visitations = list(chain(visitations, obiski_n))
-    print("!!!!!!!!!VISITATIONS - pred delitvijo: ",visitations)
+    #print("!!!!!!!!!VISITATIONS - pred delitvijo: ",visitations)
     for x in visitations:
         print(x.datum)
     visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
     visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
-    print("!!!!!!!!!!!VISITATIONS_TODAY: ",visitations_today)
-    print("!!!!!!!!!!!VISITATIONS_YESTERDAY: ",visitations_yesterday)
+    #print("!!!!!!!!!!!VISITATIONS_TODAY: ",visitations_today)
+    #print("!!!!!!!!!!!VISITATIONS_YESTERDAY: ",visitations_yesterday)
 
     delovni_nalogi = Delovni_nalog.objects.all()
     material = Material_DN.objects.all()
@@ -81,9 +81,9 @@ def list_active_visitations(request):
     vodje_ps = Vodja_PS.objects.all()
 
     # V testne namene
-    obiski = Obisk.objects.all()
+    #obiski = Obisk.objects.all()
     # visitations_today = obiski[:10]
-    visitations_yesterday = obiski[:10]
+    #visitations_yesterday = obiski[:10]
     
     vsa_nadomescanja = Nadomescanje.objects.all()
     vsa_porocila = Porocilo_o_obisku.objects.all()
@@ -92,11 +92,11 @@ def list_active_visitations(request):
 
 
     ## TEST AREA VISIT_REPORT_WITH ALL THE DATA
-    print()
+    '''print()
     print("                     POROCILO                         ")
     print(" ==================================================== ")
     for i in obiski[0].porocilo_izpis():
-        print(i)
+        print(i)'''
 
 
 

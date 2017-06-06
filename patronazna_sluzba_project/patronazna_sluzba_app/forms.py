@@ -347,7 +347,7 @@ class InputVisitationDataForm(forms.Form):
 
 
 
-                details_list = [ detail for (_,detail,_) in polja]
+                details_list = [ detail for (_,detail,_,_) in polja]
 
                 # clean the list
                 prev_string = details_list[0]
@@ -373,7 +373,7 @@ class InputVisitationDataForm(forms.Form):
                 self.fields['personal_card_id_%s' % care_taker[0].st_kartice ] = CharField(label= "VNESITE PODATKE O", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':pat_name}))
 
 
-                for (p_id, p_opis, pm_id) in polja:
+                for (p_id, p_opis, pm_id, _) in polja:
                     # Get required object
                     vnos = Polje_v_porocilu.objects.get(id=p_id)
                     print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti, " - - - ", vnos.enkraten_vnos  )
@@ -397,11 +397,11 @@ class InputVisitationDataForm(forms.Form):
                             print("OBISK JE OPRAVLJEN", " obisk_id ", current_visit.id, "pacient_id ", care_taker[0].st_kartice, " meritev_id ", Polje_meritev.objects.get(id=pm_id).meritev_id, " polje_id ", p_id)
                             
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['disabled'] = "disabled"
 
                     
                     elif(vnos.vnosno_polje == "DecimalField"):
@@ -415,11 +415,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['disabled'] = "disabled"
                     
                     elif(vnos.vnosno_polje == "CharField"):
                         self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -427,11 +427,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['disabled'] = "disabled"
                     
                     elif(vnos.vnosno_polje == "ChoiceField"):
                         given_choices = vnos.mozne_vrednosti.split(",")
@@ -443,11 +443,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['disabled'] = "disabled"
                     else:
                         pass
 
@@ -466,7 +466,7 @@ class InputVisitationDataForm(forms.Form):
 
                     counter = 0
                      # print("POLJA IZ POROCILA: ", polja)
-                    for (p_id, p_opis, pm_id) in polja:
+                    for (p_id, p_opis, pm_id, _) in polja:
                         # Get required object
                         vnos = Polje_v_porocilu.objects.get(id=p_id)
                         print(" id: ", vnos.id, " label: ", p_opis, " vnosni podatek: ", vnos.ime, " tip polja: ", vnos.vnosno_polje, " vrednosti vnosa: ", vnos.mozne_vrednosti, " - - - ", vnos.enkraten_vnos )
@@ -489,11 +489,11 @@ class InputVisitationDataForm(forms.Form):
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
                                 if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                     print("enkraten vnos: ", vnos.enkraten_vnos)
                                     if(vnos.enkraten_vnos):
                                         print("ZAHTEVAN ENKRATEN VNOS")
-                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['disabled'] = "disabled"
                         
                         elif(vnos.vnosno_polje == "DecimalField"):
                             vrednosti = vnos.mozne_vrednosti.split(",")
@@ -505,11 +505,11 @@ class InputVisitationDataForm(forms.Form):
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
                                 if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                     print("enkraten vnos: ", vnos.enkraten_vnos)
                                     if(vnos.enkraten_vnos):
                                         print("ZAHTEVAN ENKRATEN VNOS")
-                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['disabled'] = "disabled"
                         
                         elif(vnos.vnosno_polje == "CharField"):
                             self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -517,11 +517,11 @@ class InputVisitationDataForm(forms.Form):
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
                                 if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                     print("enkraten vnos: ", vnos.enkraten_vnos)
                                     if(vnos.enkraten_vnos):
                                         print("ZAHTEVAN ENKRATEN VNOS")
-                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['disabled'] = "disabled"
                         
                         elif(vnos.vnosno_polje == "ChoiceField"):
                             given_choices = vnos.mozne_vrednosti.split(",")
@@ -533,11 +533,11 @@ class InputVisitationDataForm(forms.Form):
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
                                 if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                    self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                     print("enkraten vnos: ", vnos.enkraten_vnos)
                                     if(vnos.enkraten_vnos):
                                         print("ZAHTEVAN ENKRATEN VNOS")
-                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['readonly'] = "readonly"
+                                        self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['disabled'] = "disabled"
                         
                         else:
                             pass
@@ -602,11 +602,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['disabled'] = "disabled"
 
                     elif(vnos.vnosno_polje == "DecimalField"):
                         vrednosti = vnos.mozne_vrednosti.split(",")
@@ -618,11 +618,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['disabled'] = "disabled"
 
                     elif(vnos.vnosno_polje == "CharField"):
                         self.fields['polje%s_%s' % (pm_id,pacient.st_kartice)] = CharField(label=field_label, required = req, help_text=field_title, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -630,11 +630,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['disabled'] = "disabled"
 
                     elif(vnos.vnosno_polje == "ChoiceField"):
                         given_choices = vnos.mozne_vrednosti.split(",")
@@ -646,11 +646,11 @@ class InputVisitationDataForm(forms.Form):
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
                             if(Porocilo_o_obisku.objects.filter(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).exists()):
-                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].value = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
+                                self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['value'] = Porocilo_o_obisku.objects.get(obisk_id=current_visit.id, polje_id=p_id, meritev_id=Polje_meritev.objects.get(id=pm_id).meritev_id).vrednost
                                 print("enkraten vnos: ", vnos.enkraten_vnos)
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
-                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['readonly'] = "readonly"
+                                    self.fields['polje%s_%s' % (pm_id, pacient.st_kartice)].widget.attrs['disabled'] = "disabled"
 
                     else:
                         pass

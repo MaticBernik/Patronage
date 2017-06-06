@@ -381,7 +381,7 @@ class Obisk(models.Model):
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
         # return [x.polje_id for x in polja]
-        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id) for x in polja]
+        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id, x.meritev_id) for x in polja]
 
     
     def porocilo_izpis(self):

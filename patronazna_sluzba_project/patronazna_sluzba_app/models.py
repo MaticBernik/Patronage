@@ -381,21 +381,33 @@ class Obisk(models.Model):
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
         # return [x.polje_id for x in polja]
-        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id,x.meritev_id) for x in polja]
+        return [(x.polje_id,Meritev.objects.get(id=x.meritev_id).opis, x.id) for x in polja]
 
     
-    '''def porocilo_izpis(self):
+    def porocilo_izpis(self):
         #Metoda vrne polja, ki jih mora vsebovati porocilo o obisku
         delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
         vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
         meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
-        # return [x.polje_id for x in polja]
-        # return [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, x.polje.enkraten_vnos, Porocilo_o_obisku.objects.filter(obisk_id=self.id, polje_id=x.polje.id)[0]) for x in polja]
-        # osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.filter(obisk_id=self.id, polje_id=x.polje.id)[0].vrednost) for x in polja]
-        osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.filter(polje= x.polje)) for x in polja]
-        return osnutek'''
+        osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).vrednost) for x in polja]
+        
+        # potrebno filtriranje osnutka
+        print_ready = []
+        previous = ""
+        for i in range(0, len(osnutek)):
+            (description, name, value) = osnutek[i]
+            if(i == 0):
+                previous=description
+                print_ready.append([description, name, value])
+            elif(description == previous):
+                print_ready.append(["", name, value])
+            else:
+                print_ready.append([description, name, value])
+                previous = description
+
+        return print_ready
 
     def obisk_vrsta_tostring(self):
         delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)

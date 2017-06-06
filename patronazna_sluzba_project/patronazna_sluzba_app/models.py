@@ -306,8 +306,8 @@ class Vrsta_obiska(models.Model):
 
 class Meritev(models.Model): #Oz. bolje receno aktivnost?
     #Pove za katero vrsto obiska se meritev izvaja, in katere podatke mora vsebovati porocilo
-    class Meta:
-        unique_together = (('sifra', 'vrsta_obiska'),)
+    #class Meta:
+    #    unique_together = (('sifra', 'vrsta_obiska'),)
 
     vrsta_obiska = models.ForeignKey(Vrsta_obiska, null=False)
     sifra = models.IntegerField(null=False)

@@ -269,7 +269,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 
 			if sifra_storitve==30: #zdruzi sicer locena obiska otrocnice in novorojencka
 				sifra_storitve=20
-				sifra+=240 #offset
+				#sifra+=240 #offset  ODKOMENTIRAJJJJJ!!!!!!!!!!!!!!
 			#elif sifra_storitve==20:
 			#	sifra_storitve=80
 
@@ -281,9 +281,18 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(80) + " and sifra=" + str(line[2]) + ";");
 
 				else:
+					'''print()
+					print()
+					print()
+					print("Tule dodajam vrsto obiska, ki bi morala biti 30!!!!!!")
+					print("Vrsta obiska id = ",str(line[0]))
+					print()
+					print()
+					print()'''
 					conn.execute("INSERT INTO patronazna_sluzba_app_meritev (vrsta_obiska_id, sifra, opis) VALUES (?,?,?)", (int(line[0]), int(line[2]), str(line[3])));
 					cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(line[0]) + " and sifra=" + str(line[2]) + ";");
 				meritev_id_orig = cursor.fetchall()[0][0]
+				print("---->meritev_id_orig: ",meritev_id_orig)
 
 			cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id=" + str(sifra_storitve) + " and sifra="+ str(sifra) +";");
 			meritev_id = cursor.fetchall()[0][0]
@@ -299,7 +308,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 					obvezen_vnos = True
 					ime = ime[0 : ime.index('*') - 1]
 				mozne_vrednosti=None
-				if ime=="Prosti vnos" or "prosti vnos" in ime:
+				if ime=="Prosti vnos" or "prosti vnos" in ime or "Prosti vnos" in ime:
 					vnosno_polje="CharField"
 				elif '/' in ime:
 					i=ime.index('/')
@@ -410,7 +419,17 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 
 				conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id), str(polje_id)));
 				if sifra_storitve == 20:
-						conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
+						print()
+						print()
+						print()
+						print("ORIG: Pripenjam polje: ",meritev_id_orig)
+						print("meritev_id: ",meritev_id)
+						print()
+						print()
+						print()
+						#conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
+						conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)",
+				             (meritev_id_orig, str(polje_id)));
 
 #Bolezni
 #with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"
@@ -613,9 +632,9 @@ for obisk in obiski:
 		delovni_nalog_vrsta_obiska = cursor.fetchall()[0][0]
 		print("VRSTA OBISKA: ",delovni_nalog_vrsta_obiska)
 		cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id="+str(delovni_nalog_vrsta_obiska)+";");
-		meritve=cursor.fetchall()
+		meritve=cursor.fetchall() #HRANI VSE MERITVE ZA TO VRSTO OBISKA
 		meritve=[x[0] for x in meritve]
-		polja=[]
+		polja=[] #HRANI VSA POLJA ZA TO VRSTO OBISKA
 		#meritve_id=[]
 		for meritev_id in meritve:
 			cursor = conn.execute("select polje_id, meritev_id from patronazna_sluzba_app_polje_meritev where meritev_id="+str(meritev_id)+";");
@@ -629,8 +648,8 @@ for obisk in obiski:
 		for polje in polja:
 			print(polje)'''
 		for vrednosti_id in polja:
-			polje_id = vrednosti_id[0]
-			meritev_id= vrednosti_id[1]
+			polje_id = vrednosti_id[0] #ID POLJA
+			meritev_id= vrednosti_id[1] #ID MERITVE, NA KATERO SE POLJE NAVEZUJE
 			cursor = conn.execute("select id,ime,vnosno_polje,obvezno,mozne_vrednosti from patronazna_sluzba_app_polje_v_porocilu where id=" + str(polje_id) + ";");
 			polje_info = cursor.fetchall()[0]
 
@@ -663,10 +682,10 @@ for obisk in obiski:
 				pacient_id=oskrbovanci[0]
 				print("ST KARTICEE: ",pacient_id)
 
-				cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient;")
+				'''cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient;")
 				test=cursor.fetchall()
 				for t in test:
-					print("**Pacient v bazi: ",t[0])
+					print("**Pacient v bazi: ",t[0])'''
 
 				cursor = conn.execute("select datum_rojstva from patronazna_sluzba_app_pacient where st_kartice='" + str(
 				pacient_id) +"';");
@@ -735,32 +754,72 @@ for obisk in obiski:
 			else:
 				izbira = "Porocilo o pacientovem stanju. Testni vnos."
 
+			if delovni_nalog_vrsta_obiska==20:
+				#print("IS MERITVE EMPTY?? ",meritve)
+				cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where id=" + str(meritev_id) + ";");
+				meritev_info = cursor.fetchall()
+				print("!!!!!!!!DOLZINA VECJA OD 1: ",len(meritev_info))
+				sifra=meritev_info[0][1]
+				opis=meritev_info[0][2]
+				vrsta=meritev_info[0][3]
+				cursor = conn.execute("select vrsta_obiska_id from patronazna_sluzba_app_meritev where sifra=" + str(meritev_info[0][1]) + " and opis= '" + meritev_info[0][2] + "' ;");
+				vrste_obiskov_vezane_na_obisk = cursor.fetchall()
+				#print("Na ta obisk so vezane: ",vrste_obiskov_vezane_na_obisk)
 
-			print("IS MERITVE EMPTY?? ",meritve)
-			for m in meritve:
-				cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where id=" + str(m) + ";");
-				meritev_infos = cursor.fetchall()[0]
-				sifra=meritev_infos[1]
-				cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where sifra=" + str(sifra) + ";");
-				meritveee = cursor.fetchall()
+				tmp_vrste=[x[0] for x in vrste_obiskov_vezane_na_obisk]
 
-				for meritev_info in meritveee:
-					print("Meritev info: ",meritev_info)
-					if meritev_info[3]==80:
-						print("!!!***skrbnik")
-						if len(skrbniki)>0:
-							pacient_id=skrbniki[0]
-						else:
-							pacient_id='072044444444'
-						break
+				print("*** Na to kombinacijo sifro storitve in opisa storitve so vezane vrste obiska: ",tmp_vrste)
+				if 30 in tmp_vrste:
+					print()
+					print()
+					print()
+					print()
+					print()
+					print("30")
+					print()
+					print()
+					print()
+
+				if 80 in tmp_vrste:
+					if len(skrbniki) > 0:
+						pacient_id = skrbniki[0]
+					else:
+						print("**Manjka skrbnik")
+						pacient_id = '072044444444'
+					break
+				else:
+					if len(oskrbovanci) > 0:
+						pacient_id = oskrbovanci[0]
+					else:
+						print("**Manjka oskrbovanec")
+						pacient_id = '062088888886'
+					break
+
+				'''for meritev_info in meritveee:
+					#print("Meritev info: ",meritev_info)
 					if meritev_info[3]==30:
-						print("!!!***oskrbovanec")
 						if len(oskrbovanci)>0:
 							pacient_id=oskrbovanci[0]
 						else:
+							print("**Manjka oskrbovanec")
 							pacient_id='062088888886'
 						break
+					if meritev_info[3]==80:
+						if len(skrbniki)>0:
+							pacient_id=skrbniki[0]
+						else:
+							print("**Manjka skrbnik")
+							pacient_id='072044444444'
+						break'''
 
+			else:
+				pacient_id=skrbniki[0]
+
+			if delovni_nalog_vrsta_obiska==20:
+				if pacient_id in skrbniki:
+					print("**V bazo dodajam polje za skrbnika!")
+				else:
+					print("**V bazo dodajam polje za oskrbovanca!")
 
 			conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost, meritev_id) VALUES (?,?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira), meritev_id));
 

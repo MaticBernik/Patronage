@@ -189,7 +189,7 @@ def edit_visitaiton_data(request):
                 '''if not datetime.now().date() == obisk.datum.date():
                     print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")'''
 
-                porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0], meritev=polja[i][3])
+                porocilo_vnos = Porocilo_o_obisku(vrednost=vrednost, obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0], meritev_id=polja[i][3])
                 porocilo_vnos.save()
             else:
                 porocilo_vnos= Porocilo_o_obisku.objects.get(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0],  meritev=polja[i][3])

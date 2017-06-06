@@ -736,15 +736,31 @@ for obisk in obiski:
 				izbira = "Porocilo o pacientovem stanju. Testni vnos."
 
 
-
+			print("IS MERITVE EMPTY?? ",meritve)
 			for m in meritve:
 				cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where id=" + str(m) + ";");
-				meritev_info = cursor.fetchall()[0]
-				if meritev_info[3]==30:
-					pacient_id=oskrbovanci[0]
-					break
-				if meritev_info[3]==80:
-					pacient_id=skrbniki[0]
+				meritev_infos = cursor.fetchall()[0]
+				sifra=meritev_infos[1]
+				cursor = conn.execute("select id,sifra,opis,vrsta_obiska_id from patronazna_sluzba_app_meritev where sifra=" + str(sifra) + ";");
+				meritveee = cursor.fetchall()
+
+				for meritev_info in meritveee:
+					print("Meritev info: ",meritev_info)
+					if meritev_info[3]==80:
+						print("!!!***skrbnik")
+						if len(skrbniki)>0:
+							pacient_id=skrbniki[0]
+						else:
+							pacient_id='072044444444'
+						break
+					if meritev_info[3]==30:
+						print("!!!***oskrbovanec")
+						if len(oskrbovanci)>0:
+							pacient_id=oskrbovanci[0]
+						else:
+							pacient_id='062088888886'
+						break
+
 
 			conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost, meritev_id) VALUES (?,?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira), meritev_id));
 

@@ -402,6 +402,7 @@ class InputVisitationDataForm(forms.Form):
                                 if(vnos.enkraten_vnos):
                                     print("ZAHTEVAN ENKRATEN VNOS")
                                     self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)].widget.attrs['disabled'] = "disabled"
+                                    ##THIS IST MINOR
 
                     
                     elif(vnos.vnosno_polje == "DecimalField"):

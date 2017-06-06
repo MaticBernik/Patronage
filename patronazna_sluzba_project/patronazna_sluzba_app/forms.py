@@ -406,11 +406,17 @@ class InputVisitationDataForm(forms.Form):
                     
                     elif(vnos.vnosno_polje == "DecimalField"):
                         vrednosti = vnos.mozne_vrednosti.split(",")
-                        min_val = int(vrednosti[0])
-                        max_val = int(vrednosti[1])
+                        if(vrednosti[0] == "*"):
+                            str_vrednosti = "*"
+                        else:
+                            min_val = int(vrednosti[0])
+                            max_val = int(vrednosti[1])
+                            str_vrednosti = vrednosti[0]+ " - " + vrednosti[1] 
+                               
+                        
                         print("LIMIT VALUE: ", min_val, " - ", max_val)
                         self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                         
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
@@ -497,10 +503,16 @@ class InputVisitationDataForm(forms.Form):
                         
                         elif(vnos.vnosno_polje == "DecimalField"):
                             vrednosti = vnos.mozne_vrednosti.split(",")
-                            min_val = int(vrednosti[0])
-                            max_val = int(vrednosti[1])
+                            if(vrednosti[0] == "*"):
+                                str_vrednosti = "*"
+                            else:
+                                min_val = int(vrednosti[0])
+                                max_val = int(vrednosti[1])
+                                str_vrednosti = vrednosti[0]+ " - " + vrednosti[1] 
+                            
+
                             self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                                widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                                widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                             
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
@@ -610,10 +622,16 @@ class InputVisitationDataForm(forms.Form):
 
                     elif(vnos.vnosno_polje == "DecimalField"):
                         vrednosti = vnos.mozne_vrednosti.split(",")
-                        min_val = int(vrednosti[0])
-                        max_val = int(vrednosti[1])
+                        if(vrednosti[0] == "*"):
+                            str_vrednosti = "*"
+                        else:
+                            min_val = int(vrednosti[0])
+                            max_val = int(vrednosti[1])
+                            str_vrednosti = vrednosti[0]+ " - " + vrednosti[1] 
+                               
+
                         self.fields['polje%s_%s' % (pm_id,pacient.st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                         
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")

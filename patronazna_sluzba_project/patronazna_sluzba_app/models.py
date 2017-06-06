@@ -394,6 +394,7 @@ class Obisk(models.Model):
         osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).vrednost) for x in polja]
         
         # potrebno filtriranje osnutka
+        #fix to write
         print_ready = []
         previous = ""
         for i in range(0, len(osnutek)):

@@ -296,17 +296,22 @@
                                 <p>OPRAVLJENE MERITVE: </p>
                                 <hr>
                                 {% for m in visit.porocilo_izpis %}
+                                    {% if m.3 %}
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #2eb82e; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.3}}</b></p>
+                                        </div>
+                                    {% endif %}
                                     {% if m.0 %}
-                                    <div class ="row">
-                                        <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.0}}</b></p>
-                                        <label style="float: center;">{{m.1}}:</label>
-                                        <p style="float: center;">{{m.2}}</p>
-                                    </div>
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.0}}</b></p>
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
                                     {% else %}
-                                    <div class ="row">
-                                        <label style="float: center;">{{m.1}}:</label>
-                                        <p style="float: center;">{{m.2}}</p>
-                                    </div>
+                                        <div class ="row">
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
                                     {% endif %}
                                     <hr>        
                                 {% endfor %}
@@ -343,17 +348,22 @@
                                 <p>OPRAVLJENE MERITVE: </p>
                                 <hr>
                                 {% for m in visit.porocilo_izpis %}
+                                    {% if m.3 %}
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #2eb82e; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.3}}</b></p>
+                                        </div>
+                                    {% endif %}
                                     {% if m.0 %}
-                                    <div class ="row">
-                                        <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.0}}</b></p>
-                                        <label style="float: center;">{{m.1}}:</label>
-                                        <p style="float: center;">{{m.2}}</p>
-                                    </div>
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.0}}</b></p>
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
                                     {% else %}
-                                    <div class ="row">
-                                        <label style="float: center;">{{m.1}}:</label>
-                                        <p style="float: center;">{{m.2}}</p>
-                                    </div>
+                                        <div class ="row">
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
                                     {% endif %}
                                     <hr>        
                                 {% endfor %}

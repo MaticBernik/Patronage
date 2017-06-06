@@ -189,7 +189,9 @@ class Pacient(models.Model):
 
     def __str__(self):
         return str(self.st_kartice)+' '+self.ime+' '+self.priimek+' '+self.naslov
-
+    
+    def name_string(self):
+        return self.ime + " " + self.priimek
 
 class Sorodstveno_razmerje(models.Model):
 	kontakt = models.ForeignKey(Kontaktna_oseba, on_delete=models.CASCADE)
@@ -391,23 +393,40 @@ class Obisk(models.Model):
         meritve=Meritev.objects.filter(vrsta_obiska=vrsta_obiska)
         meritve=[x.id for x in meritve]
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
-        osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).vrednost) for x in polja]
+        osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).vrednost, Pacient.objects.get(st_kartice= Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).pacient_id).name_string) for x in polja]
         
+        print("============================== OSNUTEK ========================")
+        for i in osnutek:
+            print(i)
+
+        print("===============================================================")
         # potrebno filtriranje osnutka
         #fix to write
         print_ready = []
         previous = ""
+        prev_pacient = ""
         for i in range(0, len(osnutek)):
-            (description, name, value) = osnutek[i]
+            (description, name, value, pac_id) = osnutek[i]
             if(i == 0):
                 previous=description
-                print_ready.append([description, name, value])
+                prev_pacient = pac_id
+                print_ready.append([description, name, value, pac_id])
             elif(description == previous):
-                print_ready.append(["", name, value])
+                if(pac_id == prev_pacient):
+                    print_ready.append(["", name, value, ""])
+                else: 
+                    print_ready.append(["", name, value, pac_id])
+                    prev_pacient = pac_id
             else:
-                print_ready.append([description, name, value])
-                previous = description
+                if(pac_id == prev_pacient):
+                    print_ready.append([description, name, value, ""])
+                    previous = description
+                else:
+                    print_ready.append([description, name, value, pac_id])
+                    previous = description
+                    prev_pacient = pac_id
 
+        print(print_ready)
         return print_ready
 
     def obisk_vrsta_tostring(self):

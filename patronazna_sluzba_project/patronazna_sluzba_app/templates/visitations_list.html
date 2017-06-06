@@ -235,30 +235,52 @@
 		        	{% if visitations_list and work_task_list %}
 		        		{% for visit in visitations_list %}
 				        	<div class="visit_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{visit.id}}">
-		        				{% for pdn in all_p_DN %}
-				        			{% if pdn.delovni_nalog == visit.delovni_nalog %}
-				        				PACIENT: <br>
-				        				{{ pdn.pacient.ime }} {{ pdn.pacient.priimek }}
-				    					<hr>
-				        			{% endif %}			
-				        		{% endfor %}
-				        		<p>DNE: {{visit.datum|date:"d.m.Y" }}</p>
-				        		<p>Izvedla patronazna sestra <br> {{visit.p_sestra.uporabniski_profil.first_name }}  {{visit.p_sestra.uporabniski_profil.last_name }}</p>
+		        				<div class ="row">
+                                    <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>Pacient:</b></p>
+                                    <br>
+                                    {% for pdn in all_p_DN %}
+    				        			{% if pdn.delovni_nalog == visit.delovni_nalog %}
+    				        				<p style="float: center;"><b>{{ pdn.pacient.ime }} {{ pdn.pacient.priimek }}</b></p>
+    				        			{% endif %}			
+    				        		{% endfor %}
+                                </div>
+                                <hr>
+
+                                <div class ="row">
+                                    <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>Izvedla patronažna sestra / brat:<b></p>
+                                    <p style="float: center;">{{ visit.p_sestra.uporabniski_profil.first_name }} {{ visit.p_sestra.uporabniski_profil.last_name }}<br>
+                                    {{visit.datum|date:"d.m.Y" }} </p>
+                                </div>
+                                <hr>
+                                
+                                <div class ="row">
+                                    <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>Vrsta obiska:<b></p>
+                                    <p style="float: center;">{{ visit.obisk_vrsta_tostring }} </p>
+                                </div>
+                                <hr>
+				        		
+                                <p>OPRAVLJENE MERITVE: </p>
 				        		<hr>
-				        		<p>OPRAVLJENE MERITVE: </p>
-				        		<hr>
-				        		{% for report in all_visit_reports %}
-				        			{% if report.obisk.id == visit.id %}
-										
-				        				{% for mf in all_measure_fields %}
-				        					{% if mf.polje == report.polje %}
-				        						{{mf.polje.opis}}
-				        					{% endif %}
-				        				{% endfor %}
-				        				<p>{{ report.polje.ime }}: {{ report.vrednost }}</p>
-				        				
-				        			{% endif %}
-				        		{% endfor %}
+                                {% for m in visit.porocilo_izpis %}
+                                    {% if m.3 %}
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #2eb82e; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.3}}</b></p>
+                                        </div>
+                                    {% endif %}
+                                    {% if m.0 %}
+                                        <div class ="row">
+                                            <p style="float: center; background-color: #15a7c7; color:white; font-size: 18px;border-radius: 5px;padding: 5px;"><b>{{m.0}}</b></p>
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
+                                    {% else %}
+                                        <div class ="row">
+                                            <label style="float: center;">{{m.1}}:</label>
+                                            <p style="float: center;">{{m.2}}</p>
+                                        </div>
+                                    {% endif %}
+                                    <hr>        
+                                {% endfor %}
 				        	</div>
 		        		{% endfor %}
 		        	{% endif %}

@@ -503,7 +503,7 @@ def plan_visit_view(request):
         #print("CONTAINED: "+str(contained))
         #for i in old_plan:
          #   print("old plan: "+str(i))
-        if len(plan_visit_list) >0:
+        if len(plan_visit_list) > 0:
             #izbrisi obiske ki odstranjene
             pk_plan = [i.split(' ',1)[0] for i in plan_visit_list]
             results = list(map(int, pk_plan))
@@ -514,8 +514,9 @@ def plan_visit_view(request):
             for i in old_plan:     #empty plan visit list =6 pk=6
 
                 if i not in results:
-                    print("Ta obisk ni v planu")
+                    print("Ta obisk ni v planu: "+str(i))
                     Plan.objects.get(planirani_obisk_id=str(i)).delete()
+                    Obisk.objects.filter(id=str(i)).update(n_sestra_id=None)
             #shrani nove obiske
             logged_nurse = request.session.get('main_nurse')
             for i in plan_visit_list:
@@ -552,7 +553,7 @@ def plan_visit_view(request):
             print("=======BRISEMO PLANA======")
             print("======================================")
             logged_nurse = request.session.get('main_nurse')
-            nadomestna_sestra = None
+            #nadomestna_sestra = None
             for i in old_plan:     #empty plan visit list =6 pk=6
 
                 belongs_to_nurse = Obisk.objects.get(id=str(i))

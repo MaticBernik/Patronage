@@ -204,7 +204,7 @@
 	            		</td>
 	            		-->
 	            		<td>
-	            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-primary btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
+	            			<button onclick="show_visit_detail(this)" type="submit" class="btn btn-info btn-sm form-control" name="expand" data-toggle="modal" data-target="#myModal" value={{visit.id}}>Podrobnosti</button>
 	            		</td>
 
 	            	</tr>
@@ -259,8 +259,10 @@
                                 </div>
                                 <hr>
 				        		
-                                <p>OPRAVLJENE MERITVE: </p>
-				        		<hr>
+                                <div class ="row">
+                                    <p style="float: center; background-color: white; color:#15a7c7; font-size: 22px;border-radius: 10px; border-style: solid; border-width: 2px; border-color: #15a7c7; padding: 10px;"><b>OPRAVLJENE MERITVE</b></p>
+                                </div>
+                                <hr>
                                 {% for m in visit.porocilo_izpis %}
                                     {% if m.3 %}
                                         <div class ="row">

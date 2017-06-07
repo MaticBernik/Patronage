@@ -417,7 +417,7 @@ class InputVisitationDataForm(forms.Form):
                         
                         print("LIMIT VALUE: ", min_val, " - ", max_val)
                         self.fields['polje%s_%s' % (pm_id, care_taker[0].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti, 'step': 'any'}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                         
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")
@@ -513,7 +513,7 @@ class InputVisitationDataForm(forms.Form):
                             
 
                             self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                                widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                                widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti, 'step': 'any'}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                             
                             if(INFO_AVAILABLE):
                                 print("OBISK JE OPRAVLJEN")
@@ -632,7 +632,7 @@ class InputVisitationDataForm(forms.Form):
                                
 
                         self.fields['polje%s_%s' % (pm_id,pacient.st_kartice)] = IntegerField(label=field_label, required = req, help_text=field_title,
-                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
+                            widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': str_vrednosti, 'step': 'any'}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
                         
                         if(INFO_AVAILABLE):
                             print("OBISK JE OPRAVLJEN")

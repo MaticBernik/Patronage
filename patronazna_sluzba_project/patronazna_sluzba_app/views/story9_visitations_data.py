@@ -200,7 +200,7 @@ def edit_visitaiton_data(request):
             popravi_datum=request.POST['change_visitation_date']
             print("!!!!!!!!POPRAVI DATUM: ",popravi_datum)
             if popravi_datum=='on':
-                obisk.datum=datetime.now()
+                obisk.datum=datetime.now().date()
                 obisk.save()
 
 

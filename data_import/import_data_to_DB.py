@@ -304,7 +304,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 				elif ime == 'st C':
 					mozne_vrednosti='0,60'
 				elif ime == 'kg':
-					mozne_vrednosti='0,300'
+					mozne_vrednosti='1,300'
 				elif ime == 'Datum rojstva otroka':
 					enkraten_vnos=True
 					mozne_vrednosti='*'
@@ -322,11 +322,11 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 					mozne_vrednosti='0,20000'
 				elif ime == 'Porodna višina otroka (cm)':
 					enkraten_vnos=True
-					mozne_vrednosti='0,100'
+					mozne_vrednosti='10,100'
 				elif ime == 'g':
-					mozne_vrednosti='0,50000'
+					mozne_vrednosti='500,50000'
 				elif ime == 'cm':
-					mozne_vrednosti='0,200'
+					mozne_vrednosti='10,200'
 				#elif ime == 'Da/Ne':
 				#elif ime == 'Ni posebnosti/Mikcija/Defekacija/Napenjanje/Kolike/Polivanje/Bruhanje':
 				elif ime == 'Urin: prosti vnos':

@@ -87,8 +87,8 @@ with open("material.csv", "r") as material_file:  #encoding="utf8"
 		print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_material (ime,proizvajalec,opis,kolicina_osnovne_enote,oznaka_osnovne_enote) VALUES (?,?,?,?,?)", (line[0], line[1], line[2], line[3], line[4]));
 #Patients
-with open("testni_pacienti.csv","r",encoding="utf8") as patients_file: #encoding="utf8"
-# with open("testni_pacienti.csv","r") as patients_file: #encoding="utf8"
+#with open("testni_pacienti.csv","r",encoding="utf8") as patients_file: #encoding="utf8"
+with open("testni_pacienti.csv","r") as patients_file: #encoding="utf8"
 	patients_reader = csv.reader(patients_file, delimiter=';')
 	next(patients_reader, None) #skip header
 	for line in patients_reader:
@@ -128,8 +128,8 @@ with open("skrbnistvo.csv","r") as skrbnistvo_file:
 			print("Neveljavna st. kartice oskrbovanca")
 		conn.execute("UPDATE patronazna_sluzba_app_pacient set skrbnistvo_id="+str(skrbnik)+" where st_kartice='"+str(oskrbovanec)+"';")
 #Medical staff
-with open("testno_zdravnisko_osebje.csv","r",encoding="utf8") as staff_file: #encoding="utf8"
-# with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
+#with open("testno_zdravnisko_osebje.csv","r",encoding="utf8") as staff_file: #encoding="utf8"
+with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 	staff_reader = csv.reader(staff_file, delimiter=';')
 	next(staff_reader, None)  # skip header
 	for line in staff_reader:
@@ -178,8 +178,8 @@ for okolis in okolisi:
 		id = int(cursor.fetchall()[0][0])
 		conn.execute("INSERT INTO patronazna_sluzba_app_patronazna_sestra (sifra_patronazne_sestre,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id,okolis_id) VALUES (?,?,?,?,?)",	(sifra, '031 111 111', line[6], id, okolis[0]));
 #Poste
-with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  #encoding="utf8"
-# with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
+#with open("seznam_post.csv", "r", encoding="utf8") as poste_file:  #encoding="utf8"
+with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
 	poste_reader = csv.reader(poste_file, delimiter=';')
 	# skip header
 	next(poste_reader, None)
@@ -195,8 +195,8 @@ with open("vsa_zdravila.csv","r") as drugs_file: #encoding="utf8"
 		# conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],"", "", "",line[13], line[14], line[15],"", "", "",line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], "","","", line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra, ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, kolicina_osnovne_enote_za_aplikacijo, sifra_pravnega_statusa, sifra_rezima_izdaje, aktivno_zdravilo, sifra_liste, spremljanje_varnosti) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5], line[6], line[8], line[11], line[14], line[30], line[31], line[72]));
 #Izvajalci zdravstvenih storitev
-with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvajalci_file:  #encoding="utf8"
-# with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # encoding="utf8"
+#with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvajalci_file:  #encoding="utf8"
+with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # encoding="utf8"
 	izvajalci_reader = csv.reader(izvajalci_file, delimiter=';')
 	next(izvajalci_reader, None)  # skip header
 	last_imported=None
@@ -209,8 +209,8 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r", encoding="utf8") as izvaja
 #Vrste obiskov
 VRSTA_PREVENTIVNI = ('Obisk nosecnice', 'Obisk otrocnice in novorojencka', 'Preventiva starostnika', 'Obisk otrocnice', 'Obisk novorojencka')
 VRSTA_KURATIVNI = ("Aplikacija injekcij", "Odvzem krvi", "Kontrola zdravstvenega stanja")
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
-# with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"
+#with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste_obiskov_file:  #encoding="utf8"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  # encoding="utf8"
 	vrste_obiskov_reader = csv.reader(vrste_obiskov_file, delimiter=';')
 	next(vrste_obiskov_reader, None)  # skip header
 	last_imported = None
@@ -233,8 +233,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as vrste
 			else:
 				conn.execute("INSERT INTO patronazna_sluzba_app_vrsta_obiska (sifra, ime, tip) VALUES (?,?,?)", (int(line[0]), ime, tip));
 #Meritve oz. Aktivnosti
-with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  #encoding="utf8"
-# with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # encoding="utf8"
+#with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktivnosti_file:  #encoding="utf8"
+with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # encoding="utf8"
 	aktivnosti_reader = csv.reader(aktivnosti_file, delimiter=';')
 	next(aktivnosti_reader, None)  # skip header
 	for line in aktivnosti_reader:
@@ -269,7 +269,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 					obvezen_vnos = True
 					ime = ime[0 : ime.index('*') - 1]
 				mozne_vrednosti=None
-				if ime=="Prosti vnos" or "prosti vnos" in ime:
+				if "Prosti vnos" in ime or "prosti vnos" in ime or 'Pomoč: svojci in drugi' in ime:
 					vnosno_polje="CharField"
 				elif '/' in ime:
 					i=ime.index('/')
@@ -285,7 +285,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 				print("IME: ",ime,"  VNOSNO POLJE: ",vnosno_polje)
 				
 				enkraten_vnos=False;
-				if ime=='Prosti vnos':
+				if ime=='Prosti vnos' or ime=='Pomoč: svojci in drugi':
 					mozne_vrednosti='*'
 					#continue
 				elif ime=='Datum':
@@ -379,8 +379,8 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r", encoding="utf8") as aktiv
 				if sifra_storitve == 20:
 						conn.execute("INSERT INTO patronazna_sluzba_app_polje_meritev (meritev_id, polje_id) VALUES (?,?)", (str(meritev_id_orig), str(polje_id)));
 #Bolezni
-with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"
-# with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
+#with open("bolezni.csv", "r", encoding="utf8") as bolezni_file:  #encoding="utf8"
+with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 	bolezni_reader = csv.reader(bolezni_file, delimiter=';')
 	next(bolezni_reader, None)  # skip header
 	for line in bolezni_reader:
@@ -464,8 +464,8 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 				date_current = date_next
 				print("Obisk shranjen (OBDOBJE); datum: ", date_current)
 # Pacienti na delovnih nalogih
-with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
-# with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
+#with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
+with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
 	pacientiDN_reader = csv.reader(pacientiDN_file, delimiter=';')
 	next(pacientiDN_reader, None)  # skip header
 	for line in pacientiDN_reader:
@@ -473,8 +473,8 @@ with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #enco
 			continue
 		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
 #Delovni nalogi
-with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
-# with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
+#with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
+with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
 	dn_reader = csv.reader(dn_file, delimiter=';')
 	next(dn_reader, None)  # skip header
 	for line in dn_reader:
@@ -489,22 +489,22 @@ with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="ut
 				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]), vodjePS[0][0])); #int(line[8])
 			kreiraj_obiske(int(line[0]), int(line[4]), line[3], int(line[2]), datum)
 #Material na delovnih nalogih
-with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
-# with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
+#with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
+with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
 	materialDN_reader = csv.reader(materialDN_file, delimiter=';')
 	next(materialDN_reader, None)  # skip header
 	for line in materialDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_material_DN (delovni_nalog_id, material_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 #Zdravila na delovnih nalogih
-with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #encoding="utf8"
-# with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
+#with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #encoding="utf8"
+with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
 	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
 	next(zdravilaDN_reader, None)  # skip header
 	for line in zdravilaDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 #Nadomescanja
-with open("nadomescanja.csv", "r", encoding="utf8") as nadomescanja_file:  #encoding="utf8"
-# with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
+#with open("nadomescanja.csv", "r", encoding="utf8") as nadomescanja_file:  #encoding="utf8"
+with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
 	nadomescanja_reader = csv.reader(nadomescanja_file, delimiter=';')
 	next(nadomescanja_reader, None)  # skip header
 	for line in nadomescanja_reader:

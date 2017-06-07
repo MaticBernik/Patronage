@@ -20,7 +20,8 @@
 		$('.task_expansion').hide();
 
 		//add table sorting
-		$("#table_of_work_tasks").tablesorter( {sortList: [[5,0]]} ); 
+		$("#table_of_today_visit").tablesorter( {sortList: [[5,0]]} ); 
+        $("#table_of_yesterday_visit").tablesorter( {sortList: [[5,0]]} );
 
 	});
 
@@ -46,7 +47,7 @@
      		<hr>
             {% if visitations_list_today and work_task_list %}
             <div class="table-responsive">
-                <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+                <table class="table table-striped tablesorter list-table" id ="table_of_today_visit" style="text-align: center">
                 	<thead>
                 	<tr>
                 		<th></th>
@@ -154,7 +155,7 @@
      		<hr>
             {% if visitations_list_yesterday and work_task_list %}
             <div class="table-responsive">
-                <table class="table table-striped tablesorter list-table" id ="table_of_work_tasks" style="text-align: center">
+                <table class="table table-striped tablesorter list-table" id ="table_of_yesterday_visit" style="text-align: center">
                 	<thead>
                 	<tr>
                 		<th></th>
@@ -294,7 +295,9 @@
                                 </div>
                                 <hr>
                                 
-                                <p>OPRAVLJENE MERITVE: </p>
+                                <div class ="row">
+                                    <p style="float: center; background-color: white; color:#15a7c7; font-size: 22px;border-radius: 10px; border-style: solid; border-width: 2px; border-color: #15a7c7; padding: 10px;"><b>OPRAVLJENE MERITVE</b></p>
+                                </div>
                                 <hr>
                                 {% for m in visit.porocilo_izpis %}
                                     {% if m.3 %}
@@ -353,7 +356,9 @@
                                 </div>
                                 <hr>
 				        		
-                                <p>OPRAVLJENE MERITVE: </p>
+                                <div class ="row">
+                                    <p style="float: center; background-color: white; color:#15a7c7; font-size: 22px;border-radius: 10px; border-style: solid; border-width: 2px; border-color: #15a7c7; padding: 10px;"><b>OPRAVLJENE MERITVE</b></p>
+                                </div>
 				        		<hr>
                                 {% for m in visit.porocilo_izpis %}
                                     {% if m.3 %}

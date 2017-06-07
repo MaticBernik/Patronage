@@ -20,8 +20,8 @@
 		$('.task_expansion').hide();
 
 		//add table sorting
-		$("#table_of_work_tasks").tablesorter( {sortList: [[5,0]]} ); 
-
+		$("#table_of_visitations_complete").tablesorter( {sortList: [[8,0]]} ); 
+        $("#table_of_visitations_waiting").tablesorter( {sortList: [[8,0]]} ); 
 		//$("#filter_toggler").click(function(){
         //	$("#filter_form").toggle();
     	//});
@@ -49,7 +49,7 @@
      		<hr>
             {% if visitations_list_complete and work_task_list %}
             <div class="table-responsive">
-                <table class="table table-striped tablesorter list-table" id ="table_of_visitations_waiting" style="text-align: center">
+                <table class="table table-striped tablesorter list-table" id ="table_of_visitations_complete" style="text-align: center">
                 	<thead>
                 	<tr>
                 		<th></th>
@@ -60,8 +60,7 @@
                 		<th>Nadomestna medicinska sestra</th>
                 		<th>Pacient</th>
                 		<th>Vrsta obiska</th>
-                		<th>Predviden datum obiska</th>
-                		<th>Dejanski datum obiska</th>
+                		<th>Datum obiska</th>
                 		<th>Obvezen obisk</th>
                 		<th>Opravljen obisk</th>
                 		<th></th>
@@ -118,7 +117,6 @@
                 		</td>
                 		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
                 		<td>{{ visit.datum|date:"d.m.Y" }}</td>
-                		<td> - </td>
                 		<td>
                 			{% if visit.obvezen_obisk %}
                 				Da
@@ -149,7 +147,7 @@
         </div>
 
 
-
+        <!--
         <div class="row">
         	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h3>Napovedani obiski</h3>
@@ -167,8 +165,7 @@
                 		<th>Nadomestna medicinska sestra</th>
                 		<th>Pacient</th>
                 		<th>Vrsta obiska</th>
-                		<th>Predviden datum obiska</th>
-                		<th>Dejanski datum obiska</th>
+                		<th>Datum obiska</th>
                 		<th>Obvezen obisk</th>
                 		<th>Opravljen obisk</th>
                 		<th></th>
@@ -224,7 +221,6 @@
                 		</td>
                 		<td>{{ visit.delovni_nalog.vrsta_obiska.ime }}</td>
                 		<td>{{ visit.datum|date:"d.m.Y" }}</td>
-                		<td> - </td>
                 		<td>
                 			{% if visit.obvezen_obisk %}
                 				Da
@@ -253,6 +249,7 @@
             {% endif %}
             </div>
         </div>
+        -->
     {% endif %}
 
 
@@ -293,7 +290,9 @@
                                 </div>
                                 <hr>
                                 
-                                <p>OPRAVLJENE MERITVE: </p>
+                                <div class ="row">
+                                    <p style="float: center; background-color: white; color:#15a7c7; font-size: 22px;border-radius: 10px; border-style: solid; border-width: 2px; border-color: #15a7c7; padding: 10px;"><b>OPRAVLJENE MERITVE</b></p>
+                                </div>
                                 <hr>
                                 {% for m in visit.porocilo_izpis %}
                                     {% if m.3 %}
@@ -318,6 +317,7 @@
                             </div>
 		        		{% endfor %}
 		        	{% endif %}
+                    <!--
                     {% if visitations_list_waiting and work_task_list %}
 		        		{% for visit in visitations_list_waiting %}
                             <div class="visit_expansion col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1" id="{{visit.id}}">
@@ -345,7 +345,9 @@
                                 </div>
                                 <hr>
                                 
-                                <p>OPRAVLJENE MERITVE: </p>
+                                <div class ="row">
+                                    <p style="float: center; background-color: white; color:#15a7c7; font-size: 22px;border-radius: 10px; border-style: solid; border-width: 2px; border-color: #15a7c7; padding: 10px;"><b>OPRAVLJENE MERITVE</b></p>
+                                </div>
                                 <hr>
                                 {% for m in visit.porocilo_izpis %}
                                     {% if m.3 %}
@@ -370,6 +372,7 @@
                             </div>
 		        		{% endfor %}
 		        	{% endif %}
+                    -->
 		        <div class="modal-footer">
 		          	<button type="button" class="btn btn-default" data-dismiss="modal">Nazaj</button>
 		        </div>

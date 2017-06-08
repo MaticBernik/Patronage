@@ -83,8 +83,8 @@ def list_active_visitations(request):
     vodje_ps = Vodja_PS.objects.all()
 
     # V testne namene
-    obiski = Obisk.objects.all()
-    visitations_today = obiski
+    # obiski = Obisk.objects.all()
+    # visitations_today = obiski
     # visitations_yesterday = obiski[:10]
     
     vsa_nadomescanja = Nadomescanje.objects.all()

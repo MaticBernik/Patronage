@@ -85,6 +85,8 @@ def register_medical_staff(request):
                                                 email=email,
                                                 username=email)
                 print("user object saved")
+                uporabnik = Uporabnik.objects.create(profil_id=user.id)
+                print("Uporabnik object saved")
             except:
                 print("Could not create User object using given data!")
                 return HttpResponse("Userja ne gre registrirat.")

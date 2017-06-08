@@ -189,7 +189,9 @@ with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
 		print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
 #Drugs
-with io_open("vsa_zdravila.csv","r",encoding="windows-1250") as drugs_file: #encoding="utf8"
+#with codecs.open("vsa_zdravila.csv","r",encoding="latin-1", errors='ignore') as drugs_file: #encoding="windows-1250"
+with open("vsa_zdravila.csv", "r") as drugs_file:  # encoding="utf8"
+
 	drugs_reader = csv.reader(drugs_file, delimiter=';')
 	next(drugs_reader, None)  # skip header
 	for line in drugs_reader:

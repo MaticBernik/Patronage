@@ -51,7 +51,7 @@ def search_district_name(request):
     return render_to_response('ajax_district.html',{'district':district})
 
 def add_patient_caretaker(password1, password2, first_name, last_name, mail, card_number, address, phone_number,
-                           birth_date, sex, contact_first_name, contact_last_name, contact_address, contact_phone_number, sorodstveno_razmerje):
+                           birth_date, sex, contact_first_name, contact_last_name, contact_address, contact_phone_number, sorodstveno_razmerje, posta, district):
 
     if check_passwords(password1, password2):
         if check_mail_builtin(mail):
@@ -60,12 +60,10 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
                     #   DODAJ PACIENTA
 
                     if contact_first_name != "":
-                        contact = Kontaktna_oseba(ime=contact_first_name, priimek=contact_last_name,
-                                                  naslov=contact_address, telefon=contact_phone_number)
 
                         patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex, kontakt=contact)
+                                          datum_rojstva=birth_date, spol=sex, email=mail, posta=posta, okolis=district)
                         print("patient objekt ustvarjen")
 
 
@@ -77,19 +75,30 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
 
                         patient.uporabniski_profil = user
 
-                        contact.save()
+
                         patient.save()
 
+                        contact = Kontaktna_oseba(ime=contact_first_name, priimek=contact_last_name,
+                                                  naslov=contact_address, telefon=contact_phone_number)
+                        contact.save()
 
                         sorodstvo = Sorodstveno_razmerje(kontakt=contact, pacient_id=patient, tip_razmerja=sorodstveno_razmerje)
                         sorodstvo.save()
 
+                        contact.sorodstvo = sorodstvo
+                        contact.save()
+
+                        patient.sorodstvo = sorodstvo
+                        patient.save()
+
+                        patient.kontakt = contact
+                        patient.save()
                         print("user created")
                         print("patient saved")
                     else:
                         patient = Pacient(ime=first_name, priimek=last_name, st_kartice=card_number, naslov=address,
                                           telefonska_st=phone_number,
-                                          datum_rojstva=birth_date, spol=sex)
+                                          datum_rojstva=birth_date, spol=sex, email=mail, posta=posta, okolis=district)
                         print("patient dodan")
                         #patient.save()
 
@@ -321,10 +330,14 @@ def register_patient(request):
             sorodstveno_razmerje = form.cleaned_data['contact_sorodstvo']
 
             #uspesno izbrana posta
-            posta = request.POST['search_post']
-            print('izbrana posta '+posta)
+            postal_num = request.POST['search_post']
+            print('izbrana posta '+postal_num)
             # uspesno izbran okolis
             district = request.POST['search_district']
+            okolis = Okolis.objects.get(ime=district)
+
+            posta = Posta.objects.get(postna_st=int(postal_num[:4]))
+
             print('izbrana posta ' + district)
 
             if not (add_patient_caretaker(password1, password2, first_name, last_name, mail,
@@ -332,7 +345,7 @@ def register_patient(request):
                                                                     card_number, address, phone_number,
                                                                     birth_date, sex, contact_first_name,
                                                                     contact_last_name, contact_address,
-                                                                    contact_phone_number, sorodstveno_razmerje)):
+                                                                    contact_phone_number, sorodstveno_razmerje, posta, okolis)):
                 return HttpResponse("Nekdo posile requeste napisane na roko... Ali pa ne dela vredu front end"
                                     " validacija... al pa mi funkcije ne palijo kot morjo :D")
 

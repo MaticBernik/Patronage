@@ -101,7 +101,7 @@ def is_coworker(user):
 def is_admin(user):
     return user.is_superuser
 
-def get_patient_role_string():
+def get_patient_role_string(user):
 
     if is_patient(user):
         return "patient"
@@ -145,6 +145,7 @@ def index(request):
             if user is not None:
                 valid_login(ip_naslov)
                 u = User.objects.get(username=username)
+                print(get_patient_role_string(u))
                 if Pacient.objects.filter(uporabniski_profil=u).exists():
                     pacient = Pacient.objects.get(uporabniski_profil=u)
                     if u.is_active == 0:

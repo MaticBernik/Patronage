@@ -359,8 +359,9 @@ def register_patient(request):
         else:
             print("Form not valid bro", form.errors)
             return HttpResponse("Form not valid")
-
-        return redirect('/')
+        
+        print("REPONDE TO NOT VERIFIED")
+        return render_to_response(link_home, {'login_form': LoginForm(), 'not_verified': True})
 
 
     # if a GET (or any other method) we'll create a blank form

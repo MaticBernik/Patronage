@@ -207,6 +207,7 @@ def activate(request):
             except:
                 print("Ta mail ni v nasi bazi")
 
+    form = LoginForm()
     #return HttpResponse("Aktivacija ni uspela.")
     return render(request, 'index.html', {'login_form': form, 'not_verified': True})
     

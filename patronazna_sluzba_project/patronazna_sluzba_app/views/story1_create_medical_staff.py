@@ -92,7 +92,7 @@ def register_medical_staff(request):
 
             if role == 'nurse':
                 profile = Patronazna_sestra(uporabniski_profil=user, sifra_patronazne_sestre=code,
-                                            telefonska_st=phone_number, sifra_izvajalca_ZS=institution)
+                                            telefonska_st=phone_number, sifra_izvajalca_ZS=institution,okolis_id=-1)
                 print("delam sestro")
             elif role == 'doc':
                 profile = Zdravnik(uporabniski_profil=user, sifra_zdravnika=code, telefonska_st=phone_number,

@@ -7,6 +7,7 @@ from django.template.context_processors import csrf
 from patronazna_sluzba_app.forms import *
 from patronazna_sluzba_app.models import *
 import datetime
+from django.db.models import Q
 
 # zdravila
 def search_titles(request):
@@ -76,13 +77,14 @@ def visit_based_on_role(request):
 
 
 def choose_visit_type(request):
+    not_included = [30,80]
     if request.method == 'POST':
         choose_visit = request.POST['choose_visit']
 
     else:
         choose_visit = 'Preventivni obisk'
 
-    visits = Vrsta_obiska.objects.filter(tip=choose_visit)
+    visits = Vrsta_obiska.objects.filter(~Q(sifra__in=not_included),tip=choose_visit)
     print('filter paremeter is: ' + choose_visit)
     return render_to_response('ajax_visit.html', {'visits': visits})
 

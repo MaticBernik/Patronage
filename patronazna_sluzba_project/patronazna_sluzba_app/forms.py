@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 
 from django.forms.fields import *
 from datetime import datetime, date
+from django.db.models import Q
 
 USER_TYPES = (
     ('doc', 'Zdravnik'),
@@ -84,7 +85,7 @@ OPRAVLJENOST_OBISKA = (
     (0, 'Neopravljen'),
 )
 
-
+not_included = [30,80]
 # SOME VALIDATORS
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 numberic_only = RegexValidator(r'^[0-9]*$', 'Dovoljena zgolj stevilska vrednost.')
@@ -219,7 +220,7 @@ class FilterWorkTasksForm(forms.Form):
     # filter_patient_id = forms.CharField(label='Šifra zdravnika: ', widget=forms.TextInput(attrs={'disabled': 'disabled', 'class': 'form-control'}))
     filter_patient_id = forms.ModelChoiceField(label='Pacient', required = False, queryset=Pacient.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'select_patient_filter'}))
     # filter_visit_type = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'id': 'task_visit_type'}))
-    filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
+    filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.filter(~Q(sifra__in=not_included)), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
 
     filter_date_from = forms.DateField(label='Datum od:', required = False,
         widget=forms.TextInput( attrs={'class': 'datepicker input-group date input-sm form-control', 'id': 'task_date_from'}),
@@ -239,7 +240,7 @@ class FilterVisitationsForm(forms.Form):
     
     filter_patient_id = forms.ModelChoiceField(label='Pacient', required = False, queryset=Pacient.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'select_patient_filter'}))
     
-    filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.all(), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
+    filter_visit_type = forms.ModelChoiceField(label='Vrsta obiska', required = False, queryset=Vrsta_obiska.objects.filter(~Q(sifra__in=not_included)), widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'task_visit_type_filter'}))
    
     # filter_visit_complete = forms.ModelChoiceField(label='Opravljenost obiska', required = False, queryset=["Opravljen","Ni opravljen"], widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'visitation_mandatory_filter'}))
     filter_visit_complete = forms.ChoiceField(label='Opravljenost obiska', required = False, choices=OPRAVLJENOST_OBISKA, widget=forms.Select(attrs={'class': 'input-sm form-control', 'id': 'visitation_mandatory_filter'}))

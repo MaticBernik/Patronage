@@ -336,7 +336,7 @@ def work_task_view(request):
                     material_obisk.save()
                 zdravila_dn=Zdravilo_DN.objects.filter(delovni_nalog=work_task_f)
                 for z in zdravila_dn:
-                    zdravilo_obisk = Zdravilo_Obisk(obisk=visit, material=m.material, kolicina=m.kolicina)
+                    zdravilo_obisk = Zdravilo_Obisk(obisk=visit, zdravilo=z.zdravilo, kolicina=z.kolicina)
                     zdravilo_obisk.save()
 
 

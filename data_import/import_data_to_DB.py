@@ -8,6 +8,7 @@ import hashlib
 import uuid
 import random
 from io import open as io_open
+import unicodedata
 import codecs
 from django.utils.crypto import (pbkdf2, get_random_string)
 def hash_password(password):
@@ -86,7 +87,7 @@ with open("material.csv", "r") as material_file:  #encoding="utf8"
 	material_reader = csv.reader(material_file, delimiter=';')
 	next(material_reader, None)  # skip header
 	for line in material_reader:
-		print(line)
+		#print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_material (ime,proizvajalec,opis,kolicina_osnovne_enote,oznaka_osnovne_enote) VALUES (?,?,?,?,?)", (line[0], line[1], line[2], line[3], line[4]));
 #Patients
 #with open("testni_pacienti.csv","r",encoding="utf8") as patients_file: #encoding="utf8"
@@ -96,7 +97,7 @@ with open("testni_pacienti.csv","r") as patients_file: #encoding="utf8"
 	for line in patients_reader:
 		if line[0]=='#':
 			continue
-		print(line)
+		#print(line)
 		#passwd=hash_password(line[9])
 		passwd="pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs=" #workaround --> geslo123
 		if line[0]=="da":
@@ -113,7 +114,7 @@ with open("skrbnistvo.csv","r") as skrbnistvo_file:
 	skrbnistvo_reader = csv.reader(skrbnistvo_file, delimiter=';')
 	next(skrbnistvo_reader, None)
 	for line in skrbnistvo_reader:
-		print(line)
+		#print(line)
 		cursor = conn.execute("select st_kartice from patronazna_sluzba_app_pacient where st_kartice = '" + str(line[0]) + "';")
 		cursor=cursor.fetchall()
 		skrbnik=None
@@ -135,7 +136,7 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 	staff_reader = csv.reader(staff_file, delimiter=';')
 	next(staff_reader, None)  # skip header
 	for line in staff_reader:
-		print(line)
+		#print(line)
 		if line[0]=='#':
 			continue
 		conn.execute("INSERT INTO auth_user (username,email,first_name,last_name,password,is_active,is_superuser,is_staff,date_joined) VALUES (?,?,?,?,?,?,?,?,?)",	(line[4], line[4], line[1], line[2], passwd, True, True if (line[0]=="administrator") else False, True, datetime.now()));
@@ -186,16 +187,29 @@ with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
 	# skip header
 	next(poste_reader, None)
 	for line in poste_reader:
-		print(line)
+		#print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
 #Drugs
 #with open("vsa_zdravila.csv","r",encoding="latin-1") as drugs_file: #encoding="windows-1250"
-with open("vsa_zdravila.csv", "r") as drugs_file:  # encoding="utf8"
-
-	drugs_reader = csv.reader(drugs_file, delimiter=';', encoding='utf-8')
-	next(drugs_reader, None)  # skip header
-	for line in drugs_reader:
-		print(line)
+with io_open("vsa_zdravila.csv", "r", encoding='windows-1250') as drugs_file:  # encoding="utf8"
+	#drugs_reader = csv.reader(drugs_file, delimiter=';')
+	#next(drugs_reader, None)  # skip header
+	skip_header=True
+	for line in drugs_file:
+		if skip_header:
+			skip_header=False
+			continue
+		line = unicodedata.normalize('NFKD', line).encode('ascii', 'ignore')
+		#line = unicodedata.normalize('NFKD', line)
+		#line=str(line)
+		line=line.split(';')
+		line=[str(x) for x in line]
+		if(line[1]=='Vecuronium Inresa' or line[1]=='Vellofent'):
+			print()
+			print()
+			print(line)
+			print()
+			print()
 		# conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra,ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, slovenski_naziv_farmacevtske_oblike, kolicina_osnovne_enote_za_aplikacijo, oznaka_osnovne_enote_za_aplikacijo,pakiranje,sifra_pravnega_statusa,naziv_pravnega_statusa,naziv_poti_uporabe,sifra_rezima_izdaje,oznaka_rezima_izdaje,naziv_rezima_izdaje,sifra_prisotnosti_na_trgu,izdaja_na_posebni_zdravniski_recept,trigonik_absolutna_prepoved_upravljanja_vozil,trigonik_relativna_prepoved_upravljanja_vozil,omejena_kolicina_enkratne_izdaje,sifra_vrste_postopka,oznaka_vrste_postopka,naziv_vrste_postopka,oznaka_ATC,vir_podatka,slovenski_opis_ATC,latinski_opis_ATC,angleski_opis_ATC,aktivno_zdravilo,sifra_liste,oznaka_liste, opis_omejitve_predpisovanja,velja_od,sifra_iz_seznama_B,oznaka_iz_seznama_B,opis_omejitve_predpisovanja_B,velja_od_B,sifra_iz_seznama_A,oznaka_iz_seznama_A,opis_omejitve_predpisovanja_A,velja_od_A,cena_na_debelo_regulirana,datum_veljavnosti_regulirane_cene,tip_regulirane_cene,predviden_datum_konca_veljavnosti_regulirane_cene,vrsta_zdravila,dogovorjena_cena,datum_veljavnosti_dogovorjene_cene,tip_dogovorjene_cene,sifra_skupine_MZZ,opis_skupine_MZZ,najvisja_priznana_vrednost_zdravila_v_eur,datum_veljavnosti_NPV_zdravila,najvisja_priznana_vrednost_za_zivila,datum_veljavnosti_NPV_zivila,primerno_za_INN_predpisovanje,sifra_vrste_postopka,naziv_vrste_postopka,stevilka_dovoljenja,datum_dovoljenja,datum_veljavnosti_dovoljenja,stevilka_uradnega_lista_objave,datum_uradnega_lista_objave,datum_prenehanja_trzenja_zdravila,sifra_imetnika_dovoljenja,naziv_imetnika_dovoljenja,kolicina_za_preracun_DDO,DDO,oznaka_merske_enote,spletna_povezava_na_EMA,spremljanje_varnosti,sif_razp_zdr,razpolozljivost_zdravila) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5],line[6], line[7], line[8],line[9],"", "", "",line[13], line[14], line[15],"", "", "",line[19],line[20], line[21], line[22],line[23], line[24], line[25],line[26], line[27], line[28],line[29],line[30], line[31], line[32],line[33], line[34], line[35],line[36], line[37], line[38],line[39],line[40], line[41], line[42],line[43], line[44], line[45],line[46], line[47], line[48],line[49],line[50], line[51], line[52],line[53], line[54], line[55],line[56], line[57], "","","", line[61], line[62],line[63], line[64], line[65],line[66], line[67], line[68],line[69],line[70], line[71], line[72],line[73], line[74]));
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo (nacionalna_sifra, ime, poimenovanje, kratko_poimenovanje, oznaka_EAN, oglasevanje_dovoljeno, originator, kolicina_osnovne_enote_za_aplikacijo, sifra_pravnega_statusa, sifra_rezima_izdaje, aktivno_zdravilo, sifra_liste, spremljanje_varnosti) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(line[0], line[1], line[2],line[3], line[4], line[5], line[6], line[8], line[11], line[14], line[30], line[31], line[72]));
 
@@ -208,7 +222,7 @@ with open("izvajalci_zdravstvenih_storitev.csv", "r") as izvajalci_file:  # enco
 	for line in izvajalci_reader:
 		if not last_imported or last_imported!=line[0]:
 			last_imported=line[0]
-			print(line)
+			#print(line)
 			posta=int(line[8][:4])
 			conn.execute("INSERT INTO patronazna_sluzba_app_izvajalec_zs (st_izvajalca, naziv, naslov, posta_id) VALUES (?,?,?,?)", (line[0], line[5], line[7], posta));
 #Vrste obiskov
@@ -223,7 +237,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as vrste_obiskov_file:  #
 	for line in vrste_obiskov_reader:
 		if len(line) == 5 and (last_imported==None or last_imported!=line[0]):
 			last_imported=line[0]
-			print(line)
+			#print(line)
 			ime=line[1].replace('č','c').replace('š','s')
 			if ime=='Obisk otrocnice' or ime=='Obisk novorojencka':
 				if not obisk_otrocnice_novorojencka_dodan:
@@ -244,7 +258,7 @@ with open("TPO_Aktivnosti_patronazne_sestre.csv", "r") as aktivnosti_file:  # en
 	next(aktivnosti_reader, None)  # skip header
 	for line in aktivnosti_reader:
 		if len(line)==5:
-			print(line)
+			#print(line)
 			sifra = int(line[2]) #sifra aktivnosti
 			sifra_storitve=int(line[0]) #sifra storitve oz. vrste obiska
 			if sifra_storitve==30: #zdruzi sicer locena obiska otrocnice in novorojencka

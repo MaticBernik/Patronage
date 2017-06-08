@@ -2,7 +2,8 @@
 zdravnik;Joze;Dolenc;99999;zdravnik@mail.si;051 111 111;00100;geslo
 sestra;Anita;Gorenc;99998;sestra@mail.si;040 111 111;00100;geslo;1000
 sestra;Lara;Novak;99990;sestra2@mail.si;040 342 444;00100;geslo123;8000
-sestra;Sara;Kotnik;99989;sestra3@mail.si;031 663 324;00100;geslo123;6000
+#sestra;Sara;Kotnik;99989;sestra3@mail.si;031 663 324;00100;geslo123;6000
+sestra;Vida;Vidic;99989;vida.vidic@mail.si;031 221 451;00100;geslo;6000
 vodja;Matej;Smrekar;99997;vodja@mail.si;031 111 111;00100;geslo
 sodelavec;Zdravko;Dren;99995;sodelavec@mail.si;041 111 111;00100;geslo
 administrator;Alen;Grozdnik;;admin@mail.si;031 311 311;;geslo123
@@ -11,4 +12,3 @@ zdravnik;Zdravko;Zdravic;99995;zdravko.zdravic@mail.si;041 314 765;00100;geslo
 zdravnik;Marko;Markic;99994;marko.markic@mail.si;051 731 431;00100;geslo
 sestra;Franja;Frankovic;99993;franja.frankovic@mail.si;040 523 553;00100;geslo;2000
 sestra;Petra;Petrovic;99992;petra.petrovic@mail.si;041 441 141;00100;geslo;4000
-#sestra;Vida;Vidic;99991;vida.vidic@mail.si;031 221 451;00100;geslo;6000

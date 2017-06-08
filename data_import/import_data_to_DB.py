@@ -7,6 +7,8 @@ import os
 import hashlib
 import uuid
 import random
+from io import open as io_open
+import codecs
 from django.utils.crypto import (pbkdf2, get_random_string)
 def hash_password(password):
 	# uuid is used to generate a random number
@@ -187,7 +189,7 @@ with open("seznam_post.csv", "r") as poste_file:  # encoding="utf8"
 		print(line)
 		conn.execute("INSERT INTO patronazna_sluzba_app_posta (postna_st, naziv_poste) VALUES (?,?)", (line[0], line[1]));
 #Drugs
-with open("vsa_zdravila.csv","r") as drugs_file: #encoding="utf8"
+with io_open("vsa_zdravila.csv","r",encoding="windows-1250") as drugs_file: #encoding="utf8"
 	drugs_reader = csv.reader(drugs_file, delimiter=';')
 	next(drugs_reader, None)  # skip header
 	for line in drugs_reader:
@@ -388,8 +390,15 @@ with open("bolezni.csv", "r") as bolezni_file:  # encoding="utf8"
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime, opis) VALUES (?,?,?)", (line[0], line[1], line[2]));
 		else:
 			conn.execute("INSERT INTO patronazna_sluzba_app_bolezen (sifra, ime) VALUES (?,?)", (line[0], line[1]));
+
 # Metoda, ki delovnim nalogom v bazi kreira pripadajoce obiske
 def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, date_current):
+	cursor = conn.execute("select delovni_nalog_id,zdravilo_id,kolicina from patronazna_sluzba_app_zdravilo_dn where delovni_nalog_id=" + str(delovni_nalog_id) + ";");
+	zdravila_dn=cursor.fetchall()
+	cursor = conn.execute("select delovni_nalog_id,material_id,kolicina from patronazna_sluzba_app_material_dn where delovni_nalog_id=" + str(delovni_nalog_id) + ";");
+	material_dn = cursor.fetchall()
+
+
 	# if we have interval type of visitation
 	if type == 'Interval':
 		for i in range(int(number_of_visits)):
@@ -420,6 +429,19 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 			conn.execute(
 				"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id, opravljen) VALUES (?,?,?,?,?)",
 				(delovni_nalog_id, date_current, obv, p_sestra, opr));
+
+			cursor = conn.execute(
+				"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(delovni_nalog_id) + " and datum='"+str(date_current)+"' and obvezen_obisk="+str(obv)+" and p_sestra_id="+str(p_sestra)+" and opravljen="+str(opr)+";");
+			obisk=cursor.fetchall()[0][0]
+			for zdravilo in zdravila_dn:
+				conn.execute(
+					"INSERT INTO patronazna_sluzba_app_zdravilo_obisk (obisk_id, zdravilo_id, kolicina) VALUES (?,?,?)",
+					(obisk,zdravilo[1],zdravilo[2]));
+			for material in material_dn:
+				conn.execute(
+					"INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)",
+					(obisk, material[1], material[2]));
+
 			date_current = date_next
 			print("Obisk shranjen (INTERVAL); datum: ", date_current)
 	else:
@@ -461,8 +483,24 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 				conn.execute(
 					"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id, opravljen) VALUES (?,?,?,?,?)",
 					(delovni_nalog_id, date_current, obv, p_sestra, opr));
+
+				cursor = conn.execute(
+					"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(
+						delovni_nalog_id) + " and datum='" + str(date_current) + "' and obvezen_obisk=" + str(obv) + " and p_sestra_id=" + str(p_sestra) + " and opravljen=" + str(opr) + ";");
+				obisk = cursor.fetchall()[0][0]
+				for zdravilo in zdravila_dn:
+					conn.execute(
+						"INSERT INTO patronazna_sluzba_app_zdravilo_obisk (obisk_id, zdravilo_id, kolicina) VALUES (?,?,?)",
+						(obisk, zdravilo[1], zdravilo[2]));
+				for material in material_dn:
+					conn.execute(
+						"INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)",
+						(obisk, material[1], material[2]));
+
+
 				date_current = date_next
 				print("Obisk shranjen (OBDOBJE); datum: ", date_current)
+
 # Pacienti na delovnih nalogih
 #with open("pacienti_na_DN.csv", "r", encoding="utf8") as pacientiDN_file:  #encoding="utf8"
 with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
@@ -472,6 +510,7 @@ with open("pacienti_na_DN.csv", "r") as pacientiDN_file:  # encoding="utf8"
 		if line[0]=='#':
 			continue
 		conn.execute("INSERT INTO patronazna_sluzba_app_pacient_DN (delovni_nalog_id, pacient_id) VALUES (?,?)", (int(line[0]), line[1]));
+
 #Delovni nalogi
 #with open("delovni_nalogi.csv", "r", encoding="utf8") as dn_file:  #encoding="utf8"
 with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
@@ -488,20 +527,33 @@ with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
 			else:
 				conn.execute("INSERT INTO patronazna_sluzba_app_delovni_nalog (id, datum_prvega_obiska, st_obiskov, cas_obiskov_tip, cas_obiskov_dolzina, vrsta_obiska_id, bolezen_id, izvajalec_zs_id, vodja_PS_id) VALUES (?,?,?,?,?,?,?,?,?)", (int(line[0]), datum, int(line[2]),line[3],int(line[4]),int(line[5]),line[6],int(line[7]), vodjePS[0][0])); #int(line[8])
 			kreiraj_obiske(int(line[0]), int(line[4]), line[3], int(line[2]), datum)
+
 #Material na delovnih nalogih
 #with open("material_na_DN.csv", "r", encoding="utf8") as materialDN_file:  #encoding="utf8"
 with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
 	materialDN_reader = csv.reader(materialDN_file, delimiter=';')
 	next(materialDN_reader, None)  # skip header
+	cursor = conn.execute("select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0]) + ";");
+	obiski = cursor.fetchall()
 	for line in materialDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_material_DN (delovni_nalog_id, material_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+		for obisk in obiski:
+			conn.execute("INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)", (int(obisk[0]), int(line[1]), int(line[2])));
+
 #Zdravila na delovnih nalogih
 #with open("zdravila_na_DN.csv", "r", encoding="utf8") as zdravilaDN_file:  #encoding="utf8"
 with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
 	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
 	next(zdravilaDN_reader, None)  # skip header
+	cursor = conn.execute("select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0])+";");
+	obiski = cursor.fetchall()
 	for line in zdravilaDN_reader:
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
+		for obisk in obiski:
+			conn.execute(
+				"INSERT INTO patronazna_sluzba_app_zdravilo_obisk (obisk_id, zdravilo_id, kolicina) VALUES (?,?,?)",
+				(int(obisk[0]), int(line[1]), int(line[2])));
+
 #Nadomescanja
 #with open("nadomescanja.csv", "r", encoding="utf8") as nadomescanja_file:  #encoding="utf8"
 with open("nadomescanja.csv", "r") as nadomescanja_file:  # encoding="utf8"
@@ -541,8 +593,9 @@ for obisk in obiski:
 			skrbniki.append(pacient)
 		else:
 			oskrbovanci.append(pacient)
-	#### print("SKRBNIKI: ",skrbniki)
-	#### print("OSKRBOVANCI: ",oskrbovanci)
+	print('pripadajoci DN: '+str(obisk[3]))
+	print("SKRBNIKI: ",skrbniki)
+	print("OSKRBOVANCI: ",oskrbovanci)
 
 	if datetime.now() > datum:
 		opravljen=True
@@ -556,33 +609,34 @@ for obisk in obiski:
 	if opravljen:
 		cursor = conn.execute("select vrsta_obiska_id from patronazna_sluzba_app_delovni_nalog where id="+str(obisk[3])+";");
 		delovni_nalog_vrsta_obiska = cursor.fetchall()[0][0]
+		print("Vrsta obiska: ",delovni_nalog_vrsta_obiska)
 		#### print("VRSTA OBISKA: ",delovni_nalog_vrsta_obiska)
 		cursor = conn.execute("select id from patronazna_sluzba_app_meritev where vrsta_obiska_id="+str(delovni_nalog_vrsta_obiska)+";");
 		meritve=cursor.fetchall() #HRANI VSE MERITVE ZA TO VRSTO OBISKA
-		print()
-		print("MERITVE ZA VRSTO OBISKA : ", delovni_nalog_vrsta_obiska, " ++++++++++++++++++++++++++++++++++++++++++++ ")
-		print(meritve)
-		print("=======================================================================================================")
-		print()
+		#print()
+		#print("MERITVE ZA VRSTO OBISKA : ", delovni_nalog_vrsta_obiska, " ++++++++++++++++++++++++++++++++++++++++++++ ")
+		#print(meritve)
+		#print("=======================================================================================================")
+		#print()
 
 		meritve=[x[0] for x in meritve]
 		polja=[] #HRANI VSA POLJA ZA TO VRSTO OBISKA
 		#meritve_id=[]
-		print("meritve x0: ", meritve)
-		print("=======================================================================================================")
+		#print("meritve x0: ", meritve)
+		#print("=======================================================================================================")
 		for meritev_id in meritve:
 			cursor = conn.execute("select polje_id, meritev_id from patronazna_sluzba_app_polje_meritev where meritev_id="+str(meritev_id)+";");
 			polja_tmp=cursor.fetchall()
-			print()
-			print()
-			print("POLJA_TMP mertiev id: ", meritev_id )
-			print(polja_tmp)
-			print("len: ", len(polja_tmp))
+			#print()
+			#print()
+			#print("POLJA_TMP mertiev id: ", meritev_id )
+			#print(polja_tmp)
+			#print("len: ", len(polja_tmp))
 			if len (polja_tmp)>0:
 				for x in polja_tmp:
 					polja.append((x[0],x[1]))
 
-		print("=======================================================================================================")
+		#print("=======================================================================================================")
 
 		print("POLJA")
 		print(polja)
@@ -709,10 +763,10 @@ for obisk in obiski:
 				vrsta=meritev_info[0][3]
 				cursor = conn.execute("select vrsta_obiska_id from patronazna_sluzba_app_meritev where sifra=" + str(meritev_info[0][1]) + " and opis= '" + meritev_info[0][2] + "' ;");
 				vrste_obiskov_vezane_na_obisk = cursor.fetchall()
-				print("Na ta obisk so vezane: ",vrste_obiskov_vezane_na_obisk)
+				#print("Na ta obisk so vezane: ",vrste_obiskov_vezane_na_obisk)
 
 				tmp_vrste=[x[0] for x in vrste_obiskov_vezane_na_obisk]
-				print("TMP VRSTE: ", tmp_vrste)
+				#print("TMP VRSTE: ", tmp_vrste)
 				#### print("*** Na to kombinacijo sifro storitve in opisa storitve so vezane vrste obiska: ",tmp_vrste)
 				if 30 in tmp_vrste:
 					#### print()
@@ -758,15 +812,16 @@ for obisk in obiski:
 			else:
 				pacient_id=skrbniki[0]
 
-			if delovni_nalog_vrsta_obiska==20:
+			'''if delovni_nalog_vrsta_obiska==20:
 				if pacient_id in skrbniki:
 					print()
 					print("**V bazo dodajam polje za skrbnika!")
 				else:
 					print()
-					print("**V bazo dodajam polje za oskrbovanca!")
-			print("ID : ", pacient_id)
+					print("**V bazo dodajam polje za oskrbovanca!")'''
+			#print("ID : ", pacient_id)
 			conn.execute("INSERT INTO patronazna_sluzba_app_porocilo_o_obisku (obisk_id, pacient_id, polje_id, vrednost, meritev_id) VALUES (?,?,?,?,?)", (int(id), pacient_id, int(polje_info[0]),str(izbira), meritev_id));
-
+	else:
+		print("Obisk se ni bil opravljen")
 conn.commit()
 conn.close()

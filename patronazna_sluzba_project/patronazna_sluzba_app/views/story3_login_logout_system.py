@@ -21,7 +21,7 @@ import os
 
 IP_FAILED_LOGIN=[]
 BLACKLISTED_TIME_MIN=3
-BLACKLIST_ATTEMPTS_BEFORE_LOCK=20
+BLACKLIST_ATTEMPTS_BEFORE_LOCK=5
 VAR = 0
 
 def valid_login(ip):
@@ -125,8 +125,9 @@ def index(request):
     ip_naslov=get_ip(request)
     if ip_blacklisted(ip_naslov):
         print("***IP naslov je bil zacasno blokiran, zaradi 3 neveljavnih poskusov prijave.")
-        return HttpResponse("Vas IP naslov je blokiran, ponovno lahko poskusite cez 3 minute.")
-    
+        form = LoginForm(request.POST)
+        #return HttpResponse("Vas IP naslov je blokiran, ponovno lahko poskusite cez 3 minute.")
+        return render(request, 'index.html', {'login_form': form, 'blocked': True})
     if request.method=='GET':
         form = LoginForm()
         return render(request, 'index.html', {'login_form': form})
@@ -147,8 +148,8 @@ def index(request):
                 if Pacient.objects.filter(uporabniski_profil=u).exists():
                     pacient = Pacient.objects.get(uporabniski_profil=u)
                     if u.is_active == 0:
-                        return HttpResponse("Potrebna je aktivacija uporabniskega racuna pacienta.")
-
+                        #return HttpResponse("Potrebna je aktivacija uporabniskega racuna pacienta.")
+                        return render(request, 'index.html', {'login_form': form, 'not_verified': True})
 
                 login(request, user)
                 return HttpResponseRedirect(reverse('link_control_panel'))
@@ -157,10 +158,12 @@ def index(request):
                 print(IP_FAILED_LOGIN)
                 invalid_login(ip_naslov)
                 print(IP_FAILED_LOGIN)
-                return HttpResponseRedirect('/')
+                #return HttpResponseRedirect('/')
+                return render(request, 'index.html', {'login_form': form, 'wrong_data': True})
         else:
             print("Invalid form!")
-            return HttpResponseRedirect('/')
+            #return HttpResponseRedirect('/')
+            return render(request, 'index.html', {'login_form': form, 'invalid': True})
         return HttpResponse("Thanks for trying.")
 
 def base(request):
@@ -198,12 +201,15 @@ def activate(request):
                 user.is_active = 1
                 user.save()
                 print("Pacient je aktiviran")
-                return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
+                form = LoginForm()
+                #return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
+                return render(request, 'index.html', {'login_form': form, 'registered_success': True})
             except:
                 print("Ta mail ni v nasi bazi")
 
-    return HttpResponse("Aktivacija ni uspela.")
-
+    #return HttpResponse("Aktivacija ni uspela.")
+    return render(request, 'index.html', {'login_form': form, 'not_verified': True})
+    
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('/')

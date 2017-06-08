@@ -204,7 +204,7 @@ def activate(request):
                 print("Pacient je aktiviran")
                 form = LoginForm()
                 #return HttpResponse("Aktivacija je uspesna. Prosimo, poizkusite se vpisati.")
-                return render(request, 'index.html', {'login_form': form, 'registered_success': True})
+                return render_to_response('index.html', {'login_form': form, 'registered_success': True})
             except:
                 print("Ta mail ni v nasi bazi")
 

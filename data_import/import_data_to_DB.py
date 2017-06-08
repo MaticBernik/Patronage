@@ -153,6 +153,7 @@ with open("testno_zdravnisko_osebje.csv","r") as staff_file: #encoding="utf8"
 		elif line[0]=="sodelavec":
 			conn.execute("INSERT INTO patronazna_sluzba_app_sodelavec_zd (sifra_sodelavca,telefonska_st,sifra_izvajalca_ZS_id,uporabniski_profil_id) VALUES (?,?,?,?)", (line[3], line[5], line[6], id));
 		conn.execute("INSERT INTO patronazna_sluzba_app_uporabnik (profil_id) VALUES (?)",	(id,));
+
 #Make sure, that every area has its nurse
 email_domains=['@gmail.com','@hotmail.com','@siol.net','@arnes.si']
 passwd = "pbkdf2_sha256$30000$5tP0aYJfzJu2$KPakIfFZwRVWnzc8H08kFF67XMvKh1Kjbm5JqN1ucBs="  # workaround --> geslo123

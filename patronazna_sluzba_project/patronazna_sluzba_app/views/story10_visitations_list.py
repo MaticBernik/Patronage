@@ -74,7 +74,7 @@ def list_visitations(request):
 
         #visitations=Obisk.objects.filter(p_sestra_id=nurse)
         visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
-        visitations |= Obisk.objects.filter(n_sestra_id=nurse)
+        #visitations |= Obisk.objects.filter(n_sestra_id=nurse)
 
         nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
         print("***Nadomescanja sestre: ", nadomescanja)

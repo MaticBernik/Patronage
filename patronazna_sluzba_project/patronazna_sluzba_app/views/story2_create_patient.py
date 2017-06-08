@@ -121,13 +121,13 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
 
 def add_patient_taken_care_of(trenutni_uporabnik, first_name, last_name, card_number, address,
                                birth_date, sex,
-                               sorodstvo, phone_number):
+                               sorodstvo, phone_number,posta,district):
 
     if check_taken_care_of(first_name, last_name, card_number, address, phone_number, sorodstvo):
         #   Tu dodam oskrbovanca
         patient = Pacient(uporabniski_profil=None, st_kartice=card_number, naslov=address, ime=first_name, priimek=last_name,
                           telefonska_st=phone_number,
-                          datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik)
+                          datum_rojstva=birth_date, spol=sex, kontakt=None, skrbnistvo=trenutni_uporabnik, posta=posta, okolis=district)
         patient.save()
         print("Dodan oskrbovanec za: ", trenutni_uporabnik.uporabniski_profil.username)
 
@@ -334,7 +334,8 @@ def register_patient(request):
             print('izbrana posta '+postal_num)
             # uspesno izbran okolis
             district = request.POST['search_district']
-            okolis = Okolis.objects.get(ime=district)
+            #okolis = Okolis.objects.get(ime=district)
+            okolis = Okolis.objects.get(ime=district,posta_id=int(postal_num[:4]))
 
             posta = Posta.objects.get(postna_st=int(postal_num[:4]))
 
@@ -404,18 +405,28 @@ def add_nursing_patient(request):
             address = form.cleaned_data['address']
             #postCode = form.cleaned_data['post_code']
             #posta oskrbovanca
-            post_code = request.POST['search_post']
-            district_name = request.POST['search_district']
-            print('posta oskrbovanca '+post_code +' okolis '+district_name)
+            #post_code = request.POST['search_post']
+            #district_name = request.POST['search_district']
+            #print('posta oskrbovanca '+post_code +' okolis '+district_name)
             #district = form.cleaned_data['district']
             birth_date = form.cleaned_data['birth_date']
             sex = form.cleaned_data['sex']
             relation = form.cleaned_data['relation']
 
+            # uspesno izbrana posta
+            postal_num = request.POST['search_post']
+            print('izbrana posta ' + postal_num)
+            # uspesno izbran okolis
+            district = request.POST['search_district']
+            # okolis = Okolis.objects.get(ime=district)
+            okolis = Okolis.objects.get(ime=district, posta_id=int(postal_num[:4]))
+
+            posta = Posta.objects.get(postna_st=int(postal_num[:4]))
+
             if not (
                     add_patient_taken_care_of(current_pacient, first_name, last_name, card_number,
                                                                          address,
-                                                                          birth_date, sex, relation, phone_number)):
+                                                                          birth_date, sex, relation, phone_number,posta,okolis)):
                 return HttpResponse("Napaka pri dodajanju oskrbovanca");
             # return HttpResponse("Dodali ste oskrbovanca")
             return redirect('link_control_panel')

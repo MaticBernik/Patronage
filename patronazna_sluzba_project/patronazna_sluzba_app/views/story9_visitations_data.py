@@ -49,8 +49,16 @@ def list_active_visitations(request):
         return
 
     #visitations = Obisk.objects.filter(p_sestra_id=nurse)
+    planned_today = Plan.objects.filter(datum__icontains=datetime.now().date()).values_list('planirani_obisk_id',flat=True)
+    print("PLANNED TODAY")
+    print(planned_today)
+    print("DATE FILTER")
+    print(datetime.now().date())
+    planned_yesterday = Plan.objects.filter(datum__icontains=(datetime.now()-timedelta(days=1)).date()).values_list('planirani_obisk_id', flat=True)
+    print(planned_today)
+    print(planned_yesterday)
     visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
-    visitations |= Obisk.objects.filter(n_sestra_id=nurse)
+    #visitations |= Obisk.objects.filter(n_sestra_id=nurse)
     nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
     obiski_n = []
     if len(nadomescanja) > 0:
@@ -70,8 +78,11 @@ def list_active_visitations(request):
     #print("!!!!!!!!!VISITATIONS - pred delitvijo: ",visitations)
     for x in visitations:
         print(x.datum)
-    visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
-    visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
+    #visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
+    visitations_today=[x for x in visitations if x.id in planned_today]
+
+    #visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
+    visitations_yesterday = [x for x in visitations if x.id in planned_yesterday]
     #print("!!!!!!!!!!!VISITATIONS_TODAY: ",visitations_today)
     #print("!!!!!!!!!!!VISITATIONS_YESTERDAY: ",visitations_yesterday)
 

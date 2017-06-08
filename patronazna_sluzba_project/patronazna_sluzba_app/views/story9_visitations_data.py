@@ -48,7 +48,9 @@ def list_active_visitations(request):
         print("ERROR!!")
         return
 
-    visitations = Obisk.objects.filter(p_sestra_id=nurse)
+    #visitations = Obisk.objects.filter(p_sestra_id=nurse)
+    visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
+    visitations |= Obisk.objects.filter(n_sestra_id=nurse)
     nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
     obiski_n = []
     if len(nadomescanja) > 0:
@@ -109,7 +111,7 @@ def list_active_visitations(request):
 
 def edit_visitaiton_data(request):
     #change_visitation_date boolean field
-    print("GOT IN VIA NEW FUNCTION !!!")
+    # print("GOT IN VIA NEW FUNCTION !!!")
 
     # CREATE FORMS
 
@@ -183,7 +185,7 @@ def edit_visitaiton_data(request):
             # vrednost=form.cleaned_data[ime_polja]
             vrednost = request.POST.get(ime_polja)
             i=polja_imena.index(ime_polja)
-            print("ID OBISKA",obisk.id)
+            # print("ID OBISKA",obisk.id)
             if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0], meritev=polja[i][3]).exists():
                 '''if not datetime.now().date() == obisk.datum.date():
                     print("Datum vnosa porocila je razlicen od datuma obiska ---> potrebna potrditev dejanskega datuma obiska")'''
@@ -198,7 +200,7 @@ def edit_visitaiton_data(request):
         # SAVE DATA
         if request.POST.get('change_visitation_date',0):
             popravi_datum=request.POST['change_visitation_date']
-            print("!!!!!!!!POPRAVI DATUM: ",popravi_datum)
+            # print("!!!!!!!!POPRAVI DATUM: ",popravi_datum)
             if popravi_datum=='on':
                 obisk.datum=datetime.now().date()
                 obisk.save()

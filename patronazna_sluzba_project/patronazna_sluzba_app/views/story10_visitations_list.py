@@ -72,13 +72,18 @@ def list_visitations(request):
         nalogi_vezani_na_pacienta=Pacient_DN.objects.filter(pacient_id__in=pacienti)
         delovni_nalogi = Delovni_nalog.objects.filter(id__in=[x.delovni_nalog_id for x in nalogi_vezani_na_pacienta])
 
-        visitations=Obisk.objects.filter(p_sestra_id=nurse)
+        #visitations=Obisk.objects.filter(p_sestra_id=nurse)
+        visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
+        visitations |= Obisk.objects.filter(n_sestra_id=nurse)
+
         nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
         print("***Nadomescanja sestre: ", nadomescanja)
         obiski_n = []
         if len(nadomescanja) > 0:
             for nadomescanje in nadomescanja:
-                nadomescani_obiski = Obisk.objects.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                #nadomescani_obiski = Obisk.objects.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                nadomescani_obiski = Obisk.objects.filter(p_sestra_id=nadomescanje.sestra_id,datum__range=(nadomescanje.datum_zacetek,nadomescanje.datum_konec ))
+
                 print("***Nadomescani obiski dodajam: ", nadomescani_obiski)
                 if len(nadomescani_obiski) > 0:
                     for x in nadomescani_obiski:
@@ -183,7 +188,9 @@ def list_visitations(request):
         if len(nadomescanja)>0:
             obiski_n=[]
             for nadomescanje in nadomescanja:
-                nadomescani_obiski=visitations.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                #nadomescani_obiski=visitations.filter(p_sestra_id=nadomescanje.sestra_id, datum__gte=nadomescanje.datum_zacetek, datum__lte=nadomescanje.datum_konec + timedelta(days=1))
+                nadomescani_obiski = visitations.filter(p_sestra_id=nadomescanje.sestra_id,datum__range=(nadomescanje.datum_zacetek,nadomescanje.datum_konec ))
+
                 print("***Nadomescani obiski dodajam: ",nadomescani_obiski)
                 if len(nadomescani_obiski)>0:
                     for x in nadomescani_obiski:

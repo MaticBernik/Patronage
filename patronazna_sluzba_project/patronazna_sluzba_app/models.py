@@ -395,11 +395,7 @@ class Obisk(models.Model):
         polja=Polje_meritev.objects.filter(meritev_id__in=meritve)
         osnutek =  [ (Meritev.objects.get(id=x.meritev_id).opis, x.polje.ime, Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).vrednost, Pacient.objects.get(st_kartice= Porocilo_o_obisku.objects.get(obisk_id=self.id, meritev_id=x.meritev_id, polje_id=x.polje.id).pacient_id).name_string) for x in polja]
         
-        print("============================== OSNUTEK ========================")
-        for i in osnutek:
-            print(i)
 
-        print("===============================================================")
         # potrebno filtriranje osnutka
         #fix to write
         print_ready = []
@@ -426,7 +422,6 @@ class Obisk(models.Model):
                     previous = description
                     prev_pacient = pac_id
 
-        print(print_ready)
         return print_ready
 
     def obisk_vrsta_tostring(self):

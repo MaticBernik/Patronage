@@ -329,6 +329,17 @@ def work_task_view(request):
 
                 visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
                 visit.save()
+
+                material_dn=Material_DN.objects.filter(delovni_nalog=work_task_f)
+                for m in material_dn:
+                    material_obisk=Material_Obisk(obisk=visit, material=m.material, kolicina=m.kolicina)
+                    material_obisk.save()
+                zdravila_dn=Zdravilo_DN.objects.filter(delovni_nalog=work_task_f)
+                for z in zdravila_dn:
+                    zdravilo_obisk = Zdravilo_Obisk(obisk=visit, material=m.material, kolicina=m.kolicina)
+                    zdravilo_obisk.save()
+
+
                 date_current = date_next
                 print("Obisk shranjen (INTERVAL); datum: ", date_current)
         else:
@@ -358,6 +369,16 @@ def work_task_view(request):
                     visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra,
                                   obvezen_obisk=obv)
                     visit.save()
+
+                    material_dn = Material_DN.objects.filter(delovni_nalog=work_task_f)
+                    for m in material_dn:
+                        material_obisk = Material_Obisk(obisk=visit, material=m.material, kolicina=m.kolicina)
+                        material_obisk.save()
+                    zdravila_dn = Zdravilo_DN.objects.filter(delovni_nalog=work_task_f)
+                    for z in zdravila_dn:
+                        zdravilo_obisk = Zdravilo_Obisk(obisk=visit, material=m.material, kolicina=m.kolicina)
+                        zdravilo_obisk.save()
+
                     date_current = date_next
                     print("Obisk shranjen (OBDOBJE); datum: ", date_current)
                 else:

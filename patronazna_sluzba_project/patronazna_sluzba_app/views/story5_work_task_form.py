@@ -325,7 +325,6 @@ def work_task_view(request):
                 obv = 0
                 if obveznost == "Obvezen":
                     obv = 1
-                    obveznost = "Okviren"
 
                 visit = Obisk(delovni_nalog=work_task_f, datum=date_current, p_sestra=p_sestra, obvezen_obisk=obv)
                 visit.save()

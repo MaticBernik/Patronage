@@ -102,7 +102,7 @@ def add_patient_caretaker(password1, password2, first_name, last_name, mail, car
                         print("patient dodan")
                         #patient.save()
 
-                        user = User.objects.create_user(username=mail,
+                        user = User.objects.create_user(first_name=first_name, last_name=last_name, username=mail,
                                                         password=password1,
                                                         email=mail, is_active=0)
 

@@ -23,12 +23,14 @@
 	<!-- CUSTOM FORM CALL -->
 	{% if registered_success %}
 		    <div class="alert alert-info col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
-			  <strong>Čestitke!</strong> Uspešno ste se registrirali. Sedaj se lahko vpišete.
+			  <strong>Čestitke!</strong> Uspešno ste se registrirali. Preden se lahko vpišete morate osvežiti stran.<br>
+			  <a href="{% url 'link_home' %}">OSVEŽI ZDAJ</a>
 			</div>
 	{% endif %} 
 	{% if not_verified %}
 		    <div class="alert alert-info col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
-			  <strong>Pozor!</strong> Kot kaže vaš račun še ni bil aktiviran. Prosimo preverite svoj e-nabiralnik.
+			  <strong>Pozor!</strong> Kot kaže vaš račun še ni bil aktiviran. Prosimo preverite svoj e-nabiralnik ali osvežite stran.<br>
+			  <a href="{% url 'link_home' %}">OSVEŽI ZDAJ</a>
 			</div>
 	{% endif %} 
 	{% if blocked %}

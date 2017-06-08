@@ -29,7 +29,7 @@ def navbar_list_processor(request):
         end_substitution_arr = ["link_sub_finished", "Zaključek nadomeščanja", "c_end_subs", "glyphicon-ok-circle" ]
         delete_patient_arr = ["link_disable_patient_user", "Zbirišite račun", "u_del", "glyphicon-remove-sign" ]
 
-        delete_staff_arr = ["link_disable_staff_member", "Odstranite račun osebja", "u_del_staff", "glyphicon-remove-sign" ]
+        #delete_staff_arr = ["link_disable_staff_member", "Odstranite račun osebja", "u_del_staff", "glyphicon-remove-sign" ]
 
         visitations_nurse_data_arr = ["link_visitations_nurse_data", "Vnos podatkov o obisku", "v_nrs_visits_data", "glyphicon-pencil" ] 
 
@@ -55,7 +55,7 @@ def navbar_list_processor(request):
             role="Admin"
             link_list = [control_panel_arr]
             dropdown_settings.append(change_password_arr)
-            dropdown_settings.append(delete_staff_arr)
+            #dropdown_settings.append(delete_staff_arr)
             dropdown_staff_management.append(add_medical_staff_arr)
         elif is_doctor(user):
             role="Zdravnik"

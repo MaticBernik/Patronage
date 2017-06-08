@@ -20,7 +20,35 @@
 	<div class="jumbotron col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		<img id="jumbo_img" class="img-responsive center-block img-rounded" src="{% static '/img/banner_ver1.png' %}">
 	</div>
-	<!-- CUSTOM FORM CALL --> 
+	<!-- CUSTOM FORM CALL -->
+	{% if registered_success %}
+		    <div class="alert alert-info col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
+			  <strong>Čestitke!</strong> Uspešno ste se registrirali. Sedaj se lahko vpišete.
+			</div>
+	{% endif %} 
+	{% if not_verified %}
+		    <div class="alert alert-info col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
+			  <strong>Pozor!</strong> Kot kaže vaš račun še ni bil aktiviran. Prosimo preverite svoj e-nabiralnik.
+			</div>
+	{% endif %} 
+	{% if blocked %}
+		    <div class="alert alert-danger col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
+			  <strong>POZOR!</strong> Vaš IP je bil blokiran zaradi 5 napačnih poskusov. Znova lahko poskusite čez 3 minute.
+			</div>
+	{% endif %}
+
+	{% if invalid %}
+		    <div class="alert alert alert-warning col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
+			  <strong>Pozor!</strong> Preverite vnosna polja.
+			</div>
+	{% endif %}
+
+	{% if wrong_data %}
+		    <div class="alert alert-danger col-lg-offset-3 col-lg-6 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-3  col-xs-6" style="min-height: 50px; text-align: center">
+			  <strong>Napaka!</strong> Uporabniško ime in geslo se ne ujemata.
+			</div>
+	{% endif %}
+
 	<div class="container">
 
 		{{ login_form.non_field_errors }}

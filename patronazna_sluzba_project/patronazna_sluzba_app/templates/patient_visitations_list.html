@@ -314,6 +314,33 @@
                                     {% endif %}
                                     <hr>        
                                 {% endfor %}
+                                {% if visit.porocilo_material %}
+                                    {% if visit.porocilo_material|length > 0 %}
+                                    <div class ="row">
+                                        <p style=" padding: 10px; text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #7c796c; background-color: #7c796c; color:white" ><b>Seznam materiala potrebnega za obisk:</b>
+
+                                        <br>
+
+                                        {% for m in visit.porocilo_material %}
+                                            <p><b>{{m.material.ime}}   x{{m.kolicina}}</b></p>
+                                        {% endfor %}
+
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                                {% if visit.porocilo_zdravila %}
+                                    {% if visit.porocilo_zdravila|length > 0 %}
+                                    <div class ="row">
+                                        <p style=" padding: 10px; text-align:center;font-size: 20px; border-style:solid; border-width: 3px;border-radius: 7px; border-color: #7c796c; background-color: #7c796c; color:white" ><b>Seznam zdravil potrebnih za obisk:</b>
+
+                                        <br>
+                                        {% for z in visit.porocilo_zdravila %}
+                                            <p><b>{{z.zdravilo.ime}}   x{{z.kolicina}}</b></p>
+                                        {% endfor %}
+
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
                             </div>
 		        		{% endfor %}
 		        	{% endif %}

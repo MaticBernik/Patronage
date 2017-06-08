@@ -679,7 +679,7 @@ class InputVisitationDataForm(forms.Form):
             else:
                 pass
 
-        min_val = 1
+        min_val = 0
         max_val = 50
 
         #ADD FIELDS FOR MATERIAL
@@ -687,7 +687,7 @@ class InputVisitationDataForm(forms.Form):
 
         if(len(visit_material) > 0):
 
-            self.fields['material_info_visit_%s' % current_visit.id ] = CharField(label= "Opcijsko", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':"MATERIAL"}))
+            self.fields['material_info_visit_%s' % current_visit.id ] = CharField(label= "Opcijsko", required = False, widget=forms.TextInput(attrs={'class': 'form-control additionals','readonly':'readonly','value':"MATERIAL"}))
 
 
             for m in visit_material:
@@ -702,13 +702,13 @@ class InputVisitationDataForm(forms.Form):
 
         if(len(visit_medications) > 0):
 
-            self.fields['material_info_visit_%s' % current_visit.id ] = CharField(label= "Opcijsko", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value':"MATERIAL"}))
+            self.fields['material_info_visit_%s' % current_visit.id ] = CharField(label= "Opcijsko", required = False, widget=forms.TextInput(attrs={'class': 'form-control additionals','readonly':'readonly','value':"ZDRAVILA"}))
 
             for z in visit_medications:
                 # self.fields['info_polje%s_material_%s' % (current_visit.id, m.id)] = CharField(label= "Enota", required = False, widget=forms.TextInput(attrs={'class': 'form-control patient-name','readonly':'readonly','value': m.material}))
                 # self.fields['polje%s_%s' % (pm_id, nursing_patients[nrs_pt].st_kartice)].widget.attrs['disabled'] = "disabled"
 
-                self.fields['polje%s_zdravilo_%s' % (current_visit.id, z.zdravilo.id)] = IntegerField(label=z.zdravilo.ime.upper(), required = False,
+                self.fields['polje%s_zdravilo_%s' % (current_visit.id, z.zdravilo.nacionalna_sifra)] = IntegerField(label=z.zdravilo.ime.upper(), required = False,
                     widget=forms.NumberInput(attrs={'class': 'form-control', 'value': int(z.kolicina), 'step': 1,'min':min_val,'max': max_val}), validators=[MinValueValidator(min_val),MaxValueValidator(max_val)])
         
 

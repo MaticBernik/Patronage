@@ -428,6 +428,12 @@ class Obisk(models.Model):
         delovni_nalog = Delovni_nalog.objects.get(id=self.delovni_nalog.id)
         vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
         return vrsta_obiska.ime
+    
+    def porocilo_material(self):
+        return Material_Obisk.objects.filter(obisk=self)
+    
+    def porocilo_zdravila(self):
+        return Zdravilo_Obisk.objects.filter(obisk=self)
 
 class Material_Obisk(models.Model):
     obisk = models.ForeignKey(Obisk)

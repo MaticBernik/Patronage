@@ -207,8 +207,8 @@ def activate(request):
             except:
                 print("Ta mail ni v nasi bazi")
 
-    #return HttpResponse("Aktivacija ni uspela.")
-    return render(request, 'index.html', {'login_form': form, 'not_verified': True})
+    return HttpResponse("Aktivacija ni uspela.")
+    #return render(request, 'index.html', {'login_form': form, 'not_verified': True})
     
 def logout_user(request):
     logout(request)

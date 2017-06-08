@@ -74,7 +74,7 @@ def list_visitations(request):
 
         #visitations=Obisk.objects.filter(p_sestra_id=nurse)
         visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
-        visitations |= Obisk.objects.filter(n_sestra_id=nurse)
+        #visitations |= Obisk.objects.filter(n_sestra_id=nurse)
 
         nadomescanja = Nadomescanje.objects.filter(nadomestna_sestra_id=nurse, veljavno=True)
         print("***Nadomescanja sestre: ", nadomescanja)
@@ -93,6 +93,9 @@ def list_visitations(request):
             print("***NADOMESCANJE PRAZEN QUERYSET")
         #obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
         visitations = list(chain(visitations, obiski_n))
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(visitations)
+        print("========================================")
         visitations_nurse=visitations
         print("!!! OBISKI SESTRE PRED FILTRIRANJEM: ",visitations)
         print("len(visitations) = ",len(visitations))

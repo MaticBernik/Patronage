@@ -448,7 +448,7 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 				"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id, opravljen) VALUES (?,?,?,?,?)",
 				(delovni_nalog_id, date_current, obv, p_sestra, opr));
 
-			cursor = conn.execute(
+			'''cursor = conn.execute(
 				"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(delovni_nalog_id) + " and datum='"+str(date_current)+"' and obvezen_obisk="+str(obv)+" and p_sestra_id="+str(p_sestra)+" and opravljen="+str(opr)+";");
 			obisk=cursor.fetchall()[0][0]
 			for zdravilo in zdravila_dn:
@@ -458,7 +458,7 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 			for material in material_dn:
 				conn.execute(
 					"INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)",
-					(obisk, material[1], material[2]));
+					(obisk, material[1], material[2]));'''
 
 			date_current = date_next
 			print("Obisk shranjen (INTERVAL); datum: ", date_current)
@@ -502,7 +502,7 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 					"INSERT INTO patronazna_sluzba_app_obisk (delovni_nalog_id, datum, obvezen_obisk, p_sestra_id, opravljen) VALUES (?,?,?,?,?)",
 					(delovni_nalog_id, date_current, obv, p_sestra, opr));
 
-				cursor = conn.execute(
+				'''cursor = conn.execute(
 					"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(
 						delovni_nalog_id) + " and datum='" + str(date_current) + "' and obvezen_obisk=" + str(obv) + " and p_sestra_id=" + str(p_sestra) + " and opravljen=" + str(opr) + ";");
 				obisk = cursor.fetchall()[0][0]
@@ -513,7 +513,7 @@ def kreiraj_obiske(delovni_nalog_id, interval_period, type, number_of_visits, da
 				for material in material_dn:
 					conn.execute(
 						"INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)",
-						(obisk, material[1], material[2]));
+						(obisk, material[1], material[2]));'''
 
 
 				date_current = date_next
@@ -551,9 +551,10 @@ with open("delovni_nalogi.csv", "r") as dn_file:  # encoding="utf8"
 with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
 	materialDN_reader = csv.reader(materialDN_file, delimiter=';')
 	next(materialDN_reader, None)  # skip header
-	cursor = conn.execute("select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0]) + ";");
-	obiski = cursor.fetchall()
 	for line in materialDN_reader:
+		cursor = conn.execute(
+			"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0]) + ";");
+		obiski = cursor.fetchall()
 		conn.execute("INSERT INTO patronazna_sluzba_app_material_DN (delovni_nalog_id, material_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 		for obisk in obiski:
 			conn.execute("INSERT INTO patronazna_sluzba_app_material_obisk (obisk_id, material_id, kolicina) VALUES (?,?,?)", (int(obisk[0]), int(line[1]), int(line[2])));
@@ -563,9 +564,10 @@ with open("material_na_DN.csv", "r") as materialDN_file:  # encoding="utf8"
 with open("zdravila_na_DN.csv", "r") as zdravilaDN_file:  # encoding="utf8"
 	zdravilaDN_reader = csv.reader(zdravilaDN_file, delimiter=';')
 	next(zdravilaDN_reader, None)  # skip header
-	cursor = conn.execute("select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0])+";");
-	obiski = cursor.fetchall()
 	for line in zdravilaDN_reader:
+		cursor = conn.execute(
+			"select id from patronazna_sluzba_app_obisk where delovni_nalog_id=" + str(line[0]) + ";");
+		obiski = cursor.fetchall()
 		conn.execute("INSERT INTO patronazna_sluzba_app_zdravilo_DN (delovni_nalog_id, zdravilo_id, kolicina) VALUES (?,?,?)", (int(line[0]), int(line[1]), int(line[2])));
 		for obisk in obiski:
 			conn.execute(

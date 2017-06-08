@@ -205,6 +205,43 @@ def edit_visitaiton_data(request):
                 obisk.datum=datetime.now().date()
                 obisk.save()
 
+        #POPRAVI KOLICINE UPORABLJENEGA MATERIALA IN ZDRAVIL
+        obisk_material=Material_Obisk.objects.filter(obisk_id=obisk)
+        obisk_zdravila=Zdravilo_Obisk.objects.filter(obisk_id=obisk)
+
+        imena_polj_material=[]
+        imena_polj_zdravila=[]
+        for m in obisk_material:
+            imena_polj_material.append("polje"+str(obisk.id)+'_material_'+str(m.material_id))
+        for z in obisk_zdravila:
+            imena_polj_zdravila.append("polje"+str(obisk.id)+'_zdravilo_'+str(z.nacionalna_sifra))
+
+        print("imena polj zdravila: ", imena_polj_zdravila)
+        print("imena polj material: ",imena_polj_material)
+
+        for polje in imena_polj_material:
+            if not request.POST.get(polje, 0):
+                print("Napaka! polje ne obstaja!")
+                continue
+            vrednost = request.POST.get(polje)
+            material_id=int(polje[polje.index('_material_')+len('_material_'):])
+            vnos_v_bazi = Material_Obisk.objects.filter(obisk_id=obisk, material_id=material_id)
+            vnos_v_bazi=vnos_v_bazi[0]
+            if vrednost != vnos_v_bazi.kolicina:
+                vnos_v_bazi.kolicina=vrednost
+                vnos_v_bazi.save()
+
+        for polje in imena_polj_zdravila:
+            if not request.POST.get(polje, 0):
+                print("Napaka! polje ne obstaja!")
+                continue
+            vrednost = request.POST.get(polje)
+            zdravilo_id = int(polje[polje.index('_zdravilo_') + len('_zdravilo_'):])
+            vnos_v_bazi = Zdravilo_Obisk.objects.filter(obisk_id=obisk, zdravilo_id_id=zdravilo_id)
+            vnos_v_bazi = vnos_v_bazi[0]
+            if vrednost != vnos_v_bazi.kolicina:
+                vnos_v_bazi.kolicina = vrednost
+                vnos_v_bazi.save()
 
         # REDIRECT TO PREVIOUS PAGE
         return redirect('link_visitations_nurse_data')

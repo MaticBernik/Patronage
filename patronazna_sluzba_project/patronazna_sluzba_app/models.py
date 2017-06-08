@@ -434,6 +434,16 @@ class Obisk(models.Model):
         vrsta_obiska = Vrsta_obiska.objects.get(sifra=delovni_nalog.vrsta_obiska.sifra)
         return vrsta_obiska.ime
 
+class Material_Obisk(models.Model):
+    obisk = models.ForeignKey(Obisk)
+    material = models.ForeignKey(Material)
+    kolicina = models.IntegerField(null=False, default=1)
+
+class Zdravilo_Obisk(models.Model):
+    obisk = models.ForeignKey(Obisk)
+    zdravilo = models.ForeignKey(Zdravilo, null=True)
+    kolicina = models.IntegerField(null=False, default=1)
+
 class Pacient_DN(models.Model):
     delovni_nalog = models.ForeignKey(Delovni_nalog, null=False, on_delete=models.CASCADE)
     pacient = models.ForeignKey(Pacient, null=True)

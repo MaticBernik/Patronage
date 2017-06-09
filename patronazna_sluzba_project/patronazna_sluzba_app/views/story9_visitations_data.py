@@ -200,6 +200,7 @@ def edit_visitaiton_data(request):
             id_pacienta=ime_polja[ime_polja.index('_')+1:]
             # vrednost=form.cleaned_data[ime_polja]
             vrednost = request.POST.get(ime_polja)
+            print("!!!!!Vrednost: ",vrednost)
             i=polja_imena.index(ime_polja)
             # print("ID OBISKA",obisk.id)
             if not Porocilo_o_obisku.objects.filter(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0], meritev=polja[i][3]).exists():

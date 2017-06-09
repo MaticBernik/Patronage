@@ -85,6 +85,8 @@ def register_medical_staff(request):
                                                 email=email,
                                                 username=email)
                 print("user object saved")
+                uporabnik = Uporabnik.objects.create(profil_id=user.id)
+                print("Uporabnik object saved")
             except:
                 print("Could not create User object using given data!")
                 return HttpResponse("Userja ne gre registrirat.")
@@ -98,14 +100,14 @@ def register_medical_staff(request):
                 profile = Zdravnik(uporabniski_profil=user, sifra_zdravnika=code, telefonska_st=phone_number,
                                    sifra_izvajalca_ZS=institution)
                 print("delam zdravnika")
-                uporabnik = Uporabnik.objects.create(profil_id=user.id)
-                print("Uporabnik object saved")
+                '''uporabnik = Uporabnik.objects.create(profil_id=user.id)
+                print("Uporabnik object saved")'''
             elif role == 'head_of_medical_service':
                 profile = Vodja_PS(uporabniski_profil=user, sifra_vodje_PS=code, telefonska_st=phone_number,
                                    sifra_izvajalca_ZS=institution)
                 print("delam vodjo PS")
-                uporabnik = Uporabnik.objects.create(profil_id=user.id)
-                print("Uporabnik object saved")
+                '''uporabnik = Uporabnik.objects.create(profil_id=user.id)
+                print("Uporabnik object saved")'''
             elif role == 'employee':
                 profile = Sodelavec_ZD(uporabniski_profil=user, ssifra_sodelavca=code, telefonska_st=phone_number,
                                        sifra_izvajalca_ZS=institution)

@@ -94,6 +94,7 @@ def list_visitations(request):
         #obiski_n=obiski_n.filter(nadomestna_sestra_id=nurse)
         visitations = list(chain(visitations, obiski_n))
         visitations_nurse=visitations
+        visitations=Obisk.objects.filter(id__in=[x.id for x in visitations])
         print("!!! OBISKI SESTRE PRED FILTRIRANJEM: ",visitations)
         print("len(visitations) = ",len(visitations))
 
@@ -214,7 +215,7 @@ def list_visitations(request):
     if request.POST.get('filter_date_to', 0):
         datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
         # POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
-        datum += timedelta(days=1)
+        #datum += timedelta(days=1)
         visitations = visitations.filter(datum__lte=datum)  # datetime.min
         # filter_form.fields['filter_date_to'] = request.POST['filter_date_to']
         filter_form.fields['filter_date_to'].initial = request.POST['filter_date_to']

@@ -103,14 +103,15 @@ def list_work_task(request):
 
             filter_form.fields['filter_creator_id'].initial = request.POST['filter_creator_id']
         if request.POST.get('filter_date_from',0):
-            datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y")
+            datum = datetime.strptime(request.POST['filter_date_from'], "%d.%m.%Y").date()
+            print("Datum za filtriranje: ",datum)
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__gte=datum) #datetime.max
             #filter_form.fields['filter_date_from'] = request.POST['filter_date_from']
             filter_form.fields['filter_date_from'].initial = request.POST['filter_date_from']
         if request.POST.get('filter_date_to',0):
-            datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y")
+            datum = datetime.strptime(request.POST['filter_date_to'], "%d.%m.%Y").date()
             #POPRAVEK, KER __lte ZACUDA NE VKLJUCUJE MEJE
-            datum+=timedelta(days=1)
+            #datum+=timedelta(days=1)
 
             delovni_nalogi = delovni_nalogi.filter(datum_prvega_obiska__lte=datum) #datetime.min
             #filter_form.fields['filter_date_to'] = request.POST['filter_date_to']

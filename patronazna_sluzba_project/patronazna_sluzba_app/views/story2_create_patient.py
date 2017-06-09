@@ -140,7 +140,9 @@ def add_patient_taken_care_of(trenutni_uporabnik, first_name, last_name, card_nu
 
 def sendEmail(activation_key, customer_mail):
 
-    link="http://127.0.0.1:8000/activate?token="+activation_key
+    #link="http://127.0.0.1:8000/activate?token="+activation_key
+    link="http://testni.streznik.org:80/activate?token="+activation_key
+
     sporocilo = "Greetings. Thank you for working with PARSEK. We would like to ask you to click the link below for email verification.  "+link+" Have a nice day. Parsek team."
     msg = """\
     <html>

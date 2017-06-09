@@ -24,3 +24,7 @@ def text_lenght(text):
 @register.filter(name='to_string')
 def to_string(text):
     return str(text)
+
+@register.filter
+def lookup(d, key):
+    return d[key]

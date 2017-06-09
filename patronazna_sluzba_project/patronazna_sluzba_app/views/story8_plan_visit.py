@@ -429,7 +429,14 @@ def plan_list_ajax(request):
    # main_nurse_id = nurse.id
     #global global_nurse_id
     request.session['global_nurse_id'] = nurse.id
-    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id})
+    patient_name = []
+    patient_surname = []
+    for i in visit_list:
+        q=Pacient_DN.objects.select_related().filter(delovni_nalog_id=i.delovni_nalog_id)
+        #print(q[0].pacient.uporabniski_profil.first_name[0])
+        patient_name.append(q[0].pacient.uporabniski_profil.first_name[0]+'.')
+        patient_surname.append(q[0].pacient.uporabniski_profil.last_name)
+    return render_to_response('ajax_plan_visit.html',{'visit_list':visit_list,'nurse':nurse.id,'name':patient_name,'surname':patient_surname})
 
 def replace_datum_type(list,n):
     if n != 1:
@@ -454,13 +461,17 @@ def ajax_added_to_plan(request):
     test_plan = replace_datum_type(test_plan, 1)
     # global_plan=planned_visits
     global_plan = test_plan
-    """
-    print("=========SESSIONG GET==========")
-    print(global_plan)
-    print("============================")
-    """
+
+    patient_name = []
+    patient_surname = []
+    for i in global_plan:
+        q = Pacient_DN.objects.select_related().filter(delovni_nalog_id=i.planirani_obisk.delovni_nalog_id)
+        # print(q[0].pacient.uporabniski_profil.first_name[0])
+        patient_name.append(q[0].pacient.uporabniski_profil.first_name[0] + '.')
+        patient_surname.append(q[0].pacient.uporabniski_profil.last_name)
+
     global_nurse_id = request.session.get('global_nurse_id')
-    return render_to_response('ajax_already_planned.html',{'planned':global_plan,'nurse':global_nurse_id})
+    return render_to_response('ajax_already_planned.html',{'planned':global_plan,'nurse':global_nurse_id,'name':patient_name,'surname':patient_surname})
 
 def plan_visit_view(request):
     if request.method == "POST":

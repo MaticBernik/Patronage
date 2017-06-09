@@ -213,9 +213,11 @@ def edit_visitaiton_data(request):
                 porocilo_vnos.vrednost = vrednost
                 porocilo_vnos.save()
 
-        if obisk_opravljen and not obisk.opravljen:
-            obisk.opravljen=True
-            obisk.save()
+        # if obisk_opravljen and not obisk.opravljen:
+            # obisk.opravljen=True
+            # obisk.save()
+        obisk.opravljen=True
+        obisk.save()
 
         # SAVE DATA
         if request.POST.get('change_visitation_date',0):

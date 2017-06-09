@@ -59,7 +59,7 @@ def change_pw_view(request):
 
 def sendEmail(activation_key, customer_mail):
 
-    link="http://127.0.0.1:8000/activateNewPassword?token="+activation_key
+    link="http://testni.streznik.org:80/activateNewPassword?token="+activation_key
     sporocilo = "Ob kliku na povezavo se vam bo geslo uspešno spremenilo.  "+link+" Želimo Vam lep dan, Parsek."
 
     send_mail(

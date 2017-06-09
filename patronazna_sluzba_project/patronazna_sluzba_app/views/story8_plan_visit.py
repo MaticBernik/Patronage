@@ -490,7 +490,7 @@ def plan_visit_view(request):
             print("INSIDE POST: " + datum)
             datum = datetime.strptime(datum, "%Y-%m-%d") + timedelta(hours=2)
         else:
-            datum = datetime.now() + timedelta(hours=2)
+            datum = datetime.now().date() + timedelta(hours=2)
             print("=================DATUM NOW============")
             print(datum)
 
@@ -538,9 +538,9 @@ def plan_visit_view(request):
                         plan = Plan(planirani_obisk_id=obisk_id,datum = datetime.now()+timedelta(days=3, hours=2))
                     """#el
                     if day == 5:
-                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=2,hours=2))
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now().date() + timedelta(days=2,hours=2))
                     elif day == 6:
-                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now() + timedelta(days=1 ,hours=2))
+                        plan = Plan(planirani_obisk_id=obisk_id, datum = datetime.now().date() + timedelta(days=1 ,hours=2))
                     else:
                         print("==================INSIDE ELSE==============")
                         print(datum)

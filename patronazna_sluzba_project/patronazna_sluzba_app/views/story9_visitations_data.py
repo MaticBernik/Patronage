@@ -49,12 +49,15 @@ def list_active_visitations(request):
         return
 
     #visitations = Obisk.objects.filter(p_sestra_id=nurse)
-    planned_today = Plan.objects.filter(datum__icontains=datetime.now().date()).values_list('planirani_obisk_id',flat=True)
+    #planned_today = Plan.objects.filter(datum__icontains=datetime.now().date()).values_list('planirani_obisk_id',flat=True)
+    planned_today= Plan.objects.filter(datum__gte=datetime.now().date(), datum__lte=(datetime.now()+timedelta(days=1)))
     print("PLANNED TODAY")
     print(planned_today)
     print("DATE FILTER")
     print(datetime.now().date())
-    planned_yesterday = Plan.objects.filter(datum__icontains=(datetime.now()-timedelta(days=1)).date()).values_list('planirani_obisk_id', flat=True)
+    #planned_yesterday = Plan.objects.filter(datum__icontains=(datetime.now().date()-timedelta(days=1)).date()).values_list('planirani_obisk_id', flat=True)
+    planned_yesterday= Plan.objects.filter(datum__gte=datetime.now().date() - timedelta(days=1), datum__lte=(datetime.now().date()))
+    planned_yesterday = Plan.objects.filter(datum = datetime.now().date()-timedelta(days=1))
     print(planned_today)
     print(planned_yesterday)
     visitations = Obisk.objects.filter(p_sestra_id=nurse,n_sestra_id=None)
@@ -79,10 +82,10 @@ def list_active_visitations(request):
     for x in visitations:
         print(x.datum)
     #visitations_today=[x for x in visitations if x.datum.date()==datetime.now().date()]
-    visitations_today=[x for x in visitations if x.id in planned_today]
+    visitations_today=[x for x in visitations if x.id in [x.planirani_obisk_id for x in planned_today]]
 
-    #visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now()-timedelta(days=1)).date()]
-    visitations_yesterday = [x for x in visitations if x.id in planned_yesterday]
+    #visitations_yesterday = [x for x in visitations if x.datum.date() == (datetime.now().date()-timedelta(days=1)).date()]
+    visitations_yesterday = [x for x in visitations if x.id in [x.planirani_obisk_id for x in planned_yesterday]]
     #print("!!!!!!!!!!!VISITATIONS_TODAY: ",visitations_today)
     #print("!!!!!!!!!!!VISITATIONS_YESTERDAY: ",visitations_yesterday)
 
@@ -189,9 +192,11 @@ def edit_visitaiton_data(request):
 
 
         # EXTRACT DATA FROM FORM
+        obisk_opravljen=False
         for ime_polja in polja_imena:
             if not request.POST.get(ime_polja,0):
                 continue
+            obisk_opravljen=True
             id_pacienta=ime_polja[ime_polja.index('_')+1:]
             # vrednost=form.cleaned_data[ime_polja]
             vrednost = request.POST.get(ime_polja)
@@ -207,6 +212,10 @@ def edit_visitaiton_data(request):
                 porocilo_vnos= Porocilo_o_obisku.objects.get(obisk_id=obisk.id, pacient_id=id_pacienta, polje_id=polja[i][0],  meritev=polja[i][3])
                 porocilo_vnos.vrednost = vrednost
                 porocilo_vnos.save()
+
+        if obisk_opravljen and not obisk.opravljen:
+            obisk.opravljen=True
+            obisk.save()
 
         # SAVE DATA
         if request.POST.get('change_visitation_date',0):

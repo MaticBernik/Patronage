@@ -617,7 +617,7 @@ for obisk in obiski:
 	print("SKRBNIKI: ",skrbniki)
 	print("OSKRBOVANCI: ",oskrbovanci)
 
-	if datetime.now() > datum:
+	if datetime.now().date() > (datum+timedelta(hours=2)).date():
 		opravljen=True
 	else:
 		opravljen=False

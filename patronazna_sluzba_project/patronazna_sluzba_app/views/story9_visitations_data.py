@@ -234,9 +234,10 @@ def edit_visitaiton_data(request):
         imena_polj_material=[]
         imena_polj_zdravila=[]
         for m in obisk_material:
-            imena_polj_material.append("polje"+str(obisk.id)+'_material_'+str(m.material.material_id))
+            imena_polj_material.append("polje"+str(obisk.id)+'_material_'+str(m.material_id))
         for z in obisk_zdravila:
-            imena_polj_zdravila.append("polje"+str(obisk.id)+'_zdravilo_'+str(z.zdravilo.nacionalna_sifra))
+            #imena_polj_zdravila.append("polje"+str(obisk.id)+'_zdravilo_'+str(z.zdravilo.nacionalna_sifra))
+            imena_polj_zdravila.append("polje" + str(obisk.id) + '_zdravilo_' + str(z.zdravilo_id))
 
         print("imena polj zdravila: ", imena_polj_zdravila)
         print("imena polj material: ",imena_polj_material)
@@ -259,7 +260,7 @@ def edit_visitaiton_data(request):
                 continue
             vrednost = request.POST.get(polje)
             zdravilo_id = int(polje[polje.index('_zdravilo_') + len('_zdravilo_'):])
-            vnos_v_bazi = Zdravilo_Obisk.objects.filter(obisk_id=obisk, zdravilo_id_id=zdravilo_id)
+            vnos_v_bazi = Zdravilo_Obisk.objects.filter(obisk_id=obisk, zdravilo_id=zdravilo_id)
             vnos_v_bazi = vnos_v_bazi[0]
             if vrednost != vnos_v_bazi.kolicina:
                 vnos_v_bazi.kolicina = vrednost

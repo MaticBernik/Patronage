@@ -9,6 +9,7 @@
 
 <select>
 {% for visit in visit_list %}
+
         {% if visit.p_sestra_id == nurse  %}
 
             {% if visit.delovni_nalog.zdravnik != None  %}
@@ -27,6 +28,13 @@
                      {% endwith %}
             {{ visit.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.p_sestra.uporabniski_profil.last_name }}
                     {% with visit.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+
+            {{ name|lookup:forloop.counter0 }} {{ surname|lookup:forloop.counter0 }}
+                    {% with surname|lookup:forloop.counter0|text_length as dolzina %}
                         {% for i in 12|sub:dolzina|times %}
                             &nbsp;
                         {% endfor %}
@@ -61,6 +69,12 @@
                      {% endwith %}
             {{ visit.p_sestra.uporabniski_profil.first_name|name_initial }}. {{ visit.p_sestra.uporabniski_profil.last_name }}
                     {% with visit.p_sestra.uporabniski_profil.last_name|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
+                    {{ name|lookup:forloop.counter0 }} {{ surname|lookup:forloop.counter0 }}
+                    {% with surname|lookup:forloop.counter0|text_length as dolzina %}
                         {% for i in 12|sub:dolzina|times %}
                             &nbsp;
                         {% endfor %}
@@ -102,7 +116,12 @@
                             &nbsp;
                         {% endfor %}
                      {% endwith %}
-
+{{ name|lookup:forloop.counter0 }} {{ surname|lookup:forloop.counter0 }}
+                    {% with surname|lookup:forloop.counter0|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
                    DA&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.obvezen_obisk }}
                    {% if visit.obvezen_obisk == "Obvezen" %}
                           {% for i in 4|times %}
@@ -135,7 +154,12 @@
                                 &nbsp;
                             {% endfor %}
                          {% endwith %}
-
+{{ name|lookup:forloop.counter0 }} {{ surname|lookup:forloop.counter0 }}
+                    {% with surname|lookup:forloop.counter0|text_length as dolzina %}
+                        {% for i in 12|sub:dolzina|times %}
+                            &nbsp;
+                        {% endfor %}
+                     {% endwith %}
                        DA&emsp;&emsp;&emsp;&emsp;&emsp;{{ visit.datum|date:"d.m.Y"}}&emsp;&emsp;{{ visit.obvezen_obisk }}
                        {% if visit.obvezen_obisk == "Obvezen" %}
                               {% for i in 4|times %}

@@ -317,8 +317,12 @@ def work_task_view(request):
             for i in range(int(number_of_visits)):
                 date_next = date_current + datetime.timedelta(days=int(interval_period))
                 weekno = date_next.weekday()
-                if weekno == 6 or weekno == 0:
+
+                if weekno == 5:
                     date_next = date_next + datetime.timedelta(days=2)
+                    weekno = date_next.weekday()
+                if weekno == 6:
+                    date_next = date_next + datetime.timedelta(days=1)
                     weekno = date_next.weekday()
 
                 p_sestra = Patronazna_sestra.objects.get(sifra_patronazne_sestre=request.POST['nurse_id'])
@@ -353,8 +357,11 @@ def work_task_view(request):
                     #   check if its weekend
                     weekno = date_next.weekday()
 
-                    if weekno == 6 or weekno == 0:
+                    if weekno == 5:
                         date_next = date_next + datetime.timedelta(days=2)
+                        weekno = date_next.weekday()
+                    if weekno == 6:
+                        date_next = date_next + datetime.timedelta(days=1)
                         weekno = date_next.weekday()
 
                     # find the appropriate nurse for the county

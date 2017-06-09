@@ -248,7 +248,12 @@
                                 <div class ="row">
                                     <p style="float: center; border-color: #15a7c7; background-color: white; color: #15a7c7; font-size: 18px;border-radius: 5px; border-style: solid; border-width: 2px;padding: 5px;"><b>Patronažna sestra / brat:<b></p>
                                     <p style="float: center;">{{ visit.p_sestra.uporabniski_profil.first_name }} {{ visit.p_sestra.uporabniski_profil.last_name }}<br>
-                                    {{visit.datum|date:"d.m.Y" }} </p>
+
+                                    {% if visit.n_sestra %}
+									<br>Nadomešča:<br>
+                                    <p style="float: center;">{{ visit.n_sestra.uporabniski_profil.first_name }} {{ visit.n_sestra.uporabniski_profil.last_name }}<br>
+									{% endif %}
+									{{visit.datum|date:"d.m.Y" }} </p>
                                 </div>
                                 <hr>
                                 

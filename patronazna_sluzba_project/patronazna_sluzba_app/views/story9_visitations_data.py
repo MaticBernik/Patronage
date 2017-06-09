@@ -232,9 +232,9 @@ def edit_visitaiton_data(request):
         imena_polj_material=[]
         imena_polj_zdravila=[]
         for m in obisk_material:
-            imena_polj_material.append("polje"+str(obisk.id)+'_material_'+str(m.material_id))
+            imena_polj_material.append("polje"+str(obisk.id)+'_material_'+str(m.material.material_id))
         for z in obisk_zdravila:
-            imena_polj_zdravila.append("polje"+str(obisk.id)+'_zdravilo_'+str(z.nacionalna_sifra))
+            imena_polj_zdravila.append("polje"+str(obisk.id)+'_zdravilo_'+str(z.zdravilo.nacionalna_sifra))
 
         print("imena polj zdravila: ", imena_polj_zdravila)
         print("imena polj material: ",imena_polj_material)
